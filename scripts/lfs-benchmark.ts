@@ -283,6 +283,6 @@ console.log(
     output: out,
     measurements: rows.length,
     microRows: micro.length,
-    correctness: "15 actual >100 MiB LFS checkouts verified",
+    correctness: `${reps * files.length} actual >100 MiB LFS checkouts verified`,
   }),
 );
