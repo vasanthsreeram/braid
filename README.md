@@ -4,11 +4,11 @@ A lean private forge prototype: Workers control plane/UI, WorkOS AuthKit integra
 
 **Status: working local storage/collaboration vertical MVP; live Cloudflare deployment and login blocked.** This repository and the synthetic GitHub benchmark repository are **PRIVATE**. No demo/public bucket, subscription change, Actions workflow, hosted agent or competition submission was created.
 
-- **Measured remotely:** private GitHub normal Git versus real local bare Git, identical full commits/checkouts, three paired repetitions, two-client task/integration races.
+- **Measured remotely:** private GitHub normal Git versus real local bare Git and a benchmark-only app-backed loopback HTTP task transport, five paired repetitions with identical full commits/checkouts. Native app normal Git is unavailable without the harness extension.
 - **Measured locally:** actual git-lfs Batch/basic push/clone/pull/checkouts of five >100 MiB versions × three repetitions; whole-file/fixed/CDC storage, compute and correctness; local UI.
-- **Not measured:** Cloudflare Artifacts Git, deployed R2 LFS, GitHub LFS or end-to-end WorkOS login. Existing Artifacts API credentials return 401, subscription reads 403; WorkOS/R2 S3 credentials and confirmed remaining GitHub LFS quota are unavailable.
+- **Not measured:** Cloudflare Artifacts Git, deployed R2 LFS, GitHub LFS or end-to-end WorkOS login. Existing Wrangler OAuth has artifacts:write and successfully lists namespaces (empty); older scoped-token 401s do not establish absence of access. WorkOS/R2 S3 credentials and confirmed remaining GitHub LFS quota are unavailable.
 
-Read the [generated benchmark report](docs/benchmarks/report-v1.md), [feature/status matrix and commands](docs/implementation.md), [security/storage model](docs/security.md), and [current primary-source/credential findings](docs/research/build-feasibility.md). Raw JSON/CSV is committed under [docs/benchmarks/raw](docs/benchmarks/raw).
+Read the [actual local app comparison v2](docs/benchmarks/gitflare-comparison-v2.md), the retained [Git/LFS report v1](docs/benchmarks/report-v1.md), [feature/status matrix and commands](docs/implementation.md), [security/storage model](docs/security.md), and [historical primary-source/credential findings](docs/research/build-feasibility.md). Raw JSON/CSV is committed under [docs/benchmarks/raw](docs/benchmarks/raw).
 
 ```sh
 npm ci
@@ -19,6 +19,7 @@ WRANGLER_SEND_METRICS=false npm run build  # dry-run only
 npm run dev                              # 127.0.0.1:8787, local test identity
 npm run test:ui                          # installed Chrome; FORGE_CHROME_PATH override
 npm run bench -- --repetitions 3          # real local Git, bounded defaults
+npm run bench:comparison -- --help        # harmless; native app + optional HTTP harness
 npm run bench:lfs -- --repetitions 3 --mib 112
 npm run report
 ```

@@ -16,6 +16,12 @@ import { largeFixtures, SEED, fileHash } from "./fixtures.ts";
 import { rows, gitMeasured, csv } from "./measure.ts";
 import { microbench } from "./microbench.ts";
 const argv = process.argv.slice(2);
+if (argv.includes("--help") || argv.includes("-h")) {
+  console.log(
+    "Usage: npm run bench:lfs -- [--repetitions 2–3] [--mib 101–128] [--output PATH.json]\nLocal-only real LFS/storage benchmark; default 3 repetitions, 112 MiB. Help runs no workload.",
+  );
+  process.exit(0);
+}
 const value = (k: string, d: string) => {
   const i = argv.indexOf(k);
   return i >= 0 ? argv[i + 1] : d;

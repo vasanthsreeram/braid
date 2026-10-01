@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "build": "wrangler deploy --dry-run --outdir dist",
     "bench": "tsx scripts/benchmark.ts",
+    "bench:comparison": "tsx scripts/gitflare-comparison-v2.ts",
     "bench:lfs": "tsx scripts/lfs-benchmark.ts",
     "report": "tsx scripts/report.ts",
     "test:ui": "tsx scripts/ui-smoke.ts",

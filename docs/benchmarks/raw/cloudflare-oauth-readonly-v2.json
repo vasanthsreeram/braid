@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "recordedAt": "2026-10-01T20:21:21.200713+00:00",
+  "tool": "wrangler 4.146.0",
+  "accountId": "7efeb52ec5727a903edd8ef7ae8eb925",
+  "environment": "unset CLOUDFLARE_API_TOKEN, CLOUDFLARE_API_KEY, CLOUDFLARE_EMAIL; WRANGLER_SEND_METRICS=false; account ID explicit for list",
+  "probes": [
+    {
+      "command": "wrangler whoami",
+      "exitCode": 0,
+      "authentication": "existing Wrangler OAuth",
+      "artifactsWriteScopePresent": true,
+      "warning": "missing k2.read/k2.write; no login/refresh performed"
+    },
+    {
+      "command": "wrangler artifacts --help",
+      "exitCode": 0,
+      "commands": [
+        "namespaces",
+        "repos"
+      ]
+    },
+    {
+      "command": "wrangler artifacts namespaces list --help",
+      "exitCode": 0,
+      "jsonOptionPresent": true
+    },
+    {
+      "command": "wrangler artifacts repos list --help",
+      "exitCode": 0,
+      "namespaceRequired": true
+    },
+    {
+      "command": "wrangler artifacts namespaces list --json",
+      "exitCode": 0,
+      "response": []
+    }
+  ],
+  "mutations": 0,
+  "conclusion": "OAuth-native Artifacts list succeeds; no namespaces currently listed on selected account. Old scoped-token 401 results do not establish absence of Artifacts access. No live Git, WorkOS login, migration, billing entitlement or deploy verified."
+}

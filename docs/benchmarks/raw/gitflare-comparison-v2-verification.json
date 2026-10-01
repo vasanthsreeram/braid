@@ -1,0 +1,432 @@
+{
+  "version": 2,
+  "verifiedAt": "2026-10-01T20:24:22.686Z",
+  "input": "/Users/admin/projects/cf-native-forge/docs/benchmarks/raw/gitflare-comparison-v2.json",
+  "inputSha256": "b54eb258e818548eca1f3916972c44bc52c4078699a9fdc1e880dc873f946479",
+  "passed": true,
+  "matchedV1Commits": true,
+  "checks": [
+    {
+      "rep": 1,
+      "backend": "gitflare-harness-http",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 1,
+      "backend": "gitflare-harness-http",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 1,
+      "originalLocalApplicationReopened": true,
+      "privateRepos": 2,
+      "apiLogAndThreeFileBodiesMatch": true,
+      "anonymousOpenStatus": 404
+    },
+    {
+      "rep": 1,
+      "backend": "bare-git",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 1,
+      "backend": "bare-git",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 1,
+      "backend": "github",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 1,
+      "backend": "github",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "backend": "bare-git",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "backend": "bare-git",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "backend": "github",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "backend": "github",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "backend": "gitflare-harness-http",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "backend": "gitflare-harness-http",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 2,
+      "originalLocalApplicationReopened": true,
+      "privateRepos": 2,
+      "apiLogAndThreeFileBodiesMatch": true,
+      "anonymousOpenStatus": 404
+    },
+    {
+      "rep": 3,
+      "backend": "github",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 3,
+      "backend": "github",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 3,
+      "backend": "bare-git",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 3,
+      "backend": "bare-git",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 3,
+      "backend": "gitflare-harness-http",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 3,
+      "backend": "gitflare-harness-http",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 3,
+      "originalLocalApplicationReopened": true,
+      "privateRepos": 2,
+      "apiLogAndThreeFileBodiesMatch": true,
+      "anonymousOpenStatus": 404
+    },
+    {
+      "rep": 4,
+      "backend": "github",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 4,
+      "backend": "github",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 4,
+      "backend": "gitflare-harness-http",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 4,
+      "backend": "gitflare-harness-http",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 4,
+      "originalLocalApplicationReopened": true,
+      "privateRepos": 2,
+      "apiLogAndThreeFileBodiesMatch": true,
+      "anonymousOpenStatus": 404
+    },
+    {
+      "rep": 4,
+      "backend": "bare-git",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 4,
+      "backend": "bare-git",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 5,
+      "backend": "github",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 5,
+      "backend": "github",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 5,
+      "backend": "gitflare-harness-http",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 5,
+      "backend": "gitflare-harness-http",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 5,
+      "originalLocalApplicationReopened": true,
+      "privateRepos": 2,
+      "apiLogAndThreeFileBodiesMatch": true,
+      "anonymousOpenStatus": 404
+    },
+    {
+      "rep": 5,
+      "backend": "bare-git",
+      "client": "client",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "rep": 5,
+      "backend": "bare-git",
+      "client": "consumer",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    },
+    {
+      "freshGithubClone": true,
+      "isPrivate": true,
+      "branch": "bench-v2-20261001202002649-e1990d-5",
+      "files": 257,
+      "fullHistoryCommits": 4,
+      "bodySha256Match": true,
+      "noPersistedCredential": true
+    }
+  ],
+  "inventories": [
+    {
+      "rep": 1,
+      "backend": "gitflare-harness-http",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 1,
+      "backend": "bare-git",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 1,
+      "backend": "github",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 2,
+      "backend": "bare-git",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 2,
+      "backend": "github",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 2,
+      "backend": "gitflare-harness-http",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 3,
+      "backend": "github",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 3,
+      "backend": "bare-git",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 3,
+      "backend": "gitflare-harness-http",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 4,
+      "backend": "github",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 4,
+      "backend": "gitflare-harness-http",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 4,
+      "backend": "bare-git",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 5,
+      "backend": "github",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 5,
+      "backend": "gitflare-harness-http",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    },
+    {
+      "rep": 5,
+      "backend": "bare-git",
+      "reachableObjects": 272,
+      "consumerCountObjects": "count: 12\nsize: 60\nin-pack: 260\npacks: 1\nsize-pack: 80\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+      "note": "Post-run local consumer object inventory, not network bytes or provider storage."
+    }
+  ],
+  "note": "Independent fresh process; original local app reopened without HTTP wrapper; post-run filesystem inspections are verification, outside measured workflows."
+}

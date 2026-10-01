@@ -8,7 +8,7 @@ Implementation is authorized by the build brief. Earlier documents describe the 
 | WorkOS AuthKit | Real authorize/code exchange, PKCE, encrypted flow/session cookies, strict JWT verifier, rejection tests | No Keychain WorkOS credentials/environment; end-to-end login blocked; refresh/org switching/provider logout deferred |
 | Repo policy | Private default, reader/contributor/writer/admin, explicit grants, tenant checks, revocation, shared listing | Direct WorkOS user-ID grant; invitations/team/org lifecycle reconciliation deferred |
 | Public discovery | Explicit confirmed visibility API and public query; policy gated | Disabled in evaluation; no repo has been published; lexical ranking/topics/indexing deferred |
-| Native Git | Artifacts binding create/info/log/tree/file/fork/import/token code matches pinned vendor types | Read-only account probes return 401; no Artifacts Git network timing; native lifecycle/token semantics unvalidated |
+| Native Git | Artifacts binding create/info/log/tree/file/fork/import/token code matches pinned vendor types | Existing Wrangler OAuth has artifacts:write; native namespace list succeeds with []; no Artifacts Git network timing; lifecycle/token semantics unvalidated. Older scoped-token probes returned 401 |
 | URL import | Strict reconstructed public GitHub HTTPS identity; native importer; private destination | No live import test. LFS/submodules/platform metadata not migrated. Failed/in-progress native intent retained; no background reconciler |
 | Task fork/review | Real local bare-Git forks; immutable base/candidate existence checks; stale-head rejection; decisions | Provider forks need live tests. Review does **not** integrate. Canonical token withheld; publisher/initial canonical seeding deferred |
 | Native deterministic check | Actual immutable JSON parsing, 8 files × 64 KiB; positive/negative tests | Contract `json-parse-v1` only, synchronous receipt; no persisted CI orchestration/logs. No shell/packages/Actions/Sandbox claims |
@@ -30,6 +30,7 @@ npm run dev
 # Open http://127.0.0.1:8787, choose "Use local test identity".
 npm run test:ui
 npm run bench -- --repetitions 3
+npm run bench:comparison -- --help  # no workload; native API + benchmark HTTP task transport
 # Opt-in remote synthetic Git benchmark; gh must use the authorized keyring account.
 env -u GH_TOKEN -u GITHUB_TOKEN npm run bench -- --github --repetitions 3
 npm run bench:lfs -- --repetitions 3 --mib 112
@@ -41,6 +42,10 @@ The local harness is `scripts/local.ts`, binds **127.0.0.1 only**, and supplies 
 `npm run test:ui` uses installed system Chrome; set `FORGE_CHROME_PATH` to a Chrome/Chromium executable elsewhere. No browser installation is performed automatically. Benchmarks use full clones, compression 6, no partial/shallow checkout, bounded child commands, at most two task clients. Commands invoking Git/gh remove `GH_TOKEN` and `GITHUB_TOKEN`. Fixtures are deterministic synthetic bytes generated under ignored `.tmp/`, with recorded seed/hashes. The LFS runner prunes disposable local test services/clients after each repetition; fixture files remain for inspection.
 
 ## Production integration prerequisites
+
+The [v2 comparison](benchmarks/gitflare-comparison-v2.md) exercises real native API creation/auth/list/open/task/log/tree/file paths. Unmodified LocalGit read tokens expose a filesystem remote without a Git credential, and the local server has no normal Git HTTP route; direct bare-path operations bypass app authorization. V2's optional transport is isolated in `scripts/benchmark-http-v2.ts`, binds loopback only, wraps info/token for scoped ephemeral capabilities, and sends actual Git HTTP requests through existing application policy and the original LocalGit storage. It is a benchmark harness, not a production or ordinary local-server feature. Canonical publication remains unavailable; baseline and edits are pushed only to app-created private tasks. Raw full iteration stopwatches and independent content verification are retained separately from v1.
+
+Current read-only remote status: existing Wrangler OAuth successfully lists Artifacts namespaces (empty on account 7efeb52ec5727a903edd8ef7ae8eb925), with artifacts:write scope. No Artifacts Git workload or deployment was performed. WorkOS configuration and remote provisioning remain pending; the separate MFweb-app migration has not been verified.
 
 `wrangler.jsonc` deliberately has no route, `workers_dev:false`, `preview_urls:false`, a placeholder D1 UUID, disabled public discovery and missing WorkOS configuration. `npm run build` is a **dry run**, not a deploy command. Do not treat these names as provisioned resource IDs.
 

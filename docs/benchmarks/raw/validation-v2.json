@@ -1,0 +1,88 @@
+{
+  "version": 2,
+  "recordedAt": "2026-10-01T20:27:58.399205+00:00",
+  "baseline": "29b9083",
+  "commands": [
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    {
+      "command": "WRANGLER_SEND_METRICS=false npm run build",
+      "exitCode": 0,
+      "dryRunOnly": true,
+      "uploadKiB": 138.03,
+      "gzipKiB": 35.59
+    },
+    {
+      "command": "npm run test:worker",
+      "exitCode": 0,
+      "checks": 7,
+      "passed": 7,
+      "note": "Rerun output saved as worker-auth-smoke-v2.json; original v1 output restored byte-identically"
+    },
+    {
+      "command": "env -u GH_TOKEN -u GITHUB_TOKEN npm run bench:comparison -- --github --repetitions 5",
+      "exitCode": 0,
+      "iterations": 45,
+      "unexpectedFailures": 0,
+      "timeouts": 0
+    },
+    {
+      "command": "env -u GH_TOKEN -u GITHUB_TOKEN ./node_modules/.bin/tsx scripts/verify-comparison-v2.ts --github",
+      "exitCode": 0,
+      "independentChecks": 36
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "cliGuards": [
+    {
+      "args": [
+        "--help"
+      ],
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "--repetitions",
+        "6"
+      ],
+      "exitCode": 1
+    },
+    {
+      "args": [
+        "--bogus"
+      ],
+      "exitCode": 1
+    },
+    {
+      "args": [
+        "--output",
+        "docs/benchmarks/raw/gitflare-comparison-v2.json"
+      ],
+      "exitCode": 1
+    }
+  ],
+  "lfsHelpExitCode": 0,
+  "newWorkloadDirsFromGuardChecks": 0,
+  "rawJsonSha256": "b54eb258e818548eca1f3916972c44bc52c4078699a9fdc1e880dc873f946479",
+  "matchesIndependentInputHash": true,
+  "csvMatchesAll703Rows": true,
+  "previousBenchmarkFilesByteIdenticalToBaseline": true,
+  "credentialScan": "New raw artifact files only; no Authorization headers, credential JSON values or GitHub token prefixes found. Native auth stores not inspected.",
+  "initialTestIssues": [
+    "fetch did not transmit overridden Host; replaced with raw Node HTTP probe",
+    "revoked identity yields existing app non-enumeration 404, assertion corrected"
+  ],
+  "pilot": "First full run retained under raw/pilot; excluded after capabilities were bound to issuing identity for grant revocation."
+}
