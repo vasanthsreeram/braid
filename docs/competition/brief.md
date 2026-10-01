@@ -1,5 +1,7 @@
 # Cloudflare: Build the next GitHub
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](../implementation.md). Original scope/research is retained below.
+
 Sources accessed 2026-10-01 UTC:
 - Landing page: https://www.cloudflare.com/git-competition/
 - Published Markdown: https://www.cloudflare.com/git-competition/.md

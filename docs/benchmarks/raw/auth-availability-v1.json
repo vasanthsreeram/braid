@@ -1,0 +1,15 @@
+{
+  "keychainDumpExit": 0,
+  "servicesInspected": 218,
+  "cloudflareNamesMatched": 22,
+  "workosNamesMatched": [],
+  "forgeNamesMatched": [],
+  "environmentKeyPresence": {
+    "WORKOS_CLIENT_ID": false,
+    "WORKOS_API_KEY": false,
+    "WORKOS_ISSUER": false,
+    "R2_ACCESS_KEY_ID": false,
+    "R2_SECRET_ACCESS_KEY": false
+  },
+  "note": "Names/presence only; no secret value is emitted or persisted"
+}

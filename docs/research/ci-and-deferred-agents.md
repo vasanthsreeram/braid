@@ -1,5 +1,7 @@
 # Cloudflare-native CI and deferred repo agents
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](../implementation.md). Original scope/research is retained below.
+
 Research date: **2026-10-01 (UTC)**. Primary documentation was fetched live on this date; numerical limits below are documentation observations, not measurements of this project's Cloudflare account. No deployments, runner experiments, code, configuration, or Git operations were performed.
 
 **Scope decision / recommendation:** build a small native CI service, not a GitHub Actions clone. Workers handle the control plane; Linux Containers provide the execution plane; Workflows coordinate durable runs; Queues buffer dispatch. **Agents SDK + Sandbox repo-edit/test agents are KIV (keep in view), explicitly NOT MVP.** Native CI feasibility is conditional on the validation gates below, particularly beta APIs, untrusted-code containment, and reliable cancellation.

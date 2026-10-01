@@ -1,36 +1,30 @@
 # CF Native Forge
 
-A lean, Cloudflare-native place to host, discover, and collaborate on Git projects, designed for heavy human and AI-agent activity without recreating all of GitHub.
+A lean private forge prototype: Workers control plane/UI, WorkOS AuthKit integration, Artifacts Git adapter, explicit repository roles/task reviews, and tenant-scoped R2 LFS chunks using deterministic content-defined deduplication.
 
-**Working name:** CF Native Forge. **Status:** planning and research only. **Repository:** private. No application code, runtime configuration, deployment, or benchmark has been created.
+**Status: working local storage/collaboration vertical MVP; live Cloudflare deployment and login blocked.** This repository and the synthetic GitHub benchmark repository are **PRIVATE**. No demo/public bucket, subscription change, Actions workflow, hosted agent or competition submission was created.
 
-## Product direction
+- **Measured remotely:** private GitHub normal Git versus real local bare Git, identical full commits/checkouts, three paired repetitions, two-client task/integration races.
+- **Measured locally:** actual git-lfs Batch/basic push/clone/pull/checkouts of five >100 MiB versions × three repetitions; whole-file/fixed/CDC storage, compute and correctness; local UI.
+- **Not measured:** Cloudflare Artifacts Git, deployed R2 LFS, GitHub LFS or end-to-end WorkOS login. Existing Artifacts API credentials return 401, subscription reads 403; WorkOS/R2 S3 credentials and confirmed remaining GitHub LFS quota are unavailable.
 
-- Cloudflare **Artifacts** owns Git storage and the Git-compatible data plane.
-- **Workers** serves the product and control-plane APIs. **Durable Objects** coordinates small, contention-sensitive units of work, not one global bottleneck.
-- Public/private repositories, shared access, browsing, discovery, and lightweight change review are core product features.
-- Import projects from a GitHub URL with transparent migration boundaries.
-- Native CI uses Workers orchestration and Cloudflare-hosted isolated Linux execution where needed. Ordinary Workers are not Ubuntu GitHub Actions runners.
-- **WorkOS** supplies authentication. Repository authorization remains an explicit platform responsibility.
-- **KIV:** Cloudflare Agents SDK + Sandbox agents that edit repos and run tests. Not part of the initial implementation scope.
+Read the [generated benchmark report](docs/benchmarks/report-v1.md), [feature/status matrix and commands](docs/implementation.md), [security/storage model](docs/security.md), and [current primary-source/credential findings](docs/research/build-feasibility.md). Raw JSON/CSV is committed under [docs/benchmarks/raw](docs/benchmarks/raw).
 
-## Read the docs
+```sh
+npm ci
+npm run typecheck
+npm test
+npm run test:worker                      # local workerd auth guards only
+WRANGLER_SEND_METRICS=false npm run build  # dry-run only
+npm run dev                              # 127.0.0.1:8787, local test identity
+npm run test:ui                          # installed Chrome; FORGE_CHROME_PATH override
+npm run bench -- --repetitions 3          # real local Git, bounded defaults
+npm run bench:lfs -- --repetitions 3 --mib 112
+npm run report
+```
 
-| Document | Contents |
-|---|---|
-| [Original requirements](docs/product-brief.md) | All ideas from Vas, priorities, assumptions, and non-goals |
-| [Competition brief](docs/competition/brief.md) | Rules, deadline, judging, privacy/licensing and eligibility blockers |
-| [Architecture](docs/architecture.md) | Proposed Cloudflare-native boundaries and concurrency flows |
-| [Artifacts and scale research](docs/research/artifacts-and-scale.md) | Verified capabilities, live limits, costs, hot spots, validation plan |
-| [Collaboration, discovery, import, auth](docs/research/collaboration-discovery-import-auth.md) | Feature research, permissions, WorkOS, GitHub migration, search |
-| [CI and deferred agents](docs/research/ci-and-deferred-agents.md) | Workers versus Linux execution, isolation, native CI, KIV agents |
-| [Roadmap and open decisions](docs/roadmap.md) | Staged scope and experiments, without implementation |
-| [Source archive](docs/competition/sources/README.md) | Original competition page and official PDF |
+Requires Node ≥22.15, Git, git-lfs. Measured using Node 26.5.0 and git-lfs 3.7.0 on macOS ARM64 in Singapore. Remote GitHub benchmarking is explicit: `env -u GH_TOKEN -u GITHUB_TOKEN npm run bench -- --github --repetitions 3`; it creates/reuses only the dedicated private `cf-native-forge-benchmark-*` repository with synthetic files. Credentials use the existing vasanthsreeram CLI keyring. Provider secrets never enter source, .env, Git config or reports.
 
-## Important competition constraints
+CDC saves storage, not standard LFS upload bandwidth or model tokens. Range/resume is unsupported (416). Production uploads use implemented direct R2 staging + verified ingest; actual above-limit Cloudflare compatibility is untested. Review decisions do not perform a merge. Native CI currently supports only an actual bounded immutable JSON-parse check; shell/Actions/Sandbox execution and hosted editing agents remain deferred. This is not a complete or production-ready platform.
 
-The official rules restrict eligibility to adult legal residents of the **United States or Canada**. Do not assume eligibility; clarify with Cloudflare before pursuing entry.
-
-The page asks for open-source code, a 5–10 minute demo, and run instructions by **October 14, 2026**. Rules require Workers + Artifacts, concurrent multi-agent changes, and an approved open-source LICENSE. This private, docs-only repo is **not a submission-ready entry**. No license or publication decision has been made. Do not make this repository public or submit it without Vas's explicit approval.
-
-The user-supplied motivation about GitHub struggling with millions of AI pushes is recorded as a **hypothesis**, not an established causal finding. Evaluate our own workloads rather than claim unmeasured superiority or attack competitors.
+The [original product brief](docs/product-brief.md), [architecture](docs/architecture.md), [planning README archive](docs/archive/README-planning.md) and [official competition archive](docs/competition/sources/README.md) are retained. The implementation authorization supersedes their docs-only restriction. Competition eligibility/licensing/publication questions remain separate; no license or publication decision was made.

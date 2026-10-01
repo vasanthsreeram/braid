@@ -1,5 +1,7 @@
 # Product brief
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](implementation.md). Original scope/research is retained below.
+
 Captured from Vas's request on 2026-10-01. These are requirements and design intent, not implemented functionality.
 
 ## Vision

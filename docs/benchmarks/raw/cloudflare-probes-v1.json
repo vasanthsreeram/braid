@@ -1,0 +1,412 @@
+[
+  {
+    "credential": "bugguide-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/user/tokens/verify",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "token_status": "active"
+  },
+  {
+    "credential": "bugguide-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925",
+    "status": 200,
+    "success": true,
+    "errors": []
+  },
+  {
+    "credential": "bugguide-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/workers/account-settings",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "settings": {
+      "default_usage_model": "standard",
+      "usage_model": null,
+      "max_subdomain_count": null
+    }
+  },
+  {
+    "credential": "bugguide-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/default/repos?limit=1",
+    "status": 401,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error"
+      }
+    ]
+  },
+  {
+    "credential": "bugguide-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/r2/buckets",
+    "status": 200,
+    "success": true,
+    "errors": []
+  },
+  {
+    "credential": "bugguide-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/subscriptions",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/accounts/subresources/subscriptions/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "unified-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/user/tokens/verify",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "token_status": "active"
+  },
+  {
+    "credential": "unified-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 9109,
+        "message": "Unauthorized to access requested resource"
+      }
+    ]
+  },
+  {
+    "credential": "unified-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/workers/account-settings",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/workers/subresources/account_settings/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "unified-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/default/repos?limit=1",
+    "status": 401,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error"
+      }
+    ]
+  },
+  {
+    "credential": "unified-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/r2/buckets",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/r2"
+      }
+    ]
+  },
+  {
+    "credential": "unified-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/subscriptions",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/accounts/subresources/subscriptions/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "cloudflare_api_token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/user/tokens/verify",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "token_status": "active"
+  },
+  {
+    "credential": "cloudflare_api_token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 9109,
+        "message": "Unauthorized to access requested resource"
+      }
+    ]
+  },
+  {
+    "credential": "cloudflare_api_token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/workers/account-settings",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/workers/subresources/account_settings/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "cloudflare_api_token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/default/repos?limit=1",
+    "status": 401,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error"
+      }
+    ]
+  },
+  {
+    "credential": "cloudflare_api_token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/r2/buckets",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/r2"
+      }
+    ]
+  },
+  {
+    "credential": "cloudflare_api_token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/subscriptions",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/accounts/subresources/subscriptions/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "workers-pages-dns-token",
+    "account": "d548b7a718412ded2345edbf8733cdc3",
+    "path": "/user/tokens/verify",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "token_status": "active"
+  },
+  {
+    "credential": "workers-pages-dns-token",
+    "account": "d548b7a718412ded2345edbf8733cdc3",
+    "path": "/accounts/d548b7a718412ded2345edbf8733cdc3",
+    "status": 200,
+    "success": true,
+    "errors": []
+  },
+  {
+    "credential": "workers-pages-dns-token",
+    "account": "d548b7a718412ded2345edbf8733cdc3",
+    "path": "/accounts/d548b7a718412ded2345edbf8733cdc3/workers/account-settings",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "settings": {
+      "default_usage_model": "standard",
+      "usage_model": null,
+      "max_subdomain_count": null
+    }
+  },
+  {
+    "credential": "workers-pages-dns-token",
+    "account": "d548b7a718412ded2345edbf8733cdc3",
+    "path": "/accounts/d548b7a718412ded2345edbf8733cdc3/artifacts/namespaces/default/repos?limit=1",
+    "status": 401,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error"
+      }
+    ]
+  },
+  {
+    "credential": "workers-pages-dns-token",
+    "account": "d548b7a718412ded2345edbf8733cdc3",
+    "path": "/accounts/d548b7a718412ded2345edbf8733cdc3/r2/buckets",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/r2"
+      }
+    ]
+  },
+  {
+    "credential": "workers-pages-dns-token",
+    "account": "d548b7a718412ded2345edbf8733cdc3",
+    "path": "/accounts/d548b7a718412ded2345edbf8733cdc3/subscriptions",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/accounts/subresources/subscriptions/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "pages-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/user/tokens/verify",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "token_status": "active"
+  },
+  {
+    "credential": "pages-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 9109,
+        "message": "Unauthorized to access requested resource"
+      }
+    ]
+  },
+  {
+    "credential": "pages-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/workers/account-settings",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/workers/subresources/account_settings/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "pages-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/default/repos?limit=1",
+    "status": 401,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error"
+      }
+    ]
+  },
+  {
+    "credential": "pages-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/subscriptions",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/accounts/subresources/subscriptions/methods/get"
+      }
+    ]
+  },
+  {
+    "credential": "novoschool-workers-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/user/tokens/verify",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "token_status": "active"
+  },
+  {
+    "credential": "novoschool-workers-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925",
+    "status": 200,
+    "success": true,
+    "errors": []
+  },
+  {
+    "credential": "novoschool-workers-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/workers/account-settings",
+    "status": 200,
+    "success": true,
+    "errors": [],
+    "settings": {
+      "default_usage_model": "standard",
+      "usage_model": null,
+      "max_subdomain_count": null
+    }
+  },
+  {
+    "credential": "novoschool-workers-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/default/repos?limit=1",
+    "status": 401,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error"
+      }
+    ]
+  },
+  {
+    "credential": "novoschool-workers-deploy-token",
+    "account": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/subscriptions",
+    "status": 403,
+    "success": false,
+    "errors": [
+      {
+        "code": 10000,
+        "message": "Authentication error",
+        "documentation_url": "https://developers.cloudflare.com/api/resources/accounts/subresources/subscriptions/methods/get"
+      }
+    ]
+  }
+]

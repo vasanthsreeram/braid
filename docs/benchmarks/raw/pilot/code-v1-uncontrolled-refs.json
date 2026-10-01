@@ -1,0 +1,2971 @@
+{
+  "version": 1,
+  "runId": "20261001174037116",
+  "category": "normal-git",
+  "seed": 5370206,
+  "repetitions": 3,
+  "concurrency": 2,
+  "environment": {
+    "node": "v26.5.0",
+    "platform": "darwin",
+    "os": "24.5.0",
+    "arch": "arm64",
+    "cpu": "Apple M4",
+    "clientRegion": "Singapore (user environment; network routing not independently geolocated)",
+    "git": "git version 2.39.5 (Apple Git-154)"
+  },
+  "cold": "fresh destination, full clone, --no-local; provider and OS caches uncontrolled",
+  "warm": "existing client after preceding clone/push; full fetch and checkout, no partial/shallow options",
+  "compression": 6,
+  "order": "paired alternating backend order with seed-fixed starting backend; not provider-cold",
+  "orders": [
+    [
+      "github",
+      "local"
+    ],
+    [
+      "local",
+      "github"
+    ],
+    [
+      "github",
+      "local"
+    ]
+  ],
+  "fixture": [
+    {
+      "name": "src/file-000.ts",
+      "sha256": "fb2baaf3c5a11cc0b81a351da9fc6aaeb2b8c1781dc78d746042f29e5043ab0b",
+      "bytes": 1151
+    },
+    {
+      "name": "src/file-001.ts",
+      "sha256": "a5ef48974b2511e4d3770bb40924ed182d0d90918d551c341f4ca5c9d1ca2460",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-002.ts",
+      "sha256": "883d795625847f00d490c6009202bd9a6af65dc7dbfeb1d456d1cc4a4f4897ed",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-003.ts",
+      "sha256": "2a71269d6a991d3ee31c21e92d6e3e597368dfe342d4adfd32ecf0a5d0ae3c92",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-004.ts",
+      "sha256": "2f527751537695accd57cd4ad461ce280d5c9847500c164994673949e878eee5",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-005.ts",
+      "sha256": "382ff03a7c65f1d4c211ce411b50de3855e488af01e1f120187c0b5c8c2fd0ee",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-006.ts",
+      "sha256": "90a4debf6dea213d9fd86c05538da0deeae8419d25126f820d33da42d7eb0548",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-007.ts",
+      "sha256": "e678922029f7fc978572568520fb88fd50c157ad0a73bd7f5877c35d1f4fdff3",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-008.ts",
+      "sha256": "564fe027a11b7b009690875342122bc8c48dab570f1ffbb1fbd3133fa05d7e98",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-009.ts",
+      "sha256": "2b215aff222959649c4835c016a46fc21ee8ede06e98b041d6a0c6733e2e0aff",
+      "bytes": 1201
+    },
+    {
+      "name": "src/file-010.ts",
+      "sha256": "a6cd97f5026aa624f0f7583f536021ab47d13fcb73b2cb877b601f5eb0f1666d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-011.ts",
+      "sha256": "a0152d8aa05a5c5bc85d408d7cf487042afecba34b4bbdae7eda0fcb4243fb70",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-012.ts",
+      "sha256": "6e4049fdc65311be408866fbd9d187aba2f1f69f4fdb6fb9b12f5ba66cc67fc9",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-013.ts",
+      "sha256": "f89dec4c3d010b1d8aaa666a353b9bca5d3c870e35b547928db5f25d29aa1159",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-014.ts",
+      "sha256": "23ade35f574e31262940e8689af05b37d125c60c691d1fe5780f54db8ad007ec",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-015.ts",
+      "sha256": "9d1bf93745995b19bc98ab07860776a87fc926a477f01569c78529b6e8acd9c8",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-016.ts",
+      "sha256": "80a4ea9b19a093113e19e283ef738b521baadb5e7bd1cd31306cb54e61281724",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-017.ts",
+      "sha256": "ab98dc5a4f66c82238bf90508fc6d36373b0a652575700c7a61af0c2cff61be0",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-018.ts",
+      "sha256": "a346644257cd0e0e2689a6d39bd06fd290ab6965ff19e4ee90e044ab9a4946fc",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-019.ts",
+      "sha256": "b0b5190d0a629b84a1c3ec2ca31d6a39e9a85ffe3f3913a1607a2ba5593d0954",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-020.ts",
+      "sha256": "9a0db0a96757568fb05c3312b9e3994c73f0ba20b72fe9df6436dca48227bcef",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-021.ts",
+      "sha256": "c6e6cc7dbf3260b706ab88d7dc5e241195743eb7c023a2c000adcbd22c075dab",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-022.ts",
+      "sha256": "dbea233c13b8b411b5183b0d225abc50a7fe874e1307948e828747938f062c2f",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-023.ts",
+      "sha256": "2a7aeb451cd1eb4ddab7736aba230bdb6a0754695e3d46c4adeed59370335abc",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-024.ts",
+      "sha256": "f74a100db43c8a01fe69516e29b172f5ecd1d08d80458f77d932d89388593570",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-025.ts",
+      "sha256": "37f8bce2632b3f739a7541a01f104d9eb38ac638f864435cc9941b5bacaec37c",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-026.ts",
+      "sha256": "b0d3ed8431e28755544ebeb9c1ba397356c3033163b055b26b175b3b311850c9",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-027.ts",
+      "sha256": "649766b936009bab1757a667573fd2341798005f86169c634d71e3bcdb2c2f1d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-028.ts",
+      "sha256": "af6497b54f5c831bae7ddbafd3de45a00e7b8ba34a820c96a77459fb1ac3eddd",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-029.ts",
+      "sha256": "a755e733d331f0c74a085f14880abe9b7b8c325c99b6b41bf24b2f42a69d3ebe",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-030.ts",
+      "sha256": "45e41e3ecd9de4c502de9b2ac9b07886ba8b6cd6743d20f031a66b396b27fd0d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-031.ts",
+      "sha256": "75948b0ca6f1e4f3418764cbfb00b3f87f2eabba803e4edc4a3e4db4878bf4aa",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-032.ts",
+      "sha256": "c4d866636647102c442cc31ac90932de4bbb65294273d1e396b6be6add409209",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-033.ts",
+      "sha256": "15899ad53e380c9fe93dae563193a762b8dff74aff61546b82a824c142f5954a",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-034.ts",
+      "sha256": "4d6bf82a04dc2231d0e99ab4b2aa1c6dd857342669982009e1621fd98e058cd9",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-035.ts",
+      "sha256": "2e7f1a756c9ab202eba8ba632b16e6782b991ede034a9f4c657a488517e0e81e",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-036.ts",
+      "sha256": "4a0ac91acc73a08a4c54b076bb00fcdc65fb747d3605aaeb4ed1e8c685c07147",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-037.ts",
+      "sha256": "acd930b9a7e44c897e9f1e07bb731f8ac2713ee52e262b87297b569fb769c417",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-038.ts",
+      "sha256": "45200d59c0753bd08ae7e0c610c326d6df054dc37d33bda70254be724704a697",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-039.ts",
+      "sha256": "e749efe435e328e8d74c0c4b7fcddd65679663e43342bbfc638281b5a1fe41ac",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-040.ts",
+      "sha256": "be0b67e724c4400d135a36a899a99b0f64d21be4a9a1f7969b8891586233d951",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-041.ts",
+      "sha256": "2819c6e23ec260c1d3263d7d9b81ad0f3fa4d0192df6e04e08f05053a5878740",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-042.ts",
+      "sha256": "7d9c6a0207d55eaeca13ec43c87889e2d8fea8fb8e21108e328919688b975d88",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-043.ts",
+      "sha256": "5fc9853df175e493195bec95997a5139963edc97a1ffd2599909e5852c26e8d0",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-044.ts",
+      "sha256": "3c69fa03b444fe9495aaa8dd1f2861f6b34ce0113bf46cb66f8a373524e394bf",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-045.ts",
+      "sha256": "66c3bd5236ac1d8a036cea21e3d39c7efcdbd5216ece0599f6baf77cac1c6e24",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-046.ts",
+      "sha256": "b71667d1968cb92debc3c47eea4678d1f675ef58ded24cfd290b86c45196ec17",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-047.ts",
+      "sha256": "a9e51e2be3570bb5a426b49f668e4b75dff9e48d081a96a3bc2ab946538fd66d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-048.ts",
+      "sha256": "aafcfe7c32a90bf5c5147a58541ebd48cca431dbc3b8940df8fc9ef18239caa6",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-049.ts",
+      "sha256": "8dc512c090e6cde9dc2906a9d77a746954793367ef6c410989057b2c8e5e93fb",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-050.ts",
+      "sha256": "524c3b4d5a44bb91b01c8bd7794c27bc364143a912f55db06ed1afd8401fe34d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-051.ts",
+      "sha256": "26bcf9e3e1218f9262d7d76d3d092d07effd0102cbced60ed1ae792b9d0d6239",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-052.ts",
+      "sha256": "c83794819acbfe9f059831c1b392404f476f20ecd7c71a9ba623949f2cc5bd3d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-053.ts",
+      "sha256": "b9da39efdf58230dc163bc20db8b7eeb8b2b913aba63c791531c737cb8626a15",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-054.ts",
+      "sha256": "2af855a2cf930f1d3b0b1e56a41c9a36dce9fe632faa77adb2f9389d602676fd",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-055.ts",
+      "sha256": "68dfd83b12b0029ab6dd2f41c575c69fbc1a714147150e4b20f264994e212feb",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-056.ts",
+      "sha256": "7d68fd77059e32dd6d8e993b1a6a26fa75686c44782d57d4363fc18ba229fd15",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-057.ts",
+      "sha256": "8865b3d82c1b1a15d814d7699e537361454736598b15cfe0e796427535e2abb8",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-058.ts",
+      "sha256": "b830f8cff4158e750acc8edc0b3714ada1c27777c21343a7dd97ad2532ba9477",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-059.ts",
+      "sha256": "aaba7cddbf3dcc2b6ae47ed233d3566ad35007858e65b995f2574a1040eee26e",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-060.ts",
+      "sha256": "ca8ac491f0a182393ea1d1bfc9a20e53574435ad6f4be3cd7aa87c395b0df3ee",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-061.ts",
+      "sha256": "140c240063862ae1aa01b62f5d08507c98d0b1e9ed8dbe2d5455fc8b5774f37a",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-062.ts",
+      "sha256": "03feafff624657c87cd0409cc136875877bd9299e51f00329b61a8f8584a95c8",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-063.ts",
+      "sha256": "d97fa8f9512a3b2a86fefd97bcdcaab534c74d5ad53fd96d8ab518b8f4543daf",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-064.ts",
+      "sha256": "bbb261d25d0f034170b36b98a4754114e734e6ef04a02b27201ed09cf2f89ccc",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-065.ts",
+      "sha256": "0b7bef6e92587d9d35a6626644c487b0c8191c95e25c45d172d399ed937c3569",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-066.ts",
+      "sha256": "9f40271ba470d2e6ae3b3c9b865ae9e315fd4ebe2f03e41e5a98d6c5a6495fe6",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-067.ts",
+      "sha256": "2eeea584e423f4dbd71a4aac32b256f529b2fbd7906ce69e3e1367720cd3b4c7",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-068.ts",
+      "sha256": "a4a082d56313700368195c9c84a654d6a6739c709c05428cf993582e9a387708",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-069.ts",
+      "sha256": "fc6415e6a0d753afc93a2acbaea355763aefbb4508a6224d33d9a34f0d4d2226",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-070.ts",
+      "sha256": "3e1eeff8a7873feb4fb653f65761883f6005edf45e65f07448742e833caebef8",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-071.ts",
+      "sha256": "aac406da703be5a4863704ff83798a1b9a8e1d3056c6a8f4ecc36702b5758428",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-072.ts",
+      "sha256": "50b8ab4d73f4d872615ef9d11e676dd7d17a55370fe48e543ac1e228300b8f95",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-073.ts",
+      "sha256": "f5185d1ce99eee654edea6a2e6e303ebc85e416db77a6eec48c160d1ecdeced6",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-074.ts",
+      "sha256": "98346e125a3758d94dc919d6be8b86f67d0a474f18b5b5bb906ce2397449fdc9",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-075.ts",
+      "sha256": "45fe428690ea76be30d03bdaf6d99902a36a0ad53448b6e08f24486863d61935",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-076.ts",
+      "sha256": "42218d23303b72c2c88ab9d237134ce7d487bdd045c6ba33820229359e4efe98",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-077.ts",
+      "sha256": "fc154dba710c2ae7edf148233e1c45b9a9f3dae81cfab1e0afb8bbe80261a96b",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-078.ts",
+      "sha256": "90645eedebfb9d72dadcac248320ef810030d01b19acd31818f6c8394472fe3b",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-079.ts",
+      "sha256": "3c9120c967242cfd5a123087e081c8921aa015bc34ce3a1f9a99a81dd08b11d4",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-080.ts",
+      "sha256": "a8d0bb4c0b1034c48eb75beee1eece3dd74db68e8f3352db5b64a6fd0dfe12e9",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-081.ts",
+      "sha256": "8b75944158c5098e1cc90b2fabfe38e4342dde98d3f494321d71197b2d7b3d23",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-082.ts",
+      "sha256": "3cc7dbe0096fb9cf7788a654e2905767b73201662a7a5ebd8d574523d705b90e",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-083.ts",
+      "sha256": "940dfd5d4f35f14c3bfd03492036548aef3dc53cf6b58ddeb1f80ea59a63665d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-084.ts",
+      "sha256": "66cd34123e35e26225d96d6feec221167a6b2838db0474e9468552eceed3767e",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-085.ts",
+      "sha256": "e8c6068896bebb3b0df6a85402f9ec3819ccfa277a743e833a5c520b02a01cd5",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-086.ts",
+      "sha256": "b779318f1d59db6b850880cc84db1e3bdef7fa60d746f20a63607d1838237274",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-087.ts",
+      "sha256": "58b5eb7a00ff6377365c2c0547994699a8f98a62a8159c9f8894e3987730d079",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-088.ts",
+      "sha256": "83c324f10e8238c853e4b4299d891c13ccc569818ec3b8f0e18acb5b7ab20c9d",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-089.ts",
+      "sha256": "f0e268fd367ea62ace12e46e07d87478842dee9413297b9aabe872593290e4ca",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-090.ts",
+      "sha256": "40d07d1e67e7dc0b576e93f23bb5a8376265ae19aa6f47168226534b0d70ed1e",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-091.ts",
+      "sha256": "929564f72ae1c4837933b58a11a8be95fb5287540e0e148c25cc383bd2895190",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-092.ts",
+      "sha256": "2608a9c8ecd426983fc2f093bd338276235591348cf82c22dcbe1aa41cbfaa95",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-093.ts",
+      "sha256": "46ed53d8a1ee97ba351f2ddc5d1fc9e931c3fddfac1b598c11ac91130364a8d2",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-094.ts",
+      "sha256": "85ab7b0dacd1067d14c238e3bc1e87c57e2c2df4c1443a5b10f7a845816592a5",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-095.ts",
+      "sha256": "4946f697925bc2d344e8279102e74a5448a97e09a8003997d3d3d84cd4c8d9d9",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-096.ts",
+      "sha256": "9a25383fcfafbb705ed451478795e43719c003d3886f06046526ba56c0299017",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-097.ts",
+      "sha256": "7795b303f94270224f42089a69a5ef62b14b0f71b1406e36e177c71c17a5ea64",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-098.ts",
+      "sha256": "60541aa35f47fefd3fb641bc1020f47383dbce0eddbdff270c0ebf1edaee7f5c",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-099.ts",
+      "sha256": "9737c2b7af7ef96b8176bf5392510a9f7e40a7e8eb98a3687209788871b6ec86",
+      "bytes": 1242
+    },
+    {
+      "name": "src/file-100.ts",
+      "sha256": "b2bf725d07b4ac95db5667d1af3879a4341732e4c2eca1d13f6765e2083e81b9",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-101.ts",
+      "sha256": "def6d75b4e12609a37fd443ddafcff5ca9a6b4f69012333e6697a6fd9681f194",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-102.ts",
+      "sha256": "facb22d4780cec00360b020c40777dce9ffdfbbe6eb1f955d82f0ae91da577d4",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-103.ts",
+      "sha256": "53ba6839cf70b4f96f6fe114119c749082f9d99721e6d62093ffe67a89336937",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-104.ts",
+      "sha256": "f789bec30a5cda221e429e138d62441f5b27b51148206f9b682941c9a19b69d7",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-105.ts",
+      "sha256": "466b94bca51c0e2869d30b4a31c44d43f0bb4072dcdee48df3ba97d20c2d4c1d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-106.ts",
+      "sha256": "a20721b6b1397676271ec4289e8aa9331781595ba8682e57b41ca5433e052924",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-107.ts",
+      "sha256": "e7bf0e2ffbb38cd67a1ab95d78478c5279e2d857251a851d4f214ea8317a9be2",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-108.ts",
+      "sha256": "6fb46ddeecac6e0785b68c1191b6d3d9c907b9fbf2881b9f119fefd23b842459",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-109.ts",
+      "sha256": "2488ab136e35a0a3b8a889669438b432518eb0459b85b5375b9c0e28e8a31570",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-110.ts",
+      "sha256": "f3820f4c59f701d04e99555701fdaf2578d63b3077a8b75d934d51954a7e4853",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-111.ts",
+      "sha256": "21df4df39c8682efa215497582ee6256c1d7b49670a264b9e01f7109619780f0",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-112.ts",
+      "sha256": "34c832b4860de9e8871a44b1f1e93e73a928468b1f0a55d72805d135fab23067",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-113.ts",
+      "sha256": "f993bea6a47c68c672d9060b1f5b0a508f1a38e75258d4bfa60e9793a1f1b255",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-114.ts",
+      "sha256": "52c8df77cf415902abf76b84cbc81fba80666647738c72a24a247570574fd3b1",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-115.ts",
+      "sha256": "b71acb7afcc39a3801e8f09e0b89928e24608323f92cc709b1d80680f5bc15d6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-116.ts",
+      "sha256": "bca985259c62509af78dcd49cff7f0b0c0e85d6d5b28e33b3d3e882ef880c551",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-117.ts",
+      "sha256": "4d848dd2501354270ff3f54d2ce8b41399dc812760d52a3b6ec2676a04e21e3f",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-118.ts",
+      "sha256": "9049f547b029626fc9c01f44cb810867e0b4b62121bbe14036ef9f85e42ba3f6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-119.ts",
+      "sha256": "9706ef7bf90ad1a566b6bc2a8a59208fc5bb99a006df90d0622469111c9ac69c",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-120.ts",
+      "sha256": "4f8c6ad690a4a2ffe1b6831042c75395abd2d3df33904e2c431c0d51ac138867",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-121.ts",
+      "sha256": "88f84dd0d10dadbb33347c7bf40ff52e1a82a7af0fe46a935a458e95d251906d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-122.ts",
+      "sha256": "17ac428ae4c028f3e5b5aa7d39627003daaaff7c4fe0a01a0cc9e4a47968141f",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-123.ts",
+      "sha256": "63e4f7fcf42c75cbd17d0ccef0b7e158dac4970565a0f7d3a2cc147cc69b0651",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-124.ts",
+      "sha256": "23ba7754c3ee1419bc4f3b337eaa8316f7b591239c234ac9f7188e0813a9769f",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-125.ts",
+      "sha256": "f958891608b0bcc2afede8951fd4e57562906685dc305ae3c53f5451f0dd08e7",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-126.ts",
+      "sha256": "42509193f303bf3c3d624e90f3842fb7681f8bfd5731e1bd76db416a6f0eb738",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-127.ts",
+      "sha256": "63166fb6c5c47e8ee095ebb8719f479a5fd1fd539ff01d23a83b9fac573281fd",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-128.ts",
+      "sha256": "3c3124c2944b1681a7754e07fc289c1f3c37efde9cd57fcb5e920c8b2424087e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-129.ts",
+      "sha256": "70f7f19de0d6273f4fae0f2fdedcbc3e523449857a586da308f94d98fdf0dde4",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-130.ts",
+      "sha256": "1a57a2281f5c5694664a6509b489bf87c8e090c1e1d6e271398a2ae1017d7de2",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-131.ts",
+      "sha256": "d87bcf7686f84b1668c434383821966c5cc452aaf5451e4c04c8d564a528f45c",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-132.ts",
+      "sha256": "2d7080488f86205ccace8c67b8cc366f66b72e0b554def347f1ae7cfa1cf83c8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-133.ts",
+      "sha256": "77ed8c5cc49b50a6598967586058158a17703b8b0bdf174e5825cded4704828e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-134.ts",
+      "sha256": "4fa423fdb418fc31b6eb556e8ec130642c70d5910edbc2f7a0f328bc9fbf51b6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-135.ts",
+      "sha256": "729f705afb4e90ef4b968869a0210728f3d1a29d10d641d5da1661badea009b7",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-136.ts",
+      "sha256": "85ac7181e4f930e6f91197181ec4c82bce4fc751b5cdbc9a53301481c3a9211e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-137.ts",
+      "sha256": "6d53d0492a508da3b2d2d5a527332ede63ffbeb303afa3930a9235953eb310bd",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-138.ts",
+      "sha256": "df907b33bd5a558a1b2a81ea0ece0482bf1bd115079126ad0843c8e5ea560635",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-139.ts",
+      "sha256": "873e34a7ec0a1ebdb246e7dbf638eaebf2ea274fb8bc82eb6659f73ad047bd66",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-140.ts",
+      "sha256": "400a7202dfb41b230d9b4097ec5f29b3a75e95055c6182c3111275dcc0e33fd1",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-141.ts",
+      "sha256": "eaa8f7a524db6bdcaadc472b545688867f16ada56567cbf1133c71e28310a829",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-142.ts",
+      "sha256": "24f4a1fed92c54a0f155e10d2c0d40d5636cb9286b3d4fb97e7d52298ebc1f94",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-143.ts",
+      "sha256": "5826e860f9f9d89e93dfcd648843aa6cec1c53a031ca4990676031e8914f96af",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-144.ts",
+      "sha256": "3341155ebfec28ca69feaecc7d6a84a34eb5ce2f6ac259da6371a1ab2cec9a88",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-145.ts",
+      "sha256": "580c61abe91e984f696f7dfa6bdfd3f59cc602272701335a1edeb48034672f3d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-146.ts",
+      "sha256": "d415b09a01d8b1552fbe66eb65345b476c8fd96cc2e90794731b86d660d69caa",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-147.ts",
+      "sha256": "ad1a2d984afd1bb50fdc3325e1e61b26891a87ae8cf25033c0b9798314f9ecfb",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-148.ts",
+      "sha256": "555dbbe78f3bf9d3a3a9a5922d543d7741db535801a737b2aed35085d389f019",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-149.ts",
+      "sha256": "540aa7e7bf4287a0b35ca2d24fac15a1ccf46bfe2dc9306001ec4e9a565b070d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-150.ts",
+      "sha256": "d75c231876b921a6408fcd52d2074ed037f1eac26bf83c4fe2e7cbafcb5065e3",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-151.ts",
+      "sha256": "e1e0df7ccb90cf0f0190fe90c71b4d4e49dc6aee8664b5d800cf7b24ef5b3258",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-152.ts",
+      "sha256": "9f1b971c52ae3591a9b089c2822a9512c3d3a8b5132c01ef6d4939407bd49405",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-153.ts",
+      "sha256": "98a0d09cf547186c2b344457b7c71f9a0830f207b0ddfd2c6183365270abd0a8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-154.ts",
+      "sha256": "3ab8be71727cefc5af8c15442376a9900ac75d9aa0f4781d45b8d57319bd2863",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-155.ts",
+      "sha256": "09bd61efe61ea14fd48fdf7af08af6d660d8c38969f4a8ecc5b2938fd5d6ac91",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-156.ts",
+      "sha256": "57a0b96fd4f07166d24543fd4d8d801e0a38a0cd49e1d6063855efd634a6577f",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-157.ts",
+      "sha256": "7dd521ad4221ecd0c7eeb2af506aecabae0275a217576b3f8ab72038bafa0631",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-158.ts",
+      "sha256": "e00139df8f6a218f1557ac7a4882cb7ded985951c3384a94c9f45951e601ad26",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-159.ts",
+      "sha256": "8643292fd632cd13cff8d6776acaaf513baf2c1f1297aeef1ea12da8c14cb2a7",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-160.ts",
+      "sha256": "9996646766df02713bf3fee941889519ea994d0115db8e959f4d5870914c338d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-161.ts",
+      "sha256": "acd62382f2c8127c8a19b12b5688f3aab7ef5f2ad1518f3838be47e5ff0e5083",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-162.ts",
+      "sha256": "4973cd04bc620fe4d8e80065803079d05f06690af2c7a6341e720dd7ced49868",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-163.ts",
+      "sha256": "6a3cfa36c0035697e1669eb84a6b9cbfdeb8cb5326f6d1c15131cbca1dfba69b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-164.ts",
+      "sha256": "fed6f1d819c2331185122e136be41b4236e097c2c1afbacd72c74b45bcfed9db",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-165.ts",
+      "sha256": "0a6cc2029b16796997c5ddb11977f172d164fd9af7f6b2bfc6c87c0a78ddd1cf",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-166.ts",
+      "sha256": "8b11d0ea0fc9032122ecea322886e8be21bed907d9ea14e49e1697c26de83027",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-167.ts",
+      "sha256": "9ee48f39568df21bc4214d82c37202a9ba94ded0bef4b5753d0ad844519b6c54",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-168.ts",
+      "sha256": "d3b047ca4fad9002703fa28a7586fd1973092f70827aaeaa732428a16bd9f4cb",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-169.ts",
+      "sha256": "72a8b6e3325376e9e1b2dc5ebe6faec6570c6abb66dfc804a794e783a5c312b3",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-170.ts",
+      "sha256": "470159d9265f59cb2e4c706acdc9557c963a8b457cb0666fd74bb9a6b0ce89e3",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-171.ts",
+      "sha256": "f9d2b502f37f289874b79836ca23c02ea97b5cdb79d107183c7939195c995976",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-172.ts",
+      "sha256": "aefe99c332302ebcb94e4cd2dbc537b9aff6887f258144427f707e497b34eee0",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-173.ts",
+      "sha256": "d11e52cf65310700226349001a1f4aa94b123866c6b2e30a9188ea9e23a987b4",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-174.ts",
+      "sha256": "5f4bf213b21e383870b724318aab5e0e36c5094e1d8d7d1459ee52aac611f467",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-175.ts",
+      "sha256": "8aa6a40bf224b4d2ee8f70e367d358546e89899398863a4176dea389a25fe871",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-176.ts",
+      "sha256": "49a588c1ba361e080c3690b8d8a8f022ce10b4a8c09ff9ad22d34c9d2aa86643",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-177.ts",
+      "sha256": "ed3eff12a866fdffecd32356ff1d997c79f334015e135b4d3d0f1ded29f5b9f8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-178.ts",
+      "sha256": "0c2f6972ed291e981a1be5d884c63b39b147195c0db265b63207b6bb73b2c3ad",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-179.ts",
+      "sha256": "291cdc1c40026014341df70d302ebb0ccdfcd46054e9d1dd67378c79ac219feb",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-180.ts",
+      "sha256": "f1fc28c14e2b9f239fd868ecdac2433d006fb4a17d0f660a0ce74e37cc47bfd1",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-181.ts",
+      "sha256": "708104812c54b3796e8baa8f58c3266636e649844723a08ee7aa61cd04674c0b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-182.ts",
+      "sha256": "9e749a8a20571d9b8ca7ca2c88cdecc2d880ab197eeda10a742616c357165779",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-183.ts",
+      "sha256": "63a01140db60cda32478ad786c2f532c91fbb6345c835ddf088410cebd6d0af6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-184.ts",
+      "sha256": "b9e1175c9a6291d1d843f3605705e32dec76d8b0e8ffd25966024a34961ffb4d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-185.ts",
+      "sha256": "381c448d7db30bdcd7291f4eadfca971f446ca9ca89bcc79ec3cfbe7271ef11e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-186.ts",
+      "sha256": "52d52477bbf0eb32fa63a785d683b4b4151b8c5d57c76830e68e679f851d09c8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-187.ts",
+      "sha256": "0c6243688355cf0a765da73ffaae771d043f0bd21431dc366f3318550d205b26",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-188.ts",
+      "sha256": "e81c105964a89f38274451fe8949074b536f92693dee3e5c61ab7ed00c25a42b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-189.ts",
+      "sha256": "6e04836252db9a8eca877454fd8573b599f68f61a5a0824e1a89dcd2965dd69e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-190.ts",
+      "sha256": "8936b8cd7cb4c9c146bd7ddf0b16714f32e9841eda4cfc3da933154e262ac021",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-191.ts",
+      "sha256": "8b5319b9b7e44f36c0fa7f114995accb7b2085470e83a745eac6272fa2870256",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-192.ts",
+      "sha256": "67eaca57f2685fa114338cd9706c96999482347d68dd3955d47c6542431b56cf",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-193.ts",
+      "sha256": "43d0932b43cda648163ddd3780939de369a440f8e97384afa7f39a2c4bf32be6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-194.ts",
+      "sha256": "4ab460d1817951e3f9dd577e0a62085651bb646238d8656c03734e77744aa39c",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-195.ts",
+      "sha256": "f8fe5f45a7cc9268f84433f40c877feb378ab3af8b096f9ef52156a5f4080515",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-196.ts",
+      "sha256": "843adb0cb1856a6d5d275ddf7b2cf187e6845d5ce54b7ae3a288392670df4e71",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-197.ts",
+      "sha256": "eebd16137a0f21c01685d70a6a64d935cc69660e66859e0eafd190ec21cd2132",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-198.ts",
+      "sha256": "6cc513bdfee6d8d3097fcb05fc5e4cc72134b5ab75f6f6aebe9045ee5268a096",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-199.ts",
+      "sha256": "c9dc69aebda603a2c0a2cfc39de04ad4091ed175950d42cb57a7afa7d5c032be",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-200.ts",
+      "sha256": "c00d03769f9fa0cfc5e21f62b55dae1da6fa6462e9a66b2dec6704760964e36a",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-201.ts",
+      "sha256": "952125011d4478fef5bf23b90e305cb54e00571709101b3e76ccf2db6b95d7f5",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-202.ts",
+      "sha256": "54914c1b26fd27617b984264df0511688ca2624d62e713549157e718269dd4d9",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-203.ts",
+      "sha256": "a6bc0964f3a1a8e69b12e8c102873ecb21a764f6b31314822a1461f274d2dec7",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-204.ts",
+      "sha256": "e6499b0637d6dea0b53daaa7f085be3d4a3d28cb541853557277e64bf81451c5",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-205.ts",
+      "sha256": "409b8548f1806cd6e40d74bfdde8352d4336bfd023547eb1dee3544f4edcbebc",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-206.ts",
+      "sha256": "2509bffac2fd8260ad66056b76f1000b42e5c1ae01a69a29e95d1dbe740182c8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-207.ts",
+      "sha256": "14fd131dbad845a1aa6b3d12b0bce91732e21619ed3822b6d107af33205f535b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-208.ts",
+      "sha256": "b7cc9cfbcf4bfca64fa401e416bb5bdd3fc22d9e675ae0254127240e2da9a700",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-209.ts",
+      "sha256": "b07538657bed9011e4753283c9d409a3085914ecaf8c665bd284f1cfd291668b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-210.ts",
+      "sha256": "5b8340b17ff081fd33e99849715a63f23a30137d2119ebc345b133c97c3016ac",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-211.ts",
+      "sha256": "a6f79c947168fa694b03808ee960c1cbe18552285d40482b96c26e635cd88e8d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-212.ts",
+      "sha256": "c36870a73fd1a8f3504f434b64cdae76d7f9f820d0295d9a9c5c60ecaeff332e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-213.ts",
+      "sha256": "e50a3bba8a96e0a5439220973983da93ba335089ed3810cd7de4a62396916893",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-214.ts",
+      "sha256": "42c85ec361f41841df0bd93080a30598a02118bfad048c03e21c30350ba9ad55",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-215.ts",
+      "sha256": "c1dcfaac2da4feee2b2690af6a1eec550dc837125f9380bac319589af3c7f338",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-216.ts",
+      "sha256": "b3ddbec55d175545750e4b63edc67814e85b113d317d74c4e555db7880cff2a8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-217.ts",
+      "sha256": "9f3f06fa95ecc287b1fedfbebc1a44ab131fe60e5c448c5895e37048b71b5272",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-218.ts",
+      "sha256": "28359c9c58ba726849e85138a36b009fd09fbf02e9eb52273859ba1df90c4075",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-219.ts",
+      "sha256": "04fc15296748eccfdf00d5f754b384d054900109a100882e8590b82ca6081e0c",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-220.ts",
+      "sha256": "d7d6a0b51f6fa1e09f4842da7eb85b4d9e6d5294e9e9083ab5968a4c0051e5f0",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-221.ts",
+      "sha256": "1f08114b176d4209b6f7c34840bb8f633551b4d37447b4e1663335e6363c51f6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-222.ts",
+      "sha256": "dbe3434777ec6d9048f89582cc6afd18073da9b179aba4f062c17deb3be3113e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-223.ts",
+      "sha256": "c0a96fe33718058ad23b289b2cd4c7df5b4679c39cba7c412677d8101bd3102d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-224.ts",
+      "sha256": "f5f21d27e8018e903c6d006b044ce20075b3a8a940da26b5033a35a2fbf864f2",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-225.ts",
+      "sha256": "28f40f51761de352c931e5d4f2291847d159b7f4bca4f328cc4ca4273387892c",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-226.ts",
+      "sha256": "c5919d9bc878127a80606874b56b43eaaffe3806beedb76f41cc145b9d1b4bbd",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-227.ts",
+      "sha256": "401ee8dc2e33e9adbb13ff0fa70054692fd367544c0a447d03e1e3073d315622",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-228.ts",
+      "sha256": "c0f03537c0e2258b3bfb2f26a5ddd7fa38f711b0f1f3d19d807d64c8b84b58ce",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-229.ts",
+      "sha256": "5d8e8ad44a97547255ec102e5518aedd43ef1c7471af25b23a59572365bb4896",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-230.ts",
+      "sha256": "2620a9eca3b25babc7033f0e524b1b5bb0fe86a478df38f72333de987b1de82d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-231.ts",
+      "sha256": "7e936ed27d6ab62c9be743e34724d3a8973579a85dcfc534488c34bdef78a451",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-232.ts",
+      "sha256": "0c3406458883e182a5e7e9b304a2117cb473895264d15539a9d5c97c16bd857a",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-233.ts",
+      "sha256": "ddbb123f937d51e6cc480737dfc1368993a036bf6d3be2696eb63e445efbbd87",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-234.ts",
+      "sha256": "21a1b8ed79afc7cd6a88ce81357264b0f3fca8e45623a789db6036a08d147e0b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-235.ts",
+      "sha256": "ede15a6d4b98a696759f93a87ec1a1305dca4a15711c158f46d5ade5d552c97d",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-236.ts",
+      "sha256": "c76a520b5f7f695e1bffba42e7580ba165482b3278bbdc6d1f27e79469930ec1",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-237.ts",
+      "sha256": "6f979cdc77eeeec43ebe21fb0208edcf0b758bafc08e334ea16856a1a780c2bf",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-238.ts",
+      "sha256": "8693e0ffe9e12a04d0cf55104ad4b31647e5098618aef1c148f84fa151f1b95e",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-239.ts",
+      "sha256": "14bc07e5c0e29debd24dab3bbcae5b91700c45aa46c5b92c853c2b9d54d42ae8",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-240.ts",
+      "sha256": "aeb1aaef31c02a5850073e3a543254fe8c0560daf2696751e8609abf97ba7e92",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-241.ts",
+      "sha256": "6700f4119f202a791a17894d9ceee92236d974473ed4925ec3fba9050bc51714",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-242.ts",
+      "sha256": "9b0dff0af1e2caceaec1cccae1874973e8f82e821c8194d5328efbfc7b9d90a6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-243.ts",
+      "sha256": "18ce5b0668913980976eee96ae155e8840b4c6a03c24da44081733626fc7c8fa",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-244.ts",
+      "sha256": "84f00999da0ef1172bf07b4c16292ab25cdbd84305854a67c98256ed3b4d36e1",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-245.ts",
+      "sha256": "a66c99a1a2c830e07a3a8baba4fbe5d16734aa8427b016343f43db10d79a35eb",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-246.ts",
+      "sha256": "06b853da8f16074c2700a5dd4cb8bb030e29b22f398273d1b25eca1678c97aad",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-247.ts",
+      "sha256": "8cea87f0e38c6ded6ccfbc0fdbe502722fa4b007b84502d2ab69af3880113173",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-248.ts",
+      "sha256": "c0888e9cfcd8ff7af79dcd76eb2622a88a025c58edf0b9c874edeed2d1c838d4",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-249.ts",
+      "sha256": "b03f82843529a7ee37bb0e716bf250632d4c1a2adf9b4ba19f83b31c2168a6e6",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-250.ts",
+      "sha256": "d352cd41ead300828fdc31cb0da3fedfe4ad8555eb0f1fbf96d3d88a2c7afe1b",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-251.ts",
+      "sha256": "f7dd0bb5c8b323a365dbd8685949d11b8c8ba57f132ae41d5ee1ce65196dcee7",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-252.ts",
+      "sha256": "1a2bd1f788bf4d487dc550e77b0c49044f07fc8a882fbcc4388b706b92288552",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-253.ts",
+      "sha256": "193d93f7b7bfa7a28da87d249d382fd8577a6574efa46cda0152ce285e092a1a",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-254.ts",
+      "sha256": "c7d959864ffcebb8c9c988db60b0defa28fb25d005e8b7e8758cd25e6b3a1dd5",
+      "bytes": 1283
+    },
+    {
+      "name": "src/file-255.ts",
+      "sha256": "adee495317ed8130a308723f9468fbc9a32239898508174c4b0a6e69c5d0d3e1",
+      "bytes": 1283
+    }
+  ],
+  "commits": [
+    "d00dddbac3cda12330461a41ec3efddc2fcad6ed",
+    "f5157241c81a0d80b03ab3f9718bfb1cc66ae7c1",
+    "a63ed8171524840e3dac86ff7c9dbd2b7037165a",
+    "afc6626df5d76996f4623ffc8369a1a3b0d26007"
+  ],
+  "github": {
+    "repo": "vasanthsreeram/cf-native-forge-benchmark-20261002-v1",
+    "url": "https://github.com/vasanthsreeram/cf-native-forge-benchmark-20261002-v1.git",
+    "isPrivate": true
+  },
+  "cloudflare": {
+    "measured": false,
+    "blocker": "Artifacts API 401; Paid entitlement unverifiable (subscriptions 403)"
+  },
+  "measurements": [
+    {
+      "backend": "fixture",
+      "repetition": 0,
+      "operation": "baseline-commit",
+      "wallMs": 20.36516699999993,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6340608,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "fixture",
+      "repetition": 0,
+      "operation": "edit-commit",
+      "wallMs": 14.290417000000161,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6389760,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "fixture",
+      "repetition": 0,
+      "operation": "edit-commit",
+      "wallMs": 15.138500000000022,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6389760,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "fixture",
+      "repetition": 0,
+      "operation": "edit-commit",
+      "wallMs": 14.558708999999908,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6389760,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "seed-baseline",
+      "wallMs": 1730.9813749999994,
+      "userSeconds": 0.12,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35258368,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "cold-client-clone",
+      "wallMs": 1215.1343339999994,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.09,
+      "maxRssBytes": 35045376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "second-client-clone",
+      "wallMs": 1153.2419580000005,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.09,
+      "maxRssBytes": 35045376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-add",
+      "wallMs": 12.993500000000495,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-commit",
+      "wallMs": 14.765415999998368,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6373376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-push",
+      "wallMs": 1528.0901670000003,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35373056,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "warm-fetch",
+      "wallMs": 1145.2800830000015,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35258368,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "checkout",
+      "wallMs": 19.662250000001222,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6029312,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-add",
+      "wallMs": 11.731999999999971,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4882432,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-commit",
+      "wallMs": 15.533041999999114,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6422528,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-push",
+      "wallMs": 1645.8631249999999,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35340288,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "warm-fetch",
+      "wallMs": 1201.3731669999997,
+      "userSeconds": 0.11,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35209216,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "checkout",
+      "wallMs": 18.5212500000016,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-add",
+      "wallMs": 10.329916999999114,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4882432,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-commit",
+      "wallMs": 14.49212500000067,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6422528,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "edit-push",
+      "wallMs": 1535.875250000001,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35127296,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "warm-fetch",
+      "wallMs": 1124.4745409999996,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35880960,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "checkout",
+      "wallMs": 18.480999999999767,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "task-clone",
+      "wallMs": 1098.4041670000006,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.09,
+      "maxRssBytes": 35127296,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "task-clone",
+      "wallMs": 1105.7538329999988,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35438592,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "task-branch-push",
+      "wallMs": 1676.8687500000015,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35471360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "task-branch-push",
+      "wallMs": 1855.214333,
+      "userSeconds": 0.07,
+      "systemSeconds": 0.04,
+      "maxRssBytes": 35717120,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 1665.5801659999997,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.04,
+      "maxRssBytes": 35848192,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 1,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 1758.906458999998,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.06,
+      "maxRssBytes": 34734080,
+      "exitCode": 1,
+      "timeout": false,
+      "error": "Command failed (output withheld to avoid credential-bearing diagnostics)"
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "seed-baseline",
+      "wallMs": 67.0044999999991,
+      "userSeconds": 0.05,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 5931008,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "cold-client-clone",
+      "wallMs": 40.96466700000019,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 6684672,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "second-client-clone",
+      "wallMs": 39.548375000002125,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 6782976,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-add",
+      "wallMs": 9.973375000001397,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-commit",
+      "wallMs": 14.58991700000115,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6373376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-push",
+      "wallMs": 30.682749999999942,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5865472,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "warm-fetch",
+      "wallMs": 26.43212499999936,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6225920,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "checkout",
+      "wallMs": 12.072582999997394,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6029312,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-add",
+      "wallMs": 11.139374999998836,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-commit",
+      "wallMs": 14.369208000000071,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6406144,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-push",
+      "wallMs": 30.585707999998704,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6127616,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "warm-fetch",
+      "wallMs": 26.619958999999653,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5783552,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "checkout",
+      "wallMs": 11.89470799999981,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-add",
+      "wallMs": 11.191458000001148,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-commit",
+      "wallMs": 14.407459000001836,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6406144,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "edit-push",
+      "wallMs": 31.016208999997616,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5816320,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "warm-fetch",
+      "wallMs": 27.155417000001762,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6569984,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "checkout",
+      "wallMs": 11.89191700000083,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "task-clone",
+      "wallMs": 47.58179200000086,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 6897664,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "task-clone",
+      "wallMs": 48.92329200000313,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 6782976,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "task-branch-push",
+      "wallMs": 32.074791999999434,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5914624,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "task-branch-push",
+      "wallMs": 32.45612500000061,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5750784,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 29.216416000002937,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5668864,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 1,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 30.412457999998878,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5570560,
+      "exitCode": 1,
+      "timeout": false,
+      "error": "Command failed (output withheld to avoid credential-bearing diagnostics)"
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "seed-baseline",
+      "wallMs": 44.12779199999932,
+      "userSeconds": 0.04,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 5865472,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "cold-client-clone",
+      "wallMs": 39.40937499999927,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 6979584,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "second-client-clone",
+      "wallMs": 39.29833299999882,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 6848512,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-add",
+      "wallMs": 10.211833999997907,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-commit",
+      "wallMs": 14.322500000002037,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6373376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-push",
+      "wallMs": 30.69445899999846,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6176768,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "warm-fetch",
+      "wallMs": 26.58870900000329,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6242304,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "checkout",
+      "wallMs": 11.716667000000598,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6029312,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-add",
+      "wallMs": 10.991082999997161,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-commit",
+      "wallMs": 14.471125000000029,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6406144,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-push",
+      "wallMs": 30.616417000001093,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5914624,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "warm-fetch",
+      "wallMs": 26.98675000000003,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6537216,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "checkout",
+      "wallMs": 12.007999999997992,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-add",
+      "wallMs": 8.251208000001498,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4882432,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-commit",
+      "wallMs": 13.13354099999924,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6422528,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "edit-push",
+      "wallMs": 30.40141600000061,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6225920,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "warm-fetch",
+      "wallMs": 27.149916000002122,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6242304,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "checkout",
+      "wallMs": 9.164749999999913,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "task-clone",
+      "wallMs": 46.279624999999214,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 6799360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "task-clone",
+      "wallMs": 47.48800000000119,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 6799360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "task-branch-push",
+      "wallMs": 31.83062499999869,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5931008,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "task-branch-push",
+      "wallMs": 32.2589169999992,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6012928,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 28.81145800000013,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5799936,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 2,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 32.56004100000064,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5783552,
+      "exitCode": 1,
+      "timeout": false,
+      "error": "Command failed (output withheld to avoid credential-bearing diagnostics)"
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "seed-baseline",
+      "wallMs": 1716.6471249999995,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35012608,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "cold-client-clone",
+      "wallMs": 1198.612874999999,
+      "userSeconds": 0.11,
+      "systemSeconds": 0.1,
+      "maxRssBytes": 35553280,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "second-client-clone",
+      "wallMs": 1544.6550830000015,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.09,
+      "maxRssBytes": 35373056,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-add",
+      "wallMs": 12.343791999999667,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4849664,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-commit",
+      "wallMs": 12.645750000003318,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6242304,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-push",
+      "wallMs": 1691.423791000001,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35225600,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "warm-fetch",
+      "wallMs": 863.5739580000009,
+      "userSeconds": 0.07,
+      "systemSeconds": 0.04,
+      "maxRssBytes": 35684352,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "checkout",
+      "wallMs": 19.698790999995254,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5980160,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-add",
+      "wallMs": 10.191457999993872,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4751360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-commit",
+      "wallMs": 13.652499999996508,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6176768,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-push",
+      "wallMs": 1616.9925829999993,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35717120,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "warm-fetch",
+      "wallMs": 999.1949999999997,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35028992,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "checkout",
+      "wallMs": 18.47833299999911,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5980160,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-add",
+      "wallMs": 10.323709000003873,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4751360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-commit",
+      "wallMs": 13.545791999997164,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6193152,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "edit-push",
+      "wallMs": 1496.1437920000026,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 34717696,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "warm-fetch",
+      "wallMs": 886.8219590000008,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35962880,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "checkout",
+      "wallMs": 19.03429199999664,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6012928,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "task-clone",
+      "wallMs": 1130.9550830000007,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.09,
+      "maxRssBytes": 34832384,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "task-clone",
+      "wallMs": 1151.687374999994,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.06,
+      "maxRssBytes": 35192832,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "task-branch-push",
+      "wallMs": 1553.3388750000013,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.04,
+      "maxRssBytes": 35225600,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "task-branch-push",
+      "wallMs": 1730.8170000000027,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35422208,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 1473.8147499999977,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35209216,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 2,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 1553.285708000003,
+      "userSeconds": 0.06,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 34979840,
+      "exitCode": 1,
+      "timeout": false,
+      "error": "Command failed (output withheld to avoid credential-bearing diagnostics)"
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "seed-baseline",
+      "wallMs": 1537.765582999993,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.06,
+      "maxRssBytes": 35504128,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "cold-client-clone",
+      "wallMs": 1182.646166999999,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.1,
+      "maxRssBytes": 35045376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "second-client-clone",
+      "wallMs": 1097.7841659999976,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.09,
+      "maxRssBytes": 35028992,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-add",
+      "wallMs": 11.8059160000048,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4849664,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-commit",
+      "wallMs": 13.08154099999956,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6160384,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-push",
+      "wallMs": 1513.4799579999963,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 34930688,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "warm-fetch",
+      "wallMs": 876.156167000001,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 35176448,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "checkout",
+      "wallMs": 22.4754580000008,
+      "userSeconds": 0,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5980160,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-add",
+      "wallMs": 10.440875000000233,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4751360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-commit",
+      "wallMs": 13.72229199999856,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6176768,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-push",
+      "wallMs": 1602.9117079999996,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 34766848,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "warm-fetch",
+      "wallMs": 884.1065000000017,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35078144,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "checkout",
+      "wallMs": 16.278792000004614,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5980160,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-add",
+      "wallMs": 9.76954200000182,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4751360,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-commit",
+      "wallMs": 12.970416999996814,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6193152,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "edit-push",
+      "wallMs": 1504.374042000003,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 34979840,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "warm-fetch",
+      "wallMs": 906.5699590000004,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.06,
+      "maxRssBytes": 35602432,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "checkout",
+      "wallMs": 18.27362500000163,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6012928,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "task-clone",
+      "wallMs": 1116.9865409999984,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.08,
+      "maxRssBytes": 35864576,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "task-clone",
+      "wallMs": 1189.4985000000015,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.07,
+      "maxRssBytes": 34930688,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "task-branch-push",
+      "wallMs": 1564.1958749999976,
+      "userSeconds": 0.07,
+      "systemSeconds": 0.04,
+      "maxRssBytes": 35405824,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "task-branch-push",
+      "wallMs": 1757.3273750000008,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 34783232,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 1442.7601250000007,
+      "userSeconds": 0.09,
+      "systemSeconds": 0.06,
+      "maxRssBytes": 35700736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "github",
+      "repetition": 3,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 1559.0275419999962,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.05,
+      "maxRssBytes": 35782656,
+      "exitCode": 1,
+      "timeout": false,
+      "error": "Command failed (output withheld to avoid credential-bearing diagnostics)"
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "seed-baseline",
+      "wallMs": 78.26658399999724,
+      "userSeconds": 0.06,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 5963776,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "cold-client-clone",
+      "wallMs": 42.902915999999095,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 6471680,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "second-client-clone",
+      "wallMs": 39.937582999998995,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.02,
+      "maxRssBytes": 6881280,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-add",
+      "wallMs": 10.412834000002476,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-commit",
+      "wallMs": 14.788625000001048,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6373376,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-push",
+      "wallMs": 30.56145799999649,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6176768,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "warm-fetch",
+      "wallMs": 26.89679199999955,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6258688,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "checkout",
+      "wallMs": 11.993165999992925,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6029312,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-add",
+      "wallMs": 11.165000000000873,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-commit",
+      "wallMs": 14.726624999995693,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6406144,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-push",
+      "wallMs": 30.39916699999594,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6176768,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "warm-fetch",
+      "wallMs": 26.917999999997846,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6389760,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "checkout",
+      "wallMs": 11.89141699999891,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-add",
+      "wallMs": 11.16008399999555,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 4980736,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-commit",
+      "wallMs": 14.394209000005503,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 6406144,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "edit-push",
+      "wallMs": 30.71637500000361,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5980160,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "warm-fetch",
+      "wallMs": 27.30333399999654,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 6537216,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "checkout",
+      "wallMs": 11.934166999999434,
+      "userSeconds": 0,
+      "systemSeconds": 0,
+      "maxRssBytes": 5996544,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "task-clone",
+      "wallMs": 47.80395799999678,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 6684672,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "task-clone",
+      "wallMs": 48.40483300000051,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.03,
+      "maxRssBytes": 7061504,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "task-branch-push",
+      "wallMs": 32.01641699999891,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5701632,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "task-branch-push",
+      "wallMs": 31.73525000000518,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5816320,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 28.893167000001995,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5750784,
+      "exitCode": 0,
+      "timeout": false
+    },
+    {
+      "backend": "local",
+      "repetition": 3,
+      "operation": "canonical-compare-and-push",
+      "wallMs": 33.896999999997206,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.01,
+      "maxRssBytes": 5783552,
+      "exitCode": 1,
+      "timeout": false,
+      "error": "Command failed (output withheld to avoid credential-bearing diagnostics)"
+    }
+  ],
+  "completedAt": "2026-10-01T17:41:34.189Z",
+  "startedAt": null,
+  "timestampNote": "Completion timestamp captured; absolute start time not recorded in original v1 run. Individual wall times measured with monotonic clocks."
+}

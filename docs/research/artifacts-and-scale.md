@@ -1,5 +1,7 @@
 # Artifacts, Durable Objects, Workers, and extreme-load design
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](../implementation.md). Original scope/research is retained below.
+
 Primary sources accessed 2026-10-01 UTC. Facts describe published capabilities; recommendations describe an unimplemented design. No authenticated Artifacts operation or performance benchmark was run.
 
 ## 1. What Cloudflare already provides

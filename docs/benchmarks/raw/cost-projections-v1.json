@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "pricingAccessed": "2026-10-01 UTC",
+  "providerMeasured": false,
+  "kind": "unrounded storage-only linear allocation estimates from simulated local API counters",
+  "projections": [
+    {
+      "strategy": "whole",
+      "physicalBytes": 587281984,
+      "manifestBytes": 1130,
+      "simulatedClassA": 10,
+      "simulatedClassB": 10,
+      "storage30DayUsdUnrounded": 0.00880924671,
+      "operationUsdUnrounded": 0.0000486,
+      "workloadUsdUnrounded": 0.008857846709999999,
+      "usdPerAcceptedEditUnrounded": 0.0022144616774999997,
+      "acceptedEdits": 4,
+      "retentionDays": 30,
+      "providerMeasured": false
+    },
+    {
+      "strategy": "fixed-1MiB",
+      "physicalBytes": 455161408,
+      "manifestBytes": 51916,
+      "simulatedClassA": 568,
+      "simulatedClassB": 568,
+      "storage30DayUsdUnrounded": 0.006828199859999999,
+      "operationUsdUnrounded": 0.00276048,
+      "workloadUsdUnrounded": 0.00958867986,
+      "usdPerAcceptedEditUnrounded": 0.002397169965,
+      "acceptedEdits": 4,
+      "retentionDays": 30,
+      "providerMeasured": false
+    },
+    {
+      "strategy": "gear32-v1",
+      "physicalBytes": 359570455,
+      "manifestBytes": 32589,
+      "simulatedClassA": 357,
+      "simulatedClassB": 357,
+      "storage30DayUsdUnrounded": 0.005394045659999999,
+      "operationUsdUnrounded": 0.00173502,
+      "workloadUsdUnrounded": 0.0071290656599999995,
+      "usdPerAcceptedEditUnrounded": 0.0017822664149999999,
+      "acceptedEdits": 4,
+      "retentionDays": 30,
+      "providerMeasured": false
+    }
+  ],
+  "latencies": [
+    {
+      "backend": "local",
+      "operation": "cold-client-clone",
+      "n": 3,
+      "p50Ms": 40.923750000001746,
+      "p95Ms": 49.704499999999825
+    },
+    {
+      "backend": "local",
+      "operation": "edit-commit",
+      "n": 9,
+      "p50Ms": 14.29054200000246,
+      "p95Ms": 15.151792000004207
+    },
+    {
+      "backend": "local",
+      "operation": "edit-push",
+      "n": 9,
+      "p50Ms": 30.65875000000233,
+      "p95Ms": 30.883208000002924
+    },
+    {
+      "backend": "local",
+      "operation": "warm-fetch",
+      "n": 9,
+      "p50Ms": 26.929415999999037,
+      "p95Ms": 27.290667000001122
+    },
+    {
+      "backend": "local",
+      "operation": "checkout",
+      "n": 9,
+      "p50Ms": 11.837250000004133,
+      "p95Ms": 12.06537500000195
+    },
+    {
+      "backend": "local",
+      "operation": "task-clone",
+      "n": 6,
+      "p50Ms": 46.97077099999842,
+      "p95Ms": 48.342499999998836
+    },
+    {
+      "backend": "local",
+      "operation": "task-branch-push",
+      "n": 6,
+      "p50Ms": 31.361582999999882,
+      "p95Ms": 31.634084000001167
+    },
+    {
+      "backend": "local",
+      "operation": "canonical-compare-and-push",
+      "n": 3,
+      "p50Ms": 28.956958999999188,
+      "p95Ms": 29.07104099999924
+    },
+    {
+      "backend": "github",
+      "operation": "cold-client-clone",
+      "n": 3,
+      "p50Ms": 1216.1684170000008,
+      "p95Ms": 1233.9691250000033
+    },
+    {
+      "backend": "github",
+      "operation": "edit-commit",
+      "n": 9,
+      "p50Ms": 13.45062500000131,
+      "p95Ms": 13.954666999998153
+    },
+    {
+      "backend": "github",
+      "operation": "edit-push",
+      "n": 9,
+      "p50Ms": 1611.1462089999995,
+      "p95Ms": 1721.4416249999995
+    },
+    {
+      "backend": "github",
+      "operation": "warm-fetch",
+      "n": 9,
+      "p50Ms": 1161.564916000003,
+      "p95Ms": 1274.485084
+    },
+    {
+      "backend": "github",
+      "operation": "checkout",
+      "n": 9,
+      "p50Ms": 17.47599999999875,
+      "p95Ms": 22.216458000002604
+    },
+    {
+      "backend": "github",
+      "operation": "task-clone",
+      "n": 6,
+      "p50Ms": 1123.8130625000013,
+      "p95Ms": 1212.9623329999959
+    },
+    {
+      "backend": "github",
+      "operation": "task-branch-push",
+      "n": 6,
+      "p50Ms": 1713.554771,
+      "p95Ms": 1817.4475420000017
+    },
+    {
+      "backend": "github",
+      "operation": "canonical-compare-and-push",
+      "n": 3,
+      "p50Ms": 1555.4093749999956,
+      "p95Ms": 1570.6470000000008
+    }
+  ]
+}

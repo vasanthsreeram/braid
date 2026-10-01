@@ -1,5 +1,7 @@
 # Proposed architecture
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](implementation.md). Original scope/research is retained below.
+
 Design only. See [Artifacts research](research/artifacts-and-scale.md), [feature research](research/collaboration-discovery-import-auth.md), and [CI research](research/ci-and-deferred-agents.md) for evidence and limitations.
 
 ## Boundaries

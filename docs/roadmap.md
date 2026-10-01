@@ -1,5 +1,7 @@
 # Roadmap and open decisions
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](implementation.md). Original scope/research is retained below.
+
 Proposal only. No coding or infrastructure work is authorized by this preparation request.
 
 ## Stage 0: current preparation

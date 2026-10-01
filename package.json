@@ -1,0 +1,35 @@
+{
+  "name": "cf-native-forge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.15"
+  },
+  "scripts": {
+    "dev": "tsx scripts/local-server.ts",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "bench": "tsx scripts/benchmark.ts",
+    "bench:lfs": "tsx scripts/lfs-benchmark.ts",
+    "report": "tsx scripts/report.ts",
+    "test:ui": "tsx scripts/ui-smoke.ts",
+    "test:worker": "tsx scripts/worker-auth-smoke.ts"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0",
+    "aws4fetch": "1.0.20",
+    "jose": "6.2.12"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261001.1",
+    "@types/node": "26.0.0",
+    "miniflare": "5.20261001.0-alpha",
+    "playwright": "1.63.0",
+    "prettier": "3.6.2",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "wrangler": "4.146.0"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "timestamp": "2026-10-01T18:15:16.404267+00:00",
+  "unitTests": {
+    "command": "npm test",
+    "tests": 26,
+    "pass": 26,
+    "fail": 0,
+    "output": "\n> cf-native-forge@0.1.0 test\n> tsx --test test/*.test.ts\n\n\u2714 private default, missing identity, same-tenant stranger, other tenant, and discovery leak resistance (30.290833ms)\n\u2714 sharing grants immediate read, cannot write, and revoke removes access (20.970875ms)\n\u2714 LFS Batch/basic transfer, duplicate upload, missing OID, range rejection and per-repo ACL (38.518125ms)\n\u2714 invalid imports, unknown transfer/hash, invalid OID/size, methods and malformed JSON rejected (17.786083ms)\n\u2714 production entry denies accidental dev credentials and reports missing WorkOS setup (0.643042ms)\n\u2714 real local Git task fork, immutable proposal, stale-base refusal, actual JSON checks (381.295ms)\n\u2714 direct-staging flow verifies whole bytes before manifest publication, hides ticket across tenants (20.120125ms)\n\u2714 WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, session claims and tenant (57.100916ms)\n\u2714 WorkOS callback without state fails locally without exchanging a fake code (2.473917ms)\n\u2714 presigned PUT is bounded in time, method, exact key and signed content length; never GET (3.106ms)\n\u2714 local Miniflare R2 binding: conditional publication, verified checksum, same-OID idempotency and corrupt-chunk abort (187.091417ms)\n\u2714 CDC boundaries are deterministic across network segmentation, bounded, golden hash (349.333ms)\n\u2714 verified ingest / exact streaming reconstruction / idempotent manifest and chunk dedupe (453.689458ms)\n\u2714 same tenant different repo cannot discover manifest; different tenant has separate chunks (349.121792ms)\n\u2714 failed SHA ingest never publishes (172.959ms)\n\u2714 failed short ingest never publishes (0.369083ms)\n\u2714 failed long ingest never publishes (0.374333ms)\n\u2714 failed interrupted ingest never publishes (77.670417ms)\n\u2714 concurrent duplicate ingest has one immutable publication (389.267125ms)\n\u2714 download detects missing chunks or manifest (180.779417ms)\n\u2714 download detects corrupt chunks or manifest (178.048542ms)\n\u2714 download detects length chunks or manifest (172.124667ms)\n\u2714 download detects order chunks or manifest (235.828958ms)\n\u2714 manifest rejects traversal, unknown version, inconsistent bounds/length and excessive entries (0.145542ms)\n\u2714 zero-byte LFS object checks SHA and roundtrips (0.329708ms)\n\u2714 corrupt preexisting content-addressed chunk prevents publication (202.415ms)\n\u2139 tests 26\n\u2139 suites 0\n\u2139 pass 26\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 3092.688042\n"
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exit": 0
+  },
+  "build": {
+    "command": "WRANGLER_SEND_METRICS=false npm run build",
+    "exit": 0,
+    "kind": "Wrangler dry-run, not deployed",
+    "output": "\n> cf-native-forge@0.1.0 build\n> wrangler deploy --dry-run --outdir dist\n\n\n \u26c5\ufe0f wrangler 4.146.0\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\u2728 Read 3 files from the assets directory /Users/admin/projects/cf-native-forge/web\nTotal Upload: 138.03 KiB / gzip: 35.59 KiB\nYour Worker has access to the following bindings:\nBinding                                                    Resource                  \nenv.DB (cf-native-forge-evaluation)                        D1 Database               \nenv.BUCKET (cf-native-forge-lfs-evaluation)                R2 Bucket                 \nenv.ARTIFACTS (cf-native-forge-evaluation)                 Artifacts                 \nenv.ASSETS                                                 Assets                    \nenv.WORKOS_CLIENT_ID (\"UNCONFIGURED\")                      Environment Variable      \nenv.ORIGIN (\"https://unconfigured.invalid\")                Environment Variable      \nenv.ALLOW_PUBLIC (\"false\")                                 Environment Variable      \n\n--dry-run: exiting now.\n"
+  },
+  "audit": {
+    "command": "npm audit",
+    "vulnerabilities": 0
+  },
+  "workerSmoke": {
+    "command": "npm run test:worker",
+    "checks": 7,
+    "passed": true,
+    "scope": "local workerd only"
+  },
+  "uiSmoke": {
+    "command": "npm run test:ui",
+    "checks": 6,
+    "passed": true,
+    "scope": "local Chrome only"
+  },
+  "lockfileReinstall": {
+    "command": "npm ci --no-fund",
+    "exit": 0,
+    "packagesAdded": 50,
+    "packagesAudited": 51,
+    "vulnerabilities": 0,
+    "note": "npm emitted allow-scripts warnings for esbuild/fsevents/workerd; the subsequent 26-test suite, typecheck and Wrangler dry-run all passed without approving additional scripts."
+  },
+  "afterReinstall": {
+    "checkedAt": "2026-10-01T18:20:19.462532+00:00",
+    "tests": 26,
+    "pass": 26,
+    "fail": 0,
+    "durationMs": 3090.380041,
+    "typecheckExit": 0,
+    "buildExit": 0,
+    "bundleKiB": 138.03,
+    "gzipKiB": 35.59
+  }
+}

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CF Native Forge</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">CF / NATIVE FORGE</a
+      ><span class="badge">PRIVATE EVALUATION</span
+      ><a href="/auth/login">Sign in with WorkOS</a>
+    </header>
+    <main>
+      <aside>
+        <h1>Build together.<br />Keep control.</h1>
+        <p>Repositories, independent tasks, and verified large objects.</p>
+        <label
+          >CLI bearer credential<input
+            id="credential"
+            type="password"
+            autocomplete="off"
+            placeholder="Stored only in page memory" /></label
+        ><button id="connect">Connect</button
+        ><button id="local">Use local test identity</button>
+        <nav>
+          <button id="mine">My & shared repositories</button
+          ><button id="discover">Discover</button>
+        </nav>
+        <p id="identity">Sign in to continue.</p>
+      </aside>
+      <section>
+        <div class="section-title">
+          <h2>Repositories</h2>
+          <span id="environment">Authenticated workspace</span>
+        </div>
+        <form id="create">
+          <input
+            name="name"
+            placeholder="Repository name"
+            required
+            pattern="[A-Za-z0-9_-]+"
+          /><input
+            name="url"
+            type="url"
+            placeholder="Optional public GitHub URL"
+          /><button>Create private repo</button>
+        </form>
+        <p id="notice" role="status"></p>
+        <div id="repos"></div>
+        <article id="detail" hidden>
+          <div id="repo-header"></div>
+          <div class="tools">
+            <button id="readme">README</button
+            ><button id="history">History & files</button
+            ><button id="proposals">Proposals</button>
+          </div>
+          <form id="task">
+            <input name="name" required placeholder="New task name" /><button>
+              Fork task
+            </button>
+          </form>
+          <form id="grant">
+            <input name="user" required placeholder="WorkOS user ID" /><select
+              name="role"
+            >
+              <option>reader</option>
+              <option>contributor</option>
+              <option>writer</option>
+              <option>admin</option>
+              <option value="">revoke</option></select
+            ><button>Update access</button>
+          </form>
+          <form id="proposal">
+            <input name="task" required placeholder="Task repo ID" /><input
+              name="base"
+              required
+              placeholder="Base commit SHA"
+            /><input
+              name="candidate"
+              required
+              placeholder="Candidate commit SHA"
+            /><button>Propose change</button>
+          </form>
+          <pre id="content"></pre>
+          <div id="reviews"></div>
+        </article>
+      </section>
+    </main>
+    <footer>
+      Artifacts for Git · R2 for large objects · WorkOS for identity. Hosted
+      editing agents remain deferred.
+    </footer>
+  </body>
+</html>

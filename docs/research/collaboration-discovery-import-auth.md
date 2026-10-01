@@ -1,5 +1,7 @@
 # Collaboration, discovery, GitHub import, and authentication
 
+> Historical planning baseline. Implementation is now authorized; see [current implementation status](../implementation.md). Original scope/research is retained below.
+
 Research accessed **2026-10-01 UTC**. Scope: a Cloudflare-native GitHub alternative; documentation only. **Observed** statements below come from live primary documentation. **Recommended** statements are design choices, not implemented features or vendor guarantees. No Git commands, deployments, authenticated account probes, performance tests, or application/configuration changes were performed.
 
 **Artifacts-first integration note:** Cloudflare Artifacts, not a bespoke Git server or raw R2 object database, is the proposed Git data plane. Its published tokens are repo-scoped read/write, not proven branch/path ACLs. The finer-grained policy below is a product requirement and remains an enforcement gap: use task-fork writes and a trusted canonical publisher until ref protection is verified. The native importer documents public HTTPS remotes; authenticated private transfer and complete ref/history preservation require separate validation. See [Artifacts and scale](artifacts-and-scale.md) and [architecture](../architecture.md), which take precedence over generic Git-hosting suggestions here.

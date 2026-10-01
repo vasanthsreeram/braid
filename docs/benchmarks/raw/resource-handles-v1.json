@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-01T18:11:35.261721+00:00",
+  "github": [
+    {
+      "default_branch": "main",
+      "html_url": "https://github.com/vasanthsreeram/cf-native-forge",
+      "id": 1400275513,
+      "node_id": "R_kgDOU3aCOQ",
+      "private": true
+    },
+    {
+      "default_branch": "bench-v1-20261001174037116-1",
+      "html_url": "https://github.com/vasanthsreeram/cf-native-forge-benchmark-20261002-v1",
+      "id": 1400479288,
+      "node_id": "R_kgDOU3meOA",
+      "private": true
+    }
+  ],
+  "cloudflareProvisioned": [],
+  "retained": "Private GitHub synthetic benchmark refs retained; no LFS/Actions data; provider-metered size and subscription allocation unknown",
+  "local": "592 MiB deterministic fixture files in ignored .tmp; disposable LFS services/clients removed after runs; no test server remains running"
+}
