@@ -75,3 +75,5 @@ The WorkOS API key is absent from both Gitflare-specific Keychain names inspecte
 After installation, execute actual sign-in/callback/session/refresh/logout, org selection/revocation, and deployed create/import/share/review/merge/profile workflows before accepting live authentication as complete. Dedicated R2 S3 signing credentials remain separately missing from the core launch, so live large LFS remains unverified; this change does not claim to complete that gate.
 
 Source/evidence publication targets only the existing **private** `vasanthsreeram/cf-native-forge` repository. The final delivery receipt outside the repository records the pushed commit and independent GitHub privacy/remote-head verification.
+
+Implementation/source/evidence commit: `fb2bda27feeea7d797364c95a7a872ba9e35bdb6`. Pushed main and independently verified exact remote commit/tree plus private status. [Publication receipt](raw/publication.json).
