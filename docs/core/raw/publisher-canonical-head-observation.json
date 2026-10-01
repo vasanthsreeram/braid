@@ -1,0 +1,10 @@
+{
+  "exit": 0,
+  "refs": [
+    "a85e4f2cda6e82cd18a8b90195658905e9ffa554\tHEAD",
+    "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/main",
+    "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/side",
+    "be31b813240f32ae0baa33c423092d6c1ec3e402\trefs/tags/v1",
+    "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/tags/v1^{}"
+  ]
+}

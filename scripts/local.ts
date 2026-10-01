@@ -46,7 +46,7 @@ export class FileStore implements ObjectStore {
   constructor(public directory: string) {}
   path(key: string) {
     check(
-      /^v1\/tenants\/[a-zA-Z0-9_-]+\/(chunks\/[a-f0-9]{64}|repos\/[a-zA-Z0-9_-]+\/manifests\/[a-f0-9]{64}|staging\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)$/.test(
+      /^(?:v1\/tenants\/[a-zA-Z0-9_-]+\/(chunks\/[a-f0-9]{64}|repos\/[a-zA-Z0-9_-]+\/manifests\/[a-f0-9]{64}|staging\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)|staging-v1\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)$/.test(
         key,
       ),
       500,
@@ -144,6 +144,31 @@ export class LocalGit implements GitPlane {
     check(ID.test(name), 400, "Invalid local repo");
     return join(this.directory, name + ".git");
   }
+  async refs(name: string) {
+    return (
+      await git([
+        "--git-dir",
+        this.path(name),
+        "for-each-ref",
+        "--format=%(objectname) %(refname)",
+        "refs/heads",
+        "refs/tags",
+      ])
+    )
+      .split("\n")
+      .filter(Boolean)
+      .map((l) => {
+        const [sha, ref] = l.split(" ");
+        return { ref, sha };
+      })
+      .sort((a, b) => a.ref.localeCompare(b.ref));
+  }
+  async source(): Promise<never> {
+    throw Error(
+      "Local harness intentionally disables upstream GitHub requests",
+    );
+  }
+  async seal() {}
   async create(name: string) {
     await mkdir(this.directory, { recursive: true });
     await git(["init", "--bare", "--initial-branch=main", this.path(name)]);
@@ -228,6 +253,53 @@ export class LocalGit implements GitPlane {
       return null;
     }
   }
+  async revoke() {}
+  async commit(name: string, sha: string) {
+    try {
+      const parts = (
+        await git([
+          "--git-dir",
+          this.path(name),
+          "show",
+          "-s",
+          "--format=%H %T %P",
+          sha,
+        ])
+      ).split(" ");
+      return {
+        sha: parts[0],
+        tree: parts[1],
+        parents: parts.slice(2).filter(Boolean),
+      };
+    } catch {
+      return null;
+    }
+  }
+  async publish(
+    source: string,
+    target: string,
+    ref: string,
+    base: string,
+    candidate: string,
+  ) {
+    await git([
+      "--git-dir",
+      this.path(target),
+      "fetch",
+      "--no-tags",
+      this.path(source),
+      candidate,
+    ]);
+    // update-ref's old OID comparison is atomic; the app checks ancestry before invoking it.
+    await git([
+      "--git-dir",
+      this.path(target),
+      "update-ref",
+      ref,
+      candidate,
+      base,
+    ]);
+  }
   async token(name: string, scope: "read" | "write") {
     return {
       provider: "local-bare-git",
@@ -253,12 +325,28 @@ export async function localServices(
         .replaceAll("CREATE INDEX ", "CREATE INDEX IF NOT EXISTS "),
     ),
   );
+  db.exec(
+    await readFile(
+      new URL("../migrations/0002_core.sql", import.meta.url),
+      "utf8",
+    ).then((s) =>
+      s
+        .replaceAll("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ")
+        .replaceAll("CREATE TRIGGER ", "CREATE TRIGGER IF NOT EXISTS "),
+    ),
+  );
+  db.exec(
+    await readFile(
+      new URL("../migrations/0003_operations.sql", import.meta.url),
+      "utf8",
+    ).then((s) => s.replaceAll("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ")),
+  );
   const catalog = new SQLCatalog(sqlite(db)),
     store = new FileStore(join(directory, "objects")),
     plane = new LocalGit(join(directory, "git"));
   const token = randomBytes(32).toString("hex");
   const principal = { id: "local-owner", tenant: "local-tenant" };
-  const credentials = new Map([[token, principal]]);
+  const credentials = new Map<string, Principal>([[token, principal]]);
   const s: Services = {
     catalog,
     store,

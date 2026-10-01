@@ -1,0 +1,26 @@
+{
+  "ok": false,
+  "message": "Git git-receive-pack failed (500)",
+  "status": 502,
+  "trace": [
+    {
+      "url": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-task.git/git-upload-pack",
+      "status": 200,
+      "contentType": "application/x-git-upload-pack-result",
+      "bytes": 329,
+      "prefix": "3030333141434b20613835653466326364613665383263643138613862393031393536353839303565396666613535340a5041434b00000002000000039410785eadcc4b0ac2301000d07d4e91bd20d3"
+    },
+    {
+      "url": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git/git-receive-pack",
+      "status": 500,
+      "contentType": "text/plain; charset=UTF-8",
+      "body": "Internal Server Error"
+    }
+  ],
+  "local_git_incremental_pack_verification": {
+    "exit": 0,
+    "pack_bytes": 280,
+    "pack_sha1": "d7e284e1edeb1611e2aa30431087905e817a56ef",
+    "note": "git index-pack --stdin --strict accepted the pack with existing base objects; native provider returned 500"
+  }
+}

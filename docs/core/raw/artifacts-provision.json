@@ -1,0 +1,25 @@
+[
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos",
+    "method": "POST",
+    "status": 201,
+    "request": {
+      "name": "cf-native-forge-provider-smoke",
+      "read_only": false,
+      "set_default_branch": "main"
+    },
+    "response": {
+      "result": {
+        "id": "ccf0465yussihpy6",
+        "name": "cf-native-forge-provider-smoke",
+        "description": null,
+        "default_branch": "main",
+        "remote": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git",
+        "token": "[REDACTED]"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  }
+]

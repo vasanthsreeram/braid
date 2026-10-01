@@ -1,5 +1,7 @@
 # Collaboration, discovery, GitHub import, and authentication
 
+> Historical research snapshot, not the current product status or scope. [Current implementation and verified boundaries](../implementation.md) supersede deployment blockers and proposals below. CI, Agents SDK, Sandbox/Containers and repository execution are excluded.
+
 > Historical planning baseline. Implementation is now authorized; see [current implementation status](../implementation.md). Original scope/research is retained below.
 
 Research accessed **2026-10-01 UTC**. Scope: a Cloudflare-native GitHub alternative; documentation only. **Observed** statements below come from live primary documentation. **Recommended** statements are design choices, not implemented features or vendor guarantees. No Git commands, deployments, authenticated account probes, performance tests, or application/configuration changes were performed.

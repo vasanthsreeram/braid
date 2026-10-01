@@ -1,0 +1,82 @@
+{
+  "source": "https://github.com/vasanthsreeram/That_Aquarium_Webapp.git",
+  "refs": [
+    "0817cd263b82b5fd8126fabaa1aa6fd8b7e675c9 refs/heads/master"
+  ],
+  "commits": 144,
+  "reachable_objects": 9248,
+  "object_bytes": 416032835,
+  "count_objects": "count: 0\nsize: 0\nin-pack: 9248\npacks: 1\nsize-pack: 83583\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+  "largest_blobs": [
+    [
+      "9bc8ef524679ed0e1c78b5795daf4d59c77ce1c9",
+      "blob",
+      "73528662",
+      "Design/Logo.psd"
+    ],
+    [
+      "37a5168c0cf78f22e1ad109d66ed81bc17b23562",
+      "blob",
+      "13964777",
+      "Design/New Arrivals.psd"
+    ],
+    [
+      "d2ee6acb6e9f3ce5ac0d63af1880713983290de0",
+      "blob",
+      "13891054",
+      "Design/Featured.psd"
+    ],
+    [
+      "31562c2d57f627266350f79877ed6ac744dc1f17",
+      "blob",
+      "13493807",
+      "Design/Featured.psd"
+    ],
+    [
+      "91dc415102326c00856866b440c51312a1d187a6",
+      "blob",
+      "13387559",
+      "Design/Featured.psd"
+    ],
+    [
+      "44a460825db91deb92636a6dfef767a275132fb2",
+      "blob",
+      "10678261",
+      "Design/New Arrivals.psd"
+    ],
+    [
+      "cd0fb12a2f933da7b434d9dd71c24dcf0e6f18f3",
+      "blob",
+      "10672860",
+      "Design/Hot Deals.psd"
+    ],
+    [
+      "3e9e49d54d3e878dfcd51e27d69f2eefa951f13a",
+      "blob",
+      "10279898",
+      "Design/Hot Deals.psd"
+    ],
+    [
+      "46575cd0a61f569ec5cdcdb045ab703588fdf930",
+      "blob",
+      "10173988",
+      "Design/Hot Deals.psd"
+    ],
+    [
+      "50754e8bf5ad45c5267edc00096ec94bb53c478f",
+      "blob",
+      "8455116",
+      "Design/FAQ.psd"
+    ]
+  ],
+  "violations": [
+    [
+      "9bc8ef524679ed0e1c78b5795daf4d59c77ce1c9",
+      "blob",
+      "73528662",
+      "Design/Logo.psd"
+    ]
+  ],
+  "lfs_pointers": [],
+  "gitlinks": "checked during checkout verification"
+}

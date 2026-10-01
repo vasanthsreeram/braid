@@ -1,0 +1,69 @@
+import { writeFile } from "node:fs/promises";
+const origin = "https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev";
+const rows = [];
+for (const [path, method, body, headers, status] of [
+  ["/", "GET", undefined, {}, 401],
+  ["/app.js", "GET", undefined, {}, 401],
+  ["/api/me", "GET", undefined, {}, 401],
+  ["/api/discovery", "GET", undefined, {}, 401],
+  ["/api/repos", "GET", undefined, {}, 401],
+  ["/api/repos", "POST", { name: "forbidden" }, { origin }, 401],
+  [
+    "/api/repos",
+    "POST",
+    { name: "forbidden" },
+    { authorization: "Bearer local-owner" },
+    401,
+  ],
+  ["/api/repos", "POST", { name: "forbidden" }, {}, 403],
+  [
+    "/api/repos/private",
+    "GET",
+    undefined,
+    { authorization: "Bearer local-owner" },
+    404,
+  ],
+  [
+    "/lfs/private/objects/" + "a".repeat(64),
+    "GET",
+    undefined,
+    { authorization: "Bearer local-owner" },
+    404,
+  ],
+  ["/__local_identity", "GET", undefined, {}, 401],
+  ["/auth/login", "GET", undefined, {}, 503],
+  ["/auth/callback?code=fake&state=fake", "GET", undefined, {}, 503],
+] as [string, string, unknown, Record<string, string>, number][]) {
+  const r = await fetch(origin + path, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+    redirect: "manual",
+    signal: AbortSignal.timeout(15000),
+  });
+  const text = await r.text();
+  rows.push({
+    path,
+    method,
+    status: r.status,
+    expected: status,
+    body: text,
+    cacheControl: r.headers.get("cache-control"),
+    passed: r.status === status,
+  });
+}
+const result = {
+  origin,
+  boundary: "deployed unauthenticated rejection only; WorkOS unconfigured",
+  checks: rows,
+  passed: rows.every((r) => r.passed),
+  at: new Date().toISOString(),
+};
+await writeFile(
+  "docs/core/raw/deployed-core-smoke.json",
+  JSON.stringify(result, null, 2) + "\n",
+);
+console.log(
+  `${rows.filter((r) => r.passed).length}/${rows.length} deployed denials pass`,
+);
+if (!result.passed) process.exitCode = 1;

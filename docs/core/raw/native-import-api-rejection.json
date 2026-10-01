@@ -1,0 +1,66 @@
+[
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos",
+    "method": "POST",
+    "status": 201,
+    "request": {
+      "name": "cf-native-forge-maggies-farm-migration",
+      "read_only": false,
+      "set_default_branch": "main"
+    },
+    "response": {
+      "result": {
+        "id": "opvyb42arm5uj8cs",
+        "name": "cf-native-forge-maggies-farm-migration",
+        "description": null,
+        "default_branch": "main",
+        "remote": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-maggies-farm-migration.git",
+        "token": "[REDACTED]"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  },
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos/cf-native-forge-maggies-farm-migration/tokens?state=active&per_page=100",
+    "method": "GET",
+    "status": 200,
+    "request": null,
+    "response": {
+      "result": [
+        {
+          "id": "qwypmgowsevzpakr",
+          "scope": "write",
+          "state": "active",
+          "created_at": "2026-10-01T20:53:09.437Z",
+          "expires_at": "2026-10-02T20:53:09.437Z"
+        }
+      ],
+      "success": true,
+      "errors": [],
+      "messages": [],
+      "result_info": {
+        "page": 1,
+        "per_page": 100,
+        "total_pages": 1,
+        "count": 1,
+        "total_count": 1
+      }
+    }
+  },
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/tokens/qwypmgowsevzpakr",
+    "method": "DELETE",
+    "status": 200,
+    "request": null,
+    "response": {
+      "result": {
+        "id": "qwypmgowsevzpakr"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  }
+]

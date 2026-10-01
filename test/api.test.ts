@@ -269,7 +269,7 @@ test("production entry denies accidental dev credentials and reports missing Wor
     503,
   );
 });
-test("real local Git task fork, immutable proposal, stale-base refusal, actual JSON checks", async () => {
+test("real local Git task fork, immutable proposal, stale-base refusal, excluded native check endpoint", async () => {
   const l = await setup();
   try {
     const work = join(l.dir, "work");
@@ -330,32 +330,7 @@ test("real local Git task fork, immutable proposal, stale-base refusal, actual J
       })
     ).json();
     assert.equal(proposal.candidate, candidate);
-    let check = await (
-      await l.call("/api/repos/" + task.id + "/check", {
-        contract: "json-parse-v1",
-        commit: candidate,
-        paths: ["good.json"],
-      })
-    ).json();
-    assert.equal(check.passed, true);
-    check = await (
-      await l.call("/api/repos/" + task.id + "/check", {
-        contract: "json-parse-v1",
-        commit: candidate,
-        paths: ["bad.json"],
-      })
-    ).json();
-    assert.equal(check.passed, false);
-    assert.equal(
-      (
-        await l.call("/api/repos/" + task.id + "/check", {
-          contract: "shell",
-          commit: candidate,
-          paths: [],
-        })
-      ).status,
-      400,
-    );
+    assert.equal((await l.call("/api/repos/" + task.id + "/check", {contract:"json-parse-v1",commit:candidate,paths:["good.json"]})).status,404);
     await git(
       ["remote", "set-url", "origin", l.plane.path(l.repo.physical)],
       work,

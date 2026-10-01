@@ -1,0 +1,25 @@
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+🌀 Building list of assets...
+✨ Read 3 files from the assets directory /Users/admin/projects/cf-native-forge/web
+🌀 Starting asset upload...
+No updated asset files to upload. Proceeding with deployment...
+Total Upload: 176.04 KiB / gzip: 44.95 KiB
+Worker Startup Time: 3 ms
+Your Worker has access to the following bindings:
+Binding                                                                Resource                  
+env.DB (cf-native-forge-evaluation)                                    D1 Database               
+env.BUCKET (cf-native-forge-lfs-evaluation)                            R2 Bucket                 
+env.ARTIFACTS (cf-native-forge-evaluation)                             Artifacts                 
+env.ASSETS                                                             Assets                    
+env.WORKOS_CLIENT_ID ("UNCONFIGURED")                                  Environment Variable      
+env.ORIGIN ("https://cf-native-forge-evaluation.s-...")                Environment Variable      
+env.ALLOW_PUBLIC ("false")                                             Environment Variable      
+env.R2_ACCOUNT_ID ("7efeb52ec5727a903edd8ef7ae8eb925")                 Environment Variable      
+env.R2_BUCKET_NAME ("cf-native-forge-lfs-evaluation")                  Environment Variable      
+
+Uploaded cf-native-forge-evaluation (9.15 sec)
+Deployed cf-native-forge-evaluation triggers (2.31 sec)
+  https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev
+Current Version ID: 29847d9e-ac94-4621-bb79-3d717f3ca75e

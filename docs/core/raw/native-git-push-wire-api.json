@@ -1,0 +1,40 @@
+[
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos/cf-native-forge-provider-smoke/fork",
+    "method": "POST",
+    "status": 201,
+    "request": {
+      "name": "cf-native-forge-wire-diagnostic",
+      "default_branch_only": false,
+      "read_only": false
+    },
+    "response": {
+      "result": {
+        "id": "0r01qb9khkadyvxs",
+        "name": "cf-native-forge-wire-diagnostic",
+        "description": null,
+        "default_branch": "main",
+        "remote": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-wire-diagnostic.git",
+        "token": "[REDACTED]",
+        "objects": 4
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  },
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos/cf-native-forge-wire-diagnostic",
+    "method": "DELETE",
+    "status": 202,
+    "request": null,
+    "response": {
+      "result": {
+        "id": "0r01qb9khkadyvxs"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  }
+]

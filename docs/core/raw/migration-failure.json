@@ -1,0 +1,21 @@
+{
+  "type": "RuntimeError",
+  "message": "{\"status\": 413, \"errors\": [{\"code\": 10402, \"message\": \"Repository at \\\"https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated.git\\\" exceeded the 40MB import limit. The full history was requested. Add a \\\"depth\\\" parameter to limit how many commits are fetched (e.g. \\\"depth\\\": 1 for only the latest commit, \\\"depth\\\": 10 for the last 10 commits).\", \"documentation_url\": \"https://developers.cloudflare.com/artifacts/api/errors#10402\"}]}",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.hooksPath=/dev/null",
+        "ls-remote",
+        "--heads",
+        "--tags",
+        "https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated.git"
+      ],
+      "exit": 0,
+      "ms": 531.63,
+      "stdout_bytes": 57,
+      "stderr_bytes": 0
+    }
+  ]
+}

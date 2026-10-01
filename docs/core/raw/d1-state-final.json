@@ -1,0 +1,31 @@
+[
+  {
+    "results": [
+      {
+        "repos": 0,
+        "grants": 0,
+        "operations": 0,
+        "native_tokens": 0,
+        "applied_migrations": 3
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "SIN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.5066
+      },
+      "duration": 0.5066,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 106496,
+      "rows_read": 3,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

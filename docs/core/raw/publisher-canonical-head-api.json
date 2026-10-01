@@ -1,0 +1,37 @@
+[
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/tokens",
+    "method": "POST",
+    "status": 201,
+    "request": {
+      "repo": "cf-native-forge-provider-smoke",
+      "scope": "read",
+      "ttl": 60
+    },
+    "response": {
+      "result": {
+        "id": "hk4ia0u77a9lqoxs",
+        "plaintext": "[REDACTED]",
+        "scope": "read",
+        "expires_at": "2026-10-01T21:01:56.979Z"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  },
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/tokens/hk4ia0u77a9lqoxs",
+    "method": "DELETE",
+    "status": 200,
+    "request": null,
+    "response": {
+      "result": {
+        "id": "hk4ia0u77a9lqoxs"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  }
+]

@@ -1,10 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cf-native-forge-evaluation",
+  "account_id": "7efeb52ec5727a903edd8ef7ae8eb925",
   "main": "src/worker.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
-  "workers_dev": false,
+  "workers_dev": true,
   "preview_urls": false,
   "limits": { "cpu_ms": 300000 },
   "artifacts": [
@@ -17,7 +18,7 @@
     {
       "binding": "DB",
       "database_name": "cf-native-forge-evaluation",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "200d9a4f-b51b-451a-86ab-43b1b29847d3",
       "migrations_dir": "migrations",
     },
   ],
@@ -28,8 +29,10 @@
   },
   "vars": {
     "WORKOS_CLIENT_ID": "UNCONFIGURED",
-    "ORIGIN": "https://unconfigured.invalid",
+    "ORIGIN": "https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev",
     "ALLOW_PUBLIC": "false",
+    "R2_ACCOUNT_ID": "7efeb52ec5727a903edd8ef7ae8eb925",
+    "R2_BUCKET_NAME": "cf-native-forge-lfs-evaluation",
   },
   "observability": { "enabled": false },
 }

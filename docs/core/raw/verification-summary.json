@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-01T21:36:38.477271+00:00",
+  "sourceBaseline": "2224be6",
+  "workerVersion": "da2449d7-687d-4c3c-80bf-b9ff844a28b3",
+  "workerURL": "https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev",
+  "accountID": "7efeb52ec5727a903edd8ef7ae8eb925",
+  "d1ID": "200d9a4f-b51b-451a-86ab-43b1b29847d3",
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npm test",
+      "exit": 0,
+      "pass": 35,
+      "fail": 0,
+      "receipt": "local-tests.txt"
+    },
+    {
+      "command": "npm run test:worker",
+      "exit": 0,
+      "pass": 7,
+      "receipt": "worker-auth-smoke-core.json"
+    },
+    {
+      "command": "npm run test:ui",
+      "exit": 0,
+      "pass": 6,
+      "receipt": "ui-core.json"
+    },
+    {
+      "command": "npm run test:ui:core",
+      "exit": 0,
+      "pass": 12,
+      "receipt": "ui-core-full.json"
+    },
+    {
+      "command": "npm run build (Wrangler dry-run)",
+      "exit": 0,
+      "receipt": "build.txt"
+    },
+    {
+      "command": "wrangler deploy (existing OAuth, dedicated account)",
+      "exit": 0,
+      "receipt": "deployment-final.txt"
+    },
+    {
+      "command": "npm run test:deployed",
+      "exit": 0,
+      "pass": 13,
+      "receipt": "deployed-core-smoke.json"
+    },
+    {
+      "command": "tsx scripts/deployed-browser-smoke.ts",
+      "exit": 0,
+      "pass": 2,
+      "receipt": "deployed-browser.json"
+    },
+    {
+      "command": "direct native Git/provider tests (completed after pack framing fix)",
+      "pass": 12,
+      "receipt": "provider-core-smoke.json"
+    }
+  ],
+  "blockers": [
+    "Dedicated WorkOS client ID, API key and exact JWT issuer; callback/logout configuration",
+    "Dedicated bucket-scoped R2 S3 access key and secret; actual large LFS verification"
+  ],
+  "excluded": [
+    "native CI",
+    "Agents SDK",
+    "Sandbox",
+    "Containers",
+    "model features",
+    "repository code execution"
+  ],
+  "migrationReceipt": "migration-verification.json",
+  "benchmarkPreservationReceipt": "benchmark-preservation.json"
+}

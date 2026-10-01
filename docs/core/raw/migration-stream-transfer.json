@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "result": {
+    "packBytes": 59552567,
+    "receipt": [
+      "unpack ok\n",
+      "ok refs/heads/main\n"
+    ],
+    "defaultBranch": "main",
+    "refs": [
+      {
+        "ref": "refs/heads/main",
+        "sha": "45fb674a919bcbfcb521e9cea1bf1cffd1a8a397"
+      }
+    ],
+    "gitOnly": true
+  }
+}

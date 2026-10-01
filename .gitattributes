@@ -1,0 +1,2 @@
+# Preserve CLI stdout receipts, including table padding and terminal whitespace.
+docs/core/raw/*.txt -whitespace

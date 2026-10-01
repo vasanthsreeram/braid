@@ -1,0 +1,15 @@
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+Resource location: remote 
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mMore than one account available but unable to select one in non-interactive mode.[0m
+
+  Please set the appropriate `account_id` in your Wrangler configuration file or assign it to the `CLOUDFLARE_ACCOUNT_ID` environment variable.
+  Available accounts are (`<name>`: `<account_id>`):
+    `Noverseinc9@gmail.com's Account`: `d548b7a718412ded2345edbf8733cdc3`
+    `S.vasanthrojin@gmail.com's Account`: `7efeb52ec5727a903edd8ef7ae8eb925`
+
+
+🪵  Logs were written to "/Users/admin/.wrangler/logs/wrangler-2026-10-01_21-24-23_252.log"

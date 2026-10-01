@@ -1,0 +1,48 @@
+[
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos/cf-native-forge-provider-smoke",
+    "method": "GET",
+    "status": 200,
+    "request": null,
+    "response": {
+      "result": {
+        "id": "ccf0465yussihpy6",
+        "name": "cf-native-forge-provider-smoke",
+        "description": null,
+        "default_branch": "main",
+        "created_at": "2026-10-01T20:46:19.860Z",
+        "updated_at": "2026-10-01T20:46:21.545Z",
+        "last_push_at": null,
+        "source": null,
+        "read_only": false,
+        "remote": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  },
+  {
+    "path": "/accounts/7efeb52ec5727a903edd8ef7ae8eb925/artifacts/namespaces/cf-native-forge-evaluation/repos/cf-native-forge-maggies-farm-migration",
+    "method": "GET",
+    "status": 200,
+    "request": null,
+    "response": {
+      "result": {
+        "id": "opvyb42arm5uj8cs",
+        "name": "cf-native-forge-maggies-farm-migration",
+        "description": null,
+        "default_branch": "main",
+        "created_at": "2026-10-01T20:53:09.347Z",
+        "updated_at": "2026-10-01T20:53:09.448Z",
+        "last_push_at": null,
+        "source": null,
+        "read_only": false,
+        "remote": "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-maggies-farm-migration.git"
+      },
+      "success": true,
+      "errors": [],
+      "messages": []
+    }
+  }
+]

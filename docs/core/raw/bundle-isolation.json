@@ -1,0 +1,12 @@
+{
+  "bundle": "dist/worker.js",
+  "sha256": "905a2ff84a7f66af7e048d8e18e7b112f2dc9426c003a905c947badc9c6bc39b",
+  "bytes": 180453,
+  "absentDeveloperMarkers": {
+    "__local_identity": true,
+    "local-owner": true,
+    "node:sqlite": true,
+    "node:child_process": true,
+    "test-only-key-that-is-long-enough": true
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "message": "{\"status\": 401, \"errors\": [{\"code\": 10000, \"message\": \"Authentication error\"}]}",
+  "checks": [
+    {
+      "name": "real native authenticated push",
+      "passed": true,
+      "base": "a85e4f2cda6e82cd18a8b90195658905e9ffa554"
+    },
+    {
+      "name": "anonymous Git denied",
+      "passed": true
+    },
+    {
+      "name": "real native authenticated clone and checkout",
+      "passed": true
+    },
+    {
+      "name": "read token cannot push",
+      "passed": true
+    },
+    {
+      "name": "native fork preserves branch and annotated tag tips",
+      "passed": true,
+      "refs": [
+        "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/main",
+        "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/side",
+        "be31b813240f32ae0baa33c423092d6c1ec3e402\trefs/tags/v1",
+        "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/tags/v1^{}"
+      ]
+    },
+    {
+      "name": "task native Git push",
+      "passed": true,
+      "candidate": "d378629fd6847d363ad20927849a1948946f4e49"
+    }
+  ],
+  "commands": [
+    {
+      "args": [
+        "init",
+        "--initial-branch=main"
+      ],
+      "exit": 0,
+      "ms": 22.56,
+      "stdout": "Initialized empty Git repository in /Users/admin/projects/cf-native-forge/.tmp/core-provider-smoke/work/.git/",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.name",
+        "Synthetic Provider Test"
+      ],
+      "exit": 0,
+      "ms": 13.11,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.email",
+        "synthetic@example.invalid"
+      ],
+      "exit": 0,
+      "ms": 11.02,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "ms": 9.31,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "commit",
+        "-m",
+        "base"
+      ],
+      "exit": 0,
+      "ms": 13.19,
+      "stdout": "[main (root-commit) a85e4f2] base\n 1 file changed, 1 insertion(+)\n create mode 100644 README.md",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "ms": 7.46,
+      "stdout": "a85e4f2cda6e82cd18a8b90195658905e9ffa554",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "branch",
+        "side"
+      ],
+      "exit": 0,
+      "ms": 7.83,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "tag",
+        "-a",
+        "v1",
+        "-m",
+        "annotated"
+      ],
+      "exit": 0,
+      "ms": 8.65,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "push",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git",
+        "main",
+        "side",
+        "refs/tags/v1"
+      ],
+      "exit": 0,
+      "ms": 1189.68,
+      "stdout": "",
+      "stderr": "To https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git\n * [new branch]      main -> main\n * [new branch]      side -> side\n * [new tag]         v1 -> v1"
+    },
+    {
+      "args": [
+        "ls-remote",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git"
+      ],
+      "exit": 128,
+      "ms": 71.55,
+      "stdout": "",
+      "stderr": "fatal: could not read Username for 'https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net': terminal prompts disabled"
+    },
+    {
+      "args": [
+        "clone",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git",
+        "/Users/admin/projects/cf-native-forge/.tmp/core-provider-smoke/consumer"
+      ],
+      "exit": 0,
+      "ms": 1265.95,
+      "stdout": "",
+      "stderr": "Cloning into '/Users/admin/projects/cf-native-forge/.tmp/core-provider-smoke/consumer'..."
+    },
+    {
+      "args": [
+        "push",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git",
+        "main"
+      ],
+      "exit": 128,
+      "ms": 569.44,
+      "stdout": "",
+      "stderr": "remote: Insufficient permissions\nfatal: unable to access 'https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git/': The requested URL returned error: 403"
+    },
+    {
+      "args": [
+        "ls-remote",
+        "--heads",
+        "--tags",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-smoke.git"
+      ],
+      "exit": 0,
+      "ms": 629.99,
+      "stdout": "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/main\na85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/side\nbe31b813240f32ae0baa33c423092d6c1ec3e402\trefs/tags/v1\na85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/tags/v1^{}",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "ls-remote",
+        "--heads",
+        "--tags",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-task.git"
+      ],
+      "exit": 0,
+      "ms": 934.4,
+      "stdout": "a85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/main\na85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/heads/side\nbe31b813240f32ae0baa33c423092d6c1ec3e402\trefs/tags/v1\na85e4f2cda6e82cd18a8b90195658905e9ffa554\trefs/tags/v1^{}",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exit": 0,
+      "ms": 24.46,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "commit",
+        "-m",
+        "candidate"
+      ],
+      "exit": 0,
+      "ms": 22.08,
+      "stdout": "[main d378629] candidate\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "ms": 9.62,
+      "stdout": "d378629fd6847d363ad20927849a1948946f4e49",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "push",
+        "https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-task.git",
+        "HEAD:main"
+      ],
+      "exit": 0,
+      "ms": 971.08,
+      "stdout": "",
+      "stderr": "To https://7efeb52ec5727a903edd8ef7ae8eb925.artifacts.cloudflare.net/git/cf-native-forge-evaluation/cf-native-forge-provider-task.git\n   a85e4f2..d378629  HEAD -> main"
+    }
+  ]
+}

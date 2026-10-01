@@ -1,0 +1,92 @@
+{
+  "source": "https://github.com/vasanthsreeram/MFweb-app.git",
+  "refs": [
+    "6b33e58c8e8034ffc9719511b1a84369b558d683 refs/heads/master"
+  ],
+  "commits": 99,
+  "reachable_objects": 1136,
+  "object_bytes": 259567371,
+  "count_objects": "count: 0\nsize: 0\nin-pack: 1136\npacks: 1\nsize-pack: 243434\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+  "largest_blobs": [
+    [
+      "99f716b49d92a85597a011e3613388291904a421",
+      "blob",
+      "53799916",
+      "public/images.zip"
+    ],
+    [
+      "c1e609ab86ae14f2f7929004b61bbd3c4008c62d",
+      "blob",
+      "3677713",
+      "src/images_training/old/training_1.png"
+    ],
+    [
+      "66c4eb937dbac7d320cf17bfdaeb0674f5137067",
+      "blob",
+      "2825189",
+      "src/general_images/loading.png"
+    ],
+    [
+      "fac27af7f0fa01e32ba0200d67be94f67268a190",
+      "blob",
+      "2814196",
+      "src/images_training/old/training_3.png"
+    ],
+    [
+      "af49f0a950ffd44dc3a45475858b994694ed4d60",
+      "blob",
+      "2813775",
+      "src/images_training/old/training_4.png"
+    ],
+    [
+      "490ff83bbbae6c94a22b6d43131a9954f331dd53",
+      "blob",
+      "2813763",
+      "src/images_training/training_1.png"
+    ],
+    [
+      "3673bbec70a12b1e4e1e021f266d940a745f14b8",
+      "blob",
+      "2813385",
+      "src/images_training/old/training_2.png"
+    ],
+    [
+      "9e9071cb7f86b8cc435f160c042d8de4b6328698",
+      "blob",
+      "2761286",
+      "src/images_training/old/training_1_empty.png"
+    ],
+    [
+      "9670fc47ca77443932b1e2feb2a83d50030e04cf",
+      "blob",
+      "2759388",
+      "src/images_training/old/training_4_empty.png"
+    ],
+    [
+      "c38c14651c58fd0de889e009dfd835012d9ad29d",
+      "blob",
+      "2758949",
+      "src/images_training/old/training_2_empty.png"
+    ],
+    [
+      "1a49e57cc4a8a54f22de19e549ce3a4bdea53a2b",
+      "blob",
+      "2747023",
+      "src/images_training/old/training_3_empty.png"
+    ],
+    [
+      "46b0ea8baa7fd5d35c1f79a6b000474240a294a4",
+      "blob",
+      "2668173",
+      "src/general_images/startblock_2.png"
+    ]
+  ],
+  "violations": [
+    [
+      "99f716b49d92a85597a011e3613388291904a421",
+      "blob",
+      "53799916",
+      "public/images.zip"
+    ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "baseline": "2224be6",
+  "files": 26,
+  "changed": [],
+  "sha256": {
+    "docs/benchmarks/gitflare-comparison-v2.md": "3db4bab4950ac150caf37c9f5a5bfac56a201d01c492ffb8392aa6d756e1afff",
+    "docs/benchmarks/independent-verification.md": "68f78e229a193b6b1b05d3559d5da1e690478cd77b2078fdc1283f701304647e",
+    "docs/benchmarks/raw/auth-availability-v1.json": "a9fe06b66f98a95ba10d7d64aacff4819fe524d0ba352d52d5e69f50ad03db9c",
+    "docs/benchmarks/raw/cloudflare-oauth-readonly-v2.json": "f158022a89851394f9973d60a867c0ea282a0d0a8702d15f008325ef762bc2a4",
+    "docs/benchmarks/raw/cloudflare-probes-v1.json": "8cb5c2a3fcbe6bab52f6052d1ba8977e9a8545349d709fa9c2a11062182c0ae8",
+    "docs/benchmarks/raw/code-v1.csv": "fe869e940e851d55d8d47ac32852fb4968b37eddf0f75b76764f41af1c558a05",
+    "docs/benchmarks/raw/code-v1.json": "6001be4c4adfe192272c05372a45a0599824b08cdcb443e3212f57cda3ec91ee",
+    "docs/benchmarks/raw/cost-projections-v1.json": "e6b885f15e90a1ab79f991567d921fa0dec84bc30a1523ecca0299b5cc5f7288",
+    "docs/benchmarks/raw/gitflare-comparison-v2-verification.json": "f06ec84556a27d9dce38aa3418b3d5c4dbe42a98ec05cbf248eca47d1b14af34",
+    "docs/benchmarks/raw/gitflare-comparison-v2.csv": "8aea90179c48bbd2641ee19e0503b6287bb1d7c2e931587aaad352504bd12ceb",
+    "docs/benchmarks/raw/gitflare-comparison-v2.json": "b54eb258e818548eca1f3916972c44bc52c4078699a9fdc1e880dc873f946479",
+    "docs/benchmarks/raw/lfs-v1-micro.csv": "b005ed7907e03be49f91aa3866cf810e54a9374461438260303e462a3ecbeebe",
+    "docs/benchmarks/raw/lfs-v1.csv": "800c8d8347236b46c35c34219b5db8892452eeebb449fddac58228db2935cf34",
+    "docs/benchmarks/raw/lfs-v1.json": "9493649e28043a23b3c5012f2d21bee7ce539e613459d8c37969df34eaa52e12",
+    "docs/benchmarks/raw/pilot/code-v1-uncontrolled-refs.csv": "be84711352d56b1b8ddafbf7b2d29fc23539cc195d1c96b94ab8b99572b5fbe2",
+    "docs/benchmarks/raw/pilot/code-v1-uncontrolled-refs.json": "36ddcb70f4cd05d82bf3f4186fbbd4fd250557ce7716ce177928667228bda108",
+    "docs/benchmarks/raw/pilot/gitflare-comparison-v2-owner-pilot.csv": "216d3b64eedcbd5567e2770f2cd4f27fd890058440ac0bd961b182d29c6c8ea8",
+    "docs/benchmarks/raw/pilot/gitflare-comparison-v2-owner-pilot.json": "c31a2efa2f13c934e862978c5f880ee3a8cf4ca47f74cab3b028ef76f802a1ad",
+    "docs/benchmarks/raw/resource-handles-v1.json": "904a802e302847dcd99352d8167752f206c8290cec515af3406458bdf3489615",
+    "docs/benchmarks/raw/ui-v1.json": "096345fd37e5a42217e53aec985be3d80e82b736af3e1c3b70627b681d9210a0",
+    "docs/benchmarks/raw/validation-v1.json": "01d6e5c17a4d4a07ffe26c5d450b0403b601d773e55a52c6329da4ac030e62c1",
+    "docs/benchmarks/raw/validation-v2.json": "48e0665d3be0d65f764ca5973c4deed564e8c553623a1ce81652e5338cf47f39",
+    "docs/benchmarks/raw/worker-auth-smoke-v1.json": "a46ede62d4eb3c8e9fbf6b6c58d3e34821cf1ed9388eeb8d746f30b7e608f369",
+    "docs/benchmarks/raw/worker-auth-smoke-v2.json": "e53d72baeeab22b9cd1424c69363433adbcaa16b969952ac83ae10057699c870",
+    "docs/benchmarks/report-v1.md": "d9dd785d10cfe5a7f7eb0cf331621a279400274ec5b106646e231a6f2497178d",
+    "docs/benchmarks/ui-local.png": "2f550cfa45251d956188d7f219dccdf930a35fe257248a6d5e085ab20718b412"
+  }
+}

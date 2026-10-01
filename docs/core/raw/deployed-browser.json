@@ -1,0 +1,22 @@
+{
+  "origin": "https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev",
+  "at": "2026-10-01T21:36:39.368Z",
+  "boundary": "installed Chrome on live unauthenticated gate only; real WorkOS unavailable",
+  "checks": [
+    {
+      "path": "/",
+      "status": 401,
+      "expected": 401,
+      "body": "CF Native Forge\n\nAuthentication required\n\nSign in with WorkOS",
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "status": 503,
+      "expected": 503,
+      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

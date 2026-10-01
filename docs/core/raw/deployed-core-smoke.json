@@ -1,0 +1,125 @@
+{
+  "origin": "https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev",
+  "boundary": "deployed unauthenticated rejection only; WorkOS unconfigured",
+  "checks": [
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>CF Native Forge</title><h1>CF Native Forge</h1><p>Authentication required</p><a href=\"/auth/login\">Sign in with WorkOS</a></html>",
+      "cacheControl": "no-store",
+      "passed": true
+    },
+    {
+      "path": "/app.js",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "Authentication required",
+      "cacheControl": "no-store",
+      "passed": true
+    },
+    {
+      "path": "/api/me",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/discovery",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 403,
+      "expected": 403,
+      "body": "{\"message\":\"Origin required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/lfs/private/objects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/__local_identity",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "Authentication required",
+      "cacheControl": "no-store",
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "status": 503,
+      "expected": 503,
+      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "cacheControl": "no-store",
+      "passed": true
+    },
+    {
+      "path": "/auth/callback?code=fake&state=fake",
+      "method": "GET",
+      "status": 503,
+      "expected": 503,
+      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "cacheControl": "no-store",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "at": "2026-10-01T21:36:38.804Z"
+}

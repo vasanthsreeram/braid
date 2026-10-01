@@ -1,0 +1,74 @@
+{
+  "source": "https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated.git",
+  "refs": [
+    "45fb674a919bcbfcb521e9cea1bf1cffd1a8a397 refs/heads/main"
+  ],
+  "commits": 1,
+  "reachable_objects": 287,
+  "object_bytes": 65135804,
+  "count_objects": "count: 0\nsize: 0\nin-pack: 287\npacks: 1\nsize-pack: 58165\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0",
+  "largest_blobs": [
+    [
+      "29c11882a9e24cb2f2a7ec840a788df0e5427bb4",
+      "blob",
+      "4087808",
+      "api/data/experiment.db"
+    ],
+    [
+      "beb80fd9865cff5cffdd6aba37dd8fc898ea4cf1",
+      "blob",
+      "1763645",
+      "client/public/images/Archive.zip"
+    ],
+    [
+      "b8c84566b27820e20a08eaa2695cda0b9398c4cc",
+      "blob",
+      "1177678",
+      "behavioral_analysis_charts.png"
+    ],
+    [
+      "952495b970c6d203946f36a0175949876ebdb2ed",
+      "blob",
+      "891728",
+      "client/package-lock.json"
+    ],
+    [
+      "ac6487d7c4258e3cad13c24db8ac4844c4c19573",
+      "blob",
+      "625897",
+      "client/public/images/images_set4/sun_5.png"
+    ],
+    [
+      "eb265358b0cdb9830eafa8d5fd66b55a0a916546",
+      "blob",
+      "625030",
+      "client/public/images/images_set6/sun_5.png"
+    ],
+    [
+      "251125d9e6fe8a1955e2e830c37af2bf8fecbdfb",
+      "blob",
+      "624581",
+      "client/public/images/images_set3/sun_5.png"
+    ],
+    [
+      "065a9e636f702659e288d6a52036673c86d5f64d",
+      "blob",
+      "623392",
+      "client/public/images/images_set1/sun_5.png"
+    ],
+    [
+      "f08c329a559c3489fb52e0cc5811f39ab1576bad",
+      "blob",
+      "623381",
+      "client/public/images/images_set4/sun_4.png"
+    ],
+    [
+      "047150e4fc0ced06baaea7b4ce4686d27601f9e0",
+      "blob",
+      "623255",
+      "client/public/images/images_set2/sun_5.png"
+    ]
+  ],
+  "violations": [],
+  "lfs_pointers": []
+}

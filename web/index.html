@@ -12,6 +12,7 @@
       <a class="brand" href="/">CF / NATIVE FORGE</a
       ><span class="badge">PRIVATE EVALUATION</span
       ><a href="/auth/login">Sign in with WorkOS</a>
+      <form method="post" action="/auth/logout"><button>Sign out</button></form>
     </header>
     <main>
       <aside>
@@ -30,6 +31,18 @@
           ><button id="discover">Discover</button>
         </nav>
         <p id="identity">Sign in to continue.</p>
+        <form id="organization">
+          <label
+            >Organization ID<input
+              name="organization"
+              required
+              placeholder="org_…" /></label
+          ><button>Switch organization</button>
+        </form>
+        <form id="accept-invite">
+          <label>Invitation ID<input name="invite" required /></label
+          ><button>Accept invitation</button>
+        </form>
       </aside>
       <section>
         <div class="section-title">
@@ -49,13 +62,28 @@
           /><button>Create private repo</button>
         </form>
         <p id="notice" role="status"></p>
+        <form id="search">
+          <label
+            >Search repositories<input
+              id="query"
+              type="search"
+              placeholder="Search by name" /></label
+          ><button>Search</button>
+        </form>
+        <p>
+          GitHub imports copy Git history. LFS objects, submodules, and platform
+          metadata need separate migration.
+        </p>
         <div id="repos"></div>
         <article id="detail" hidden>
           <div id="repo-header"></div>
           <div class="tools">
             <button id="readme">README</button
             ><button id="history">History & files</button
-            ><button id="proposals">Proposals</button>
+            ><button id="proposals">Proposals</button
+            ><button id="access">Access</button
+            ><button id="clone">Clone / push credential</button
+            ><button id="reconcile">Reconcile operation</button>
           </div>
           <form id="task">
             <input name="name" required placeholder="New task name" /><button>
@@ -73,11 +101,59 @@
               <option value="">revoke</option></select
             ><button>Update access</button>
           </form>
+          <form id="invite">
+            <label
+              >Invite by verified email<input
+                name="email"
+                type="email"
+                required /></label
+            ><select name="role">
+              <option>reader</option>
+              <option>contributor</option>
+              <option>writer</option>
+              <option>admin</option></select
+            ><button>Create invitation link</button>
+          </form>
+          <form id="visibility">
+            <select name="visibility">
+              <option>private</option>
+              <option>public</option></select
+            ><label
+              >To publish, enter repository ID<input name="confirm" /></label
+            ><button>Set visibility</button>
+          </form>
+          <form id="browse">
+            <label
+              >Branch, tag, or commit<input
+                name="ref"
+                value="HEAD"
+                required /></label
+            ><label
+              >File path<input name="path" placeholder="README.md" /></label
+            ><button>Browse</button>
+          </form>
+          <div id="files"></div>
+          <div id="git-credential" hidden>
+            <label>Native remote<input id="git-remote" readonly /></label
+            ><label
+              >Scope<select id="git-scope">
+                <option>read</option>
+                <option>write</option>
+              </select></label
+            ><button id="git-mint">Get 60-second credential</button
+            ><label
+              >Credential (page memory only)<input
+                id="git-secret"
+                type="password"
+                readonly /></label
+            ><button id="git-copy">Copy credential</button>
+            <p id="git-help"></p>
+          </div>
           <form id="proposal">
             <input name="task" required placeholder="Task repo ID" /><input
               name="base"
               required
-              placeholder="Base commit SHA"
+              placeholder="Base commit SHA (40 zeros for empty repo)"
             /><input
               name="candidate"
               required
@@ -90,8 +166,7 @@
       </section>
     </main>
     <footer>
-      Artifacts for Git · R2 for large objects · WorkOS for identity. Hosted
-      editing agents remain deferred.
+      Artifacts for Git · R2 for large objects · WorkOS for identity.
     </footer>
   </body>
 </html>

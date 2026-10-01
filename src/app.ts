@@ -5,6 +5,8 @@ import type {
   Role,
   Ticket,
   Proposal,
+  Invite,
+  MergeIntent,
 } from "./contracts.ts";
 import {
   check,
@@ -19,6 +21,7 @@ import {
   root,
   copyManifests,
 } from "./storage.ts";
+import { ZERO, SHA, branchRef, descendant, diff } from "./review.ts";
 const LFS = "application/vnd.git-lfs+json";
 const rank: Record<Role, number> = {
   reader: 1,
@@ -89,8 +92,24 @@ async function authorize(
     needed === "reader"
   )
     return repo;
-  check(p && p.tenant === repo.tenant, 404, "Not found");
-  const role = p.id === repo.owner ? "admin" : await s.catalog.role(id, p.id);
+  const canonical = repo.parent ? await s.catalog.get(repo.parent) : repo;
+  check(
+    canonical &&
+      p &&
+      (p.tenant === canonical.tenant || canonical.tenant === canonical.owner),
+    404,
+    "Not found",
+  );
+  const parentRole =
+    p.id === canonical.owner
+      ? "admin"
+      : await s.catalog.role(canonical.id, p.id);
+  if (repo.parent && p.id === repo.owner)
+    check(parentRole && rank[parentRole] >= rank.contributor, 404, "Not found");
+  const role =
+    p.id === repo.owner || (repo.parent && parentRole === "admin")
+      ? "admin"
+      : await s.catalog.role(id, p.id);
   check(role && rank[role] >= rank[needed], 404, "Not found");
   return repo;
 }
@@ -117,11 +136,13 @@ async function createRepo(
     400,
     "Invalid repository name",
   );
+  const importURL = !parent && b.url ? githubURL(b.url) : null;
   const id = uuid();
   const physical = `cf-native-forge-${id}`;
+  const tenant = parent?.tenant ?? p.tenant;
   const r: Repo = {
     id,
-    tenant: p.tenant,
+    tenant,
     owner: p.id,
     name: b.name,
     physical,
@@ -131,27 +152,74 @@ async function createRepo(
   };
   await s.catalog.create(r);
   try {
+    const refs = parent
+      ? await s.git.refs(parent.physical)
+      : importURL
+        ? (await s.git.source(importURL)).refs
+        : [];
+    await s.catalog.operation({
+      repo: id,
+      kind: parent ? "fork" : importURL ? "import" : "create",
+      source: importURL,
+      refs: JSON.stringify(refs),
+    });
     if (parent) {
-      check(parent.tenant === p.tenant, 403, "Cross-tenant forks unsupported");
       check(
-        (await s.store.listManifests(p.tenant, parent.id)).length <= 128,
+        parent.tenant === p.tenant || parent.tenant === parent.owner,
+        403,
+        "Cross-tenant organization forks unsupported",
+      );
+      check(
+        (await s.store.listManifests(tenant, parent.id)).length <= 128,
         409,
         "Task fork manifest limit",
       );
       await s.git.fork(parent.physical, physical);
-      await copyManifests(s.store, p.tenant, parent.id, id);
-    } else if (b.url) await s.git.import(physical, githubURL(b.url));
+      await copyManifests(s.store, tenant, parent.id, id);
+    } else if (importURL) await s.git.import(physical, importURL);
     else await s.git.create(physical);
+    check(
+      JSON.stringify(await s.git.refs(physical)) === JSON.stringify(refs),
+      502,
+      "Git refs differ from the recorded source snapshot",
+    );
     await s.catalog.state(id, "ready");
     r.state = "ready";
     return r;
-  } catch {
+  } catch (e: any) {
+    if (
+      ["IMPORT_IN_PROGRESS", "FORK_IN_PROGRESS", "CREATE_IN_PROGRESS"].includes(
+        e?.code,
+      )
+    )
+      return r;
     await s.catalog.state(id, "failed");
     throw new Fault(
       502,
       "Git operation failed; intent retained for reconciliation",
     );
   }
+}
+async function revokeTokens(s: Services, repo: Repo, user?: string) {
+  for (const t of await s.catalog.tokens(repo.id, user)) {
+    await s.git.revoke(repo.physical, t.id);
+    await s.catalog.removeToken(t.id);
+  }
+}
+async function revokeAccessTokens(s: Services, repo: Repo, user: string) {
+  await revokeTokens(s, repo, user);
+  for (const task of await s.catalog.children(repo.id))
+    await revokeTokens(s, task, user);
+}
+function query(u: URL) {
+  const q = (u.searchParams.get("q") ?? "").trim();
+  check(q.length <= 100, 400, "Search limited to 100 characters");
+  return q;
+}
+async function head(s: Services, r: Repo) {
+  const info = (await s.git.info(r.physical)) as { defaultBranch: string };
+  const ref = branchRef(info.defaultBranch);
+  return { ref, sha: (await s.git.log(r.physical, ref))[0]?.sha ?? ZERO };
 }
 export function application(s: Services) {
   return async (request: Request): Promise<Response> => {
@@ -179,7 +247,7 @@ export function application(s: Services) {
       ) {
         if (!s.allowPublic) check(p, 401, "Authentication required");
         result = json({
-          repos: s.allowPublic ? await s.catalog.list(p, true) : [],
+          repos: s.allowPublic ? await s.catalog.list(p, true, query(url)) : [],
         });
       } else if (
         path[0] === "api" &&
@@ -188,15 +256,73 @@ export function application(s: Services) {
       ) {
         check(p, 401, "Authentication required");
         if (request.method === "GET")
-          result = json({ repos: await s.catalog.list(p, false) });
+          result = json({ repos: await s.catalog.list(p, false, query(url)) });
         else {
           check(request.method === "POST", 405, "Method unsupported");
           result = json(await createRepo(s, p, await bodyJSON(request)), 201);
         }
+      } else if (
+        path[0] === "api" &&
+        path[1] === "invites" &&
+        path[2] &&
+        request.method === "POST"
+      ) {
+        check(p, 401, "Authentication required");
+        const i = await s.catalog.getInvite(path[2]);
+        check(
+          i && i.state === "pending" && i.expires > Date.now(),
+          404,
+          "Invitation unavailable",
+        );
+        check(
+          p.emailVerified && p.email?.toLowerCase() === i.email,
+          403,
+          "Sign in with the invitation's verified email",
+        );
+        const repo = await s.catalog.get(i.repo);
+        check(repo, 404, "Invitation unavailable");
+        const canonical = repo.parent ? await s.catalog.get(repo.parent) : repo;
+        check(
+          canonical &&
+            (canonical.tenant === canonical.owner ||
+              canonical.tenant === p.tenant),
+          403,
+          "Select the invited organization with an active membership first",
+        );
+        await authorize(
+          s,
+          { id: i.issuer, tenant: canonical.tenant },
+          repo.id,
+          "admin",
+        );
+        if (s.member && canonical.tenant !== canonical.owner)
+          check(
+            await s.member(canonical.tenant, i.issuer),
+            403,
+            "Inviter organization membership inactive",
+          );
+        check(
+          (await s.catalog.mergeIntent(repo.id))?.state !== "publishing",
+          409,
+          "Resolve publishing intent before changing access",
+        );
+        check(
+          await s.catalog.acceptInvite(i.id, p.id),
+          409,
+          "Invitation is no longer pending",
+        );
+        await revokeAccessTokens(s, repo, p.id);
+        result = json({ ok: true, repo: repo.id });
       } else if (path[0] === "api" && path[1] === "repos" && path[2]) {
         const id = path[2],
           action = path[3];
-        const needed: Role = ["grants", "visibility"].includes(action)
+        const needed: Role = [
+          "grants",
+          "visibility",
+          "invites",
+          "merge",
+          "reconcile",
+        ].includes(action)
           ? "admin"
           : ["tasks", "proposals"].includes(action) && request.method === "POST"
             ? "contributor"
@@ -208,12 +334,53 @@ export function application(s: Services) {
           p,
           id,
           needed,
-          request.method === "GET" &&
-            !["grants", "proposals", "review", "token"].includes(action),
+          (action === "token" && request.method === "POST") ||
+            (request.method === "GET" &&
+              ![
+                "grants",
+                "invites",
+                "proposals",
+                "diff",
+                "review",
+                "token",
+                "merge",
+                "reconcile",
+              ].includes(action)),
         );
         if (!action && request.method === "GET")
           result = json({ ...r, git: await s.git.info(r.physical) });
-        else if (action === "grants" && request.method === "POST") {
+        else if (action === "grants" && request.method === "GET")
+          result = json(await s.catalog.grants(id));
+        else if (action === "invites" && request.method === "GET")
+          result = json(await s.catalog.invitations(id));
+        else if (action === "invites" && request.method === "POST") {
+          const b = await bodyJSON(request);
+          if (b.revoke) {
+            await s.catalog.revokeInvite(id, b.revoke);
+            result = json({ ok: true });
+          } else {
+            check(
+              typeof b.email === "string" &&
+                b.email.length <= 254 &&
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email) &&
+                Object.hasOwn(rank, b.role),
+              400,
+              "Invalid invitation",
+            );
+            const i: Invite = {
+              id: uuid(),
+              repo: id,
+              email: b.email.toLowerCase(),
+              role: b.role,
+              issuer: p!.id,
+              expires: Date.now() + 7 * 86400000,
+              state: "pending",
+              accepted_by: null,
+            };
+            await s.catalog.invite(i);
+            result = json({ ...i, url: s.origin + "/?invite=" + i.id }, 201);
+          }
+        } else if (action === "grants" && request.method === "POST") {
           const b = await bodyJSON(request);
           check(
             typeof b.user === "string" &&
@@ -223,7 +390,13 @@ export function application(s: Services) {
             "Invalid grant",
           );
           check(b.user !== r.owner, 400, "Owner cannot be changed");
+          check(
+            (await s.catalog.mergeIntent(id))?.state !== "publishing",
+            409,
+            "Resolve publishing intent before changing access",
+          );
           await s.catalog.grant(id, b.user, b.role);
+          await revokeAccessTokens(s, r, b.user);
           result = json({ ok: true });
         } else if (action === "visibility" && request.method === "POST") {
           const b = await bodyJSON(request);
@@ -233,9 +406,21 @@ export function application(s: Services) {
             400,
             "Publication disabled or unconfirmed",
           );
+          check(
+            !r.parent || b.visibility === "private",
+            400,
+            "Task repositories remain private",
+          );
+          check(
+            (await s.catalog.mergeIntent(id))?.state !== "publishing",
+            409,
+            "Resolve publishing intent before changing visibility",
+          );
           await s.catalog.visibility(id, b.visibility);
+          await revokeTokens(s, r);
           result = json({ ok: true });
         } else if (action === "token" && request.method === "POST") {
+          check(p, 401, "Authentication required");
           const b = await bodyJSON(request);
           check(
             b.scope === "read" || b.scope === "write",
@@ -250,7 +435,37 @@ export function application(s: Services) {
               "Canonical write capabilities are withheld; use a task fork",
             );
           }
-          result = json(await s.git.token(r.physical, b.scope));
+          check(p && r.state === "ready", 409, "Repository is not ready");
+          const token = await s.git.token(r.physical, b.scope);
+          if (token.id) {
+            try {
+              await s.catalog.nativeToken(
+                token.id,
+                id,
+                p.id,
+                Date.parse(token.expiresAt),
+              );
+            } catch (e) {
+              await s.git.revoke(r.physical, token.id);
+              throw e;
+            }
+          }
+          try {
+            await authorize(
+              s,
+              p,
+              id,
+              b.scope === "write" ? "writer" : "reader",
+              b.scope === "read",
+            );
+          } catch (e) {
+            if (token.id) {
+              await s.git.revoke(r.physical, token.id);
+              await s.catalog.removeToken(token.id);
+            }
+            throw e;
+          }
+          result = json(token);
         } else if (action === "log" && request.method === "GET")
           result = json(
             await s.git.log(r.physical, url.searchParams.get("ref") ?? "HEAD"),
@@ -282,6 +497,7 @@ export function application(s: Services) {
           });
         } else if (action === "tasks" && request.method === "POST") {
           check(p, 401, "Authentication required");
+          check(!r.parent, 400, "Tasks fork canonical repositories");
           result = json(
             await createRepo(s, p, await bodyJSON(request), r),
             201,
@@ -301,10 +517,19 @@ export function application(s: Services) {
           const base = await s.git.log(r.physical, b.base),
             candidate = await s.git.log(task.physical, b.candidate);
           check(
-            base[0]?.sha === b.base && candidate[0]?.sha === b.candidate,
+            (b.base === ZERO
+              ? !(await s.git.log(r.physical, "HEAD")).length
+              : base[0]?.sha === b.base) && candidate[0]?.sha === b.candidate,
             422,
             "Commit unavailable",
           );
+          check(!r.parent, 400, "Proposals target a canonical repository");
+          check(
+            (await head(s, r)).sha === b.base,
+            409,
+            "Canonical head moved; new proposal required",
+          );
+          await descendant(s.git, task.physical, b.base, b.candidate);
           const proposal: Proposal = {
             id: uuid(),
             repo: id,
@@ -328,9 +553,9 @@ export function application(s: Services) {
           );
           check(proposal, 404, "Not found");
           if (b.status === "approved") {
-            const head = (await s.git.log(r.physical, "HEAD"))[0];
+            const current = await head(s, r);
             check(
-              head?.sha === proposal.base,
+              current.sha === proposal.base,
               409,
               "Canonical head moved; new proposal required",
             );
@@ -341,44 +566,157 @@ export function application(s: Services) {
             "Already reviewed",
           );
           result = json({ ok: true, integrated: false });
-        } else if (action === "check" && request.method === "POST") {
-          await authorize(s, p, id, "contributor");
+        } else if (action === "diff" && request.method === "GET") {
+          const proposal = (await s.catalog.proposals(id)).find(
+            (x) => x.id === url.searchParams.get("proposal"),
+          );
+          check(proposal, 404, "Not found");
+          const task = await s.catalog.get(proposal.task);
+          check(
+            task && task.parent === id && task.tenant === r.tenant,
+            422,
+            "Task unavailable",
+          );
+          result = json(
+            await diff(s.git, task.physical, proposal.base, proposal.candidate),
+          );
+        } else if (action === "merge" && request.method === "GET")
+          result = json(await s.catalog.mergeIntent(id));
+        else if (action === "merge" && request.method === "POST") {
           const b = await bodyJSON(request);
-          check(
-            b.contract === "json-parse-v1" && /^[0-9a-f]{40}$/.test(b.commit),
-            400,
-            "Only immutable JSON parse check supported",
+          const proposal = (await s.catalog.proposals(id)).find(
+            (x) => x.id === b.id,
           );
           check(
-            Array.isArray(b.paths) &&
-              b.paths.length > 0 &&
-              b.paths.length <= 8 &&
-              b.paths.every(
-                (x: unknown) =>
-                  typeof x === "string" &&
-                  /^[\w/-]+\.json$/.test(x) &&
-                  !x.includes(".."),
-              ),
-            400,
-            "Invalid paths",
+            proposal?.status === "approved",
+            409,
+            "An approved proposal is required",
           );
-          const results = [];
-          for (const f of b.paths) {
-            const file = await s.git.file(r.physical, b.commit, f);
-            check(file && file.size <= 65536, 422, "Missing or oversized JSON");
-            try {
-              JSON.parse(await file.text());
-              results.push({ path: f, passed: true });
-            } catch {
-              results.push({ path: f, passed: false });
-            }
+          const prior = await s.catalog.mergeIntent(id);
+          if (prior?.state === "merged" && prior.proposal === b.id)
+            return json({
+              ok: true,
+              integrated: true,
+              candidate: prior.candidate,
+            });
+          check(
+            prior?.state !== "publishing",
+            409,
+            "Publishing intent exists; reconcile before retrying",
+          );
+          const task = await s.catalog.get(proposal.task);
+          check(
+            task && task.parent === id && task.tenant === r.tenant,
+            422,
+            "Task unavailable",
+          );
+          const current = await head(s, r);
+          check(
+            current.sha === proposal.base,
+            409,
+            "Canonical head moved; new proposal required",
+          );
+          await descendant(
+            s.git,
+            task.physical,
+            proposal.base,
+            proposal.candidate,
+          );
+          const intent: MergeIntent = {
+            repo: id,
+            proposal: b.id,
+            base: proposal.base,
+            candidate: proposal.candidate,
+            ref: current.ref,
+            fence: uuid(),
+            state: "publishing",
+            error: null,
+          };
+          check(
+            await s.catalog.beginMerge(intent),
+            409,
+            "Another publisher holds the fence",
+          );
+          try {
+            // Immutable LFS associations become readable before ref publication. No repo code runs.
+            await copyManifests(s.store, r.tenant, task.id, id);
+            await s.git.publish(
+              task.physical,
+              r.physical,
+              current.ref,
+              proposal.base,
+              proposal.candidate,
+            );
+            check(
+              (await head(s, r)).sha === proposal.candidate,
+              502,
+              "Publication receipt disagrees with canonical head",
+            );
+            check(
+              await s.catalog.finishMerge(id, intent.fence, "merged"),
+              409,
+              "Publisher fence changed",
+            );
+          } catch {
+            // A transport failure can follow a successful remote push. Keep the fence until read-only reconciliation.
+            throw new Fault(
+              502,
+              "Publication uncertain; reconcile retained intent before retrying",
+            );
           }
           result = json({
-            contract: b.contract,
-            commit: b.commit,
-            passed: results.every((x) => x.passed),
-            results,
+            ok: true,
+            integrated: true,
+            candidate: proposal.candidate,
           });
+        } else if (action === "reconcile" && request.method === "POST") {
+          const intent = await s.catalog.mergeIntent(id);
+          if (intent?.state === "publishing") {
+            const current =
+              (await s.git.log(r.physical, intent.ref))[0]?.sha ?? ZERO;
+            check(
+              current === intent.candidate || current !== intent.base,
+              409,
+              "Canonical still at base; publisher may be in flight. Fence retained; no unsafe retry",
+            );
+            const merged = current === intent.candidate;
+            check(
+              await s.catalog.finishMerge(
+                id,
+                intent.fence,
+                merged ? "merged" : "failed",
+                merged ? undefined : "Canonical diverged",
+              ),
+              409,
+              "Fence changed",
+            );
+            result = json({ ok: true, integrated: merged, head: current });
+          } else if (r.state !== "ready") {
+            const operation = await s.catalog.getOperation(id);
+            check(
+              operation,
+              409,
+              "Creation intent is incomplete; retry into a new private repository",
+            );
+            await s.git.info(r.physical);
+            check(
+              JSON.stringify(await s.git.refs(r.physical)) === operation.refs,
+              409,
+              "Source snapshot and destination refs disagree; intent retained",
+            );
+            if (r.parent) {
+              const parent = await s.catalog.get(r.parent);
+              check(
+                parent && parent.tenant === r.tenant,
+                409,
+                "Fork source unavailable",
+              );
+              await copyManifests(s.store, r.tenant, parent.id, id);
+            }
+            await s.git.seal(r.physical);
+            await s.catalog.state(id, "ready");
+            result = json({ ok: true, state: "ready" });
+          } else result = json({ ok: true, intent });
         } else throw new Fault(404, "Not found");
       } else if (path[0] === "lfs" && path[1]) {
         const id = path[1];
@@ -466,7 +804,7 @@ export function application(s: Services) {
                 repo: id,
                 oid: v.oid,
                 size: v.size,
-                key: `${root(r.tenant)}/staging/${id}/${tid}`,
+                key: `staging-v1/${r.tenant}/${id}/${tid}`,
                 expires: Date.now() + 600000,
               };
               await s.catalog.ticket(t);

@@ -30,6 +30,12 @@ export async function serveBenchmark(directory: string) {
   // Preserve all original LocalGit operations, replacing only info/token after
   // the native missing-transport probe. The real app authorizes token issuance.
   local.s.git = {
+    refs: (n) => local.plane.refs(n),
+    source: (u) => local.plane.source(),
+    seal: (n) => local.plane.seal(),
+    revoke: (n, t) => local.plane.revoke(),
+    commit: (n, s) => local.plane.commit(n, s),
+    publish: (s, t, r, b, c) => local.plane.publish(s, t, r, b, c),
     create: (n) => local.plane.create(n),
     import: () => local.plane.import(),
     fork: (a, b) => local.plane.fork(a, b),

@@ -4,6 +4,7 @@ import {
   EncryptJWT,
   jwtDecrypt,
   base64url,
+  decodeJwt,
 } from "jose";
 import type { Principal } from "./contracts.ts";
 import { check, ID, Fault, digest } from "./storage.ts";
@@ -14,7 +15,14 @@ export interface AuthConfig {
   SESSION_SECRET?: string;
   ORIGIN: string;
 }
-const cookie = (r: Request, n: string) =>
+export interface AuthIO {
+  request?: typeof fetch;
+  verify?: (token: string) => Promise<Principal>;
+  revoked?: (sid: string) => Promise<boolean>;
+  revoke?: (sid: string) => Promise<void>;
+  logoutTokens?: (user: string) => Promise<void>;
+}
+export const cookie = (r: Request, n: string) =>
   r.headers
     .get("cookie")
     ?.split(";")
@@ -31,7 +39,7 @@ export function authReady(c: AuthConfig) {
     !!c.WORKOS_API_KEY &&
     !!c.SESSION_SECRET &&
     c.SESSION_SECRET.length >= 32 &&
-    c.ORIGIN.startsWith("https://")
+    /^https:\/\/[^/]+$/.test(c.ORIGIN)
   );
 }
 function sessionKey(c: AuthConfig) {
@@ -40,12 +48,8 @@ function sessionKey(c: AuthConfig) {
     503,
     "AuthKit not configured",
   );
-  return base64url.decode(
-    base64url.encode(
-      new Uint8Array(
-        Buffer.from(digest(new TextEncoder().encode(c.SESSION_SECRET)), "hex"),
-      ),
-    ),
+  return new Uint8Array(
+    Buffer.from(digest(new TextEncoder().encode(c.SESSION_SECRET)), "hex"),
   );
 }
 export async function verifyAccess(
@@ -71,70 +75,249 @@ export async function verifyAccess(
     requiredClaims: ["sub", "exp", "iat", "sid"],
     maxTokenAge: "1h",
   });
-  // JWKS is pinned to the application; WorkOS access tokens do not consistently carry aud.
   if (payload.aud !== undefined)
     check(payload.aud === c.WORKOS_CLIENT_ID, 401, "Invalid audience");
   const tenant =
     typeof payload.org_id === "string" ? payload.org_id : payload.sub;
   check(
-    payload.sub && tenant && ID.test(payload.sub) && ID.test(tenant),
+    payload.sub &&
+      tenant &&
+      ID.test(payload.sub) &&
+      ID.test(tenant) &&
+      typeof payload.sid === "string" &&
+      ID.test(payload.sid),
     401,
     "Invalid identity",
   );
   return { id: payload.sub, tenant };
 }
+export async function workos(
+  c: AuthConfig,
+  path: string,
+  body?: unknown,
+  io: AuthIO = {},
+) {
+  check(c.WORKOS_API_KEY, 503, "WorkOS environment unavailable");
+  const r = await (io.request ?? fetch)("https://api.workos.com" + path, {
+    method: body ? "POST" : "GET",
+    redirect: "error",
+    signal: AbortSignal.timeout(15000),
+    headers: {
+      authorization: "Bearer " + c.WORKOS_API_KEY,
+      "content-type": "application/json",
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  check(
+    r.ok,
+    r.status === 400 || r.status === 401 || r.status === 404 ? 401 : 503,
+    "WorkOS request failed",
+  );
+  return r.status === 204 ? {} : ((await r.json()) as any);
+}
+// Check actual session and active organization membership on EVERY authenticated request.
+// No stale JWT-only authorization, no implicit WorkOS role -> repository grant.
+export async function livePrincipal(
+  c: AuthConfig,
+  token: string,
+  io: AuthIO = {},
+) {
+  const p = await (io.verify ? io.verify(token) : verifyAccess(c, token));
+  const sid = decodeJwt(token).sid;
+  check(typeof sid === "string" && ID.test(sid), 401, "Invalid session");
+  check(!(await io.revoked?.(sid)), 401, "Session revoked");
+  const sessions = await workos(
+    c,
+    `/user_management/users/${p.id}/sessions?limit=100`,
+    undefined,
+    io,
+  );
+  check(
+    sessions.data?.some(
+      (s: any) =>
+        s.id === sid &&
+        s.status === "active" &&
+        s.user_id === p.id &&
+        (!s.expires_at || Date.parse(s.expires_at) > Date.now()) &&
+        (s.organization_id ?? p.id) === p.tenant,
+    ),
+    401,
+    "Session inactive",
+  );
+  if (p.tenant !== p.id) {
+    const memberships = await workos(
+      c,
+      `/user_management/organization_memberships?user_id=${p.id}&organization_id=${p.tenant}&limit=100`,
+      undefined,
+      io,
+    );
+    check(
+      memberships.data?.some(
+        (m: any) =>
+          m.user_id === p.id &&
+          m.organization_id === p.tenant &&
+          m.status === "active",
+      ),
+      401,
+      "Organization membership inactive",
+    );
+  }
+  const user = await workos(c, `/user_management/users/${p.id}`, undefined, io);
+  check(user.id === p.id, 401, "User unavailable");
+  return {
+    ...p,
+    session: sid,
+    email: typeof user.email === "string" ? user.email : undefined,
+    emailVerified: user.email_verified === true,
+  };
+}
+export async function readSession(c: AuthConfig, r: Request) {
+  const sealed = cookie(r, "__Host-forge");
+  check(sealed, 401, "Session missing");
+  const { payload } = await jwtDecrypt(sealed, sessionKey(c), {
+    issuer: c.ORIGIN,
+    audience: "forge-session",
+  });
+  check(
+    typeof payload.access === "string" &&
+      typeof payload.refresh === "string" &&
+      typeof payload.sid === "string",
+    401,
+    "Invalid session",
+  );
+  return { access: payload.access, refresh: payload.refresh, sid: payload.sid };
+}
 export async function authenticate(
   c: AuthConfig,
   r: Request,
+  io: AuthIO = {},
 ): Promise<Principal | null> {
   try {
+    if (!authReady(c)) return null;
     const auth = r.headers.get("authorization");
-    let access: string | undefined;
+    let access: string;
     if (auth?.startsWith("Bearer ")) access = auth.slice(7);
     else if (auth?.startsWith("Basic ")) {
-      const value = atob(auth.slice(6));
-      access = value.slice(value.indexOf(":") + 1);
-    } else {
-      const sealed = cookie(r, "__Host-forge");
-      if (sealed) {
-        const { payload } = await jwtDecrypt(sealed, sessionKey(c), {
-          issuer: c.ORIGIN,
-          audience: "forge-session",
-        });
-        access =
-          typeof payload.access === "string" ? payload.access : undefined;
-      }
-    }
-    return access ? await verifyAccess(c, access) : null;
+      const raw = atob(auth.slice(6));
+      check(raw.includes(":"), 401, "Invalid credential");
+      access = raw.slice(raw.indexOf(":") + 1);
+    } else access = (await readSession(c, r)).access;
+    return await livePrincipal(c, access, io);
   } catch {
     return null;
   }
 }
-function sealedCookie(name: string, value: string, maxAge: number) {
+export function sealedCookie(name: string, value: string, maxAge: number) {
   return `${name}=${value}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${maxAge}`;
+}
+export async function sessionCookie(
+  c: AuthConfig,
+  tokens: any,
+  io: AuthIO = {},
+) {
+  check(
+    typeof tokens.access_token === "string" &&
+      typeof tokens.refresh_token === "string",
+    502,
+    "Incomplete token exchange",
+  );
+  const p = await livePrincipal(c, tokens.access_token, io);
+  const sealed = await new EncryptJWT({
+    access: tokens.access_token,
+    refresh: tokens.refresh_token,
+    sid: p.session,
+  })
+    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .setIssuer(c.ORIGIN)
+    .setAudience("forge-session")
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .encrypt(sessionKey(c));
+  check(sealed.length < 3800, 502, "Session exceeds cookie limit");
+  return sealedCookie("__Host-forge", sealed, 7 * 86400);
 }
 export async function authRoute(
   c: AuthConfig,
   r: Request,
+  io: AuthIO = {},
 ): Promise<Response | null> {
   const u = new URL(r.url);
   if (!u.pathname.startsWith("/auth/")) return null;
   try {
-    check(r.method === "GET", 405, "Unsupported method");
-    if (u.pathname === "/auth/logout")
-      return new Response(null, {
-        status: 303,
-        headers: {
-          location: "/",
-          "set-cookie": sealedCookie("__Host-forge", "", 0),
-        },
-      });
     check(authReady(c), 503, "WorkOS environment unavailable");
-    if (u.pathname === "/auth/login") {
-      const state = crypto.randomUUID();
-      const verifier = base64url.encode(
-        crypto.getRandomValues(new Uint8Array(32)),
+    if (
+      ["/auth/logout", "/auth/refresh", "/auth/organization"].includes(
+        u.pathname,
+      )
+    ) {
+      check(r.method === "POST", 405, "Use POST for session changes");
+      check(r.headers.get("origin") === c.ORIGIN, 403, "Origin required");
+      const s = await readSession(c, r);
+      check(!(await io.revoked?.(s.sid)), 401, "Session revoked");
+      if (u.pathname === "/auth/logout") {
+        // Retain a local deny record before contacting the provider. Errors cannot reopen the session.
+        await io.revoke?.(s.sid);
+        const user = decodeJwt(s.access).sub;
+        if (user) await io.logoutTokens?.(user);
+        await workos(
+          c,
+          "/user_management/sessions/revoke",
+          { session_id: s.sid },
+          io,
+        );
+        const logout = new URL(
+          "https://api.workos.com/user_management/sessions/logout",
+        );
+        logout.searchParams.set("session_id", s.sid);
+        logout.searchParams.set("return_to", c.ORIGIN + "/auth/login");
+        return new Response(null, {
+          status: 303,
+          headers: {
+            location: logout.href,
+            "set-cookie": sealedCookie("__Host-forge", "", 0),
+            "cache-control": "no-store",
+          },
+        });
+      }
+      let organization: string | undefined;
+      if (u.pathname === "/auth/organization") {
+        const b: any = await r.json();
+        check(
+          typeof b.organization === "string" &&
+            /^org_[A-Za-z0-9]+$/.test(b.organization),
+          400,
+          "Invalid organization",
+        );
+        organization = b.organization;
+      }
+      // WorkOS rotates the refresh credential and checks membership at the provider.
+      const tokens = await workos(
+        c,
+        "/user_management/authenticate",
+        {
+          client_id: c.WORKOS_CLIENT_ID,
+          client_secret: c.WORKOS_API_KEY,
+          grant_type: "refresh_token",
+          refresh_token: s.refresh,
+          ...(organization ? { organization_id: organization } : {}),
+        },
+        io,
       );
+      check(
+        decodeJwt(tokens.access_token).sub === decodeJwt(s.access).sub,
+        401,
+        "Refresh identity changed",
+      );
+      const next = await sessionCookie(c, tokens, io);
+      return Response.json(
+        { ok: true },
+        { headers: { "set-cookie": next, "cache-control": "no-store" } },
+      );
+    }
+    check(r.method === "GET", 405, "Unsupported method");
+    if (u.pathname === "/auth/login") {
+      const state = crypto.randomUUID(),
+        verifier = base64url.encode(crypto.getRandomValues(new Uint8Array(32)));
       const challenge = base64url.encode(
         new Uint8Array(
           await crypto.subtle.digest(
@@ -185,44 +368,36 @@ export async function authRoute(
       400,
       "Invalid OAuth state",
     );
-    const exchange = await fetch(
-      "https://api.workos.com/user_management/authenticate",
+    const tokens = await workos(
+      c,
+      "/user_management/authenticate",
       {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          client_id: c.WORKOS_CLIENT_ID,
-          client_secret: c.WORKOS_API_KEY,
-          grant_type: "authorization_code",
-          code: u.searchParams.get("code"),
-          code_verifier: payload.verifier,
-        }),
-        signal: AbortSignal.timeout(15000),
+        client_id: c.WORKOS_CLIENT_ID,
+        client_secret: c.WORKOS_API_KEY,
+        grant_type: "authorization_code",
+        code: u.searchParams.get("code"),
+        code_verifier: payload.verifier,
       },
+      io,
     );
-    check(exchange.ok, 502, `WorkOS exchange failed (${exchange.status})`);
-    const tokens: any = await exchange.json();
-    check(typeof tokens.access_token === "string", 502, "Missing access token");
-    await verifyAccess(c, tokens.access_token);
-    // No refresh credential persisted yet: session expires within 15 min or access-token expiry.
-    const sealed = await new EncryptJWT({ access: tokens.access_token })
-      .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
-      .setIssuer(c.ORIGIN)
-      .setAudience("forge-session")
-      .setIssuedAt()
-      .setExpirationTime("15m")
-      .encrypt(sessionKey(c));
     const headers = new Headers({ location: "/", "cache-control": "no-store" });
-    headers.append("set-cookie", sealedCookie("__Host-forge", sealed, 900));
+    headers.append("set-cookie", await sessionCookie(c, tokens, io));
     headers.append("set-cookie", sealedCookie("__Host-forge-flow", "", 0));
     return new Response(null, { status: 303, headers });
   } catch (e) {
+    const headers = new Headers({ "cache-control": "no-store" });
+    if (
+      ["/auth/logout", "/auth/refresh", "/auth/organization"].includes(
+        u.pathname,
+      ) &&
+      (!(e instanceof Fault) ||
+        e.status === 401 ||
+        (u.pathname === "/auth/logout" && e.status >= 500))
+    )
+      headers.set("set-cookie", sealedCookie("__Host-forge", "", 0));
     return Response.json(
       { message: e instanceof Fault ? e.message : "Authentication failed" },
-      {
-        status: e instanceof Fault ? e.status : 401,
-        headers: { "cache-control": "no-store" },
-      },
+      { status: e instanceof Fault ? e.status : 401, headers },
     );
   }
 }

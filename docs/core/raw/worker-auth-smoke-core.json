@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "provider": "local workerd/Miniflare auth boundary only; no Artifacts/R2/D1 bindings or remote operations",
+  "checks": [
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "body": "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>CF Native Forge</title><h1>CF Native Forge</h1><p>Authentication required</p><a href=\"/auth/login\">Sign in with WorkOS</a></html>",
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "status": 503,
+      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/discovery",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 403,
+      "body": "{\"message\":\"Origin required\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "passed": true
+    },
+    {
+      "path": "/lfs/private/objects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "method": "GET",
+      "status": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "passed": true
+    }
+  ],
+  "endpoint": "http://localhost:53672",
+  "runtime": "wrangler 4.146.0",
+  "passed": true
+}

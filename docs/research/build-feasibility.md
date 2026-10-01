@@ -1,5 +1,7 @@
 # Build feasibility and current source register
 
+> Historical research snapshot, not the current product status or scope. [Current implementation and verified boundaries](../implementation.md) supersede deployment blockers and proposals below. CI, Agents SDK, Sandbox/Containers and repository execution are excluded.
+
 Accessed 2026-10-01 UTC / 2026-10-02 Asia/Singapore, before implementation. This supplements the dated planning docs. Source files were fetched to `/tmp/cf-native-forge-research` for inspection; no credentials are in those files. Versions are pinned in package-lock.json: Wrangler 4.146.0, Workers types 5.20261001.1, TypeScript 7.0.2, tsx 4.23.15, noble/hashes 2.4.0, jose 6.2.12, aws4fetch 1.0.20 and Playwright 1.63.0 and Prettier 3.6.2; local emulator Miniflare 5.20261001.0-alpha (also Wrangler’s resolved dependency).
 
 ## Artifacts

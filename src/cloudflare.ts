@@ -1,5 +1,6 @@
 import type { Artifacts, R2Bucket } from "@cloudflare/workers-types";
 import { AwsClient } from "aws4fetch";
+import { publishHTTP, importHTTP, advertisedRefs } from "./git-http.ts";
 import type { GitPlane, Ticket } from "./contracts.ts";
 import type { ObjectStore } from "./storage.ts";
 import { check, digest, root, ID } from "./storage.ts";
@@ -42,16 +43,69 @@ export class NativeGit implements GitPlane {
     using repo = await this.handle(name);
     await repo.revokeToken(token);
   }
+  async refs(name: string) {
+    const token = await this.token(name, "read");
+    try {
+      return (await advertisedRefs(token)).refs;
+    } finally {
+      await this.discard(name, token.id);
+    }
+  }
+  async source(url: string) {
+    return advertisedRefs({ remote: url });
+  }
+  async seal(name: string) {
+    using repo = await this.handle(name);
+    for (const t of (await repo.listTokens()).tokens)
+      await repo.revokeToken(t.id);
+  }
   async create(name: string) {
     const r = await this.artifacts.create(name, { setDefaultBranch: "main" });
     await this.discard(name, r.token);
   }
   async import(name: string, url: string) {
-    const r = await this.artifacts.import({
-      source: { url },
-      target: { name },
-    });
-    await this.discard(name, r.token);
+    // Native importer first. Its full-history limit is smaller than Git repo storage.
+    // Fallback streams a complete ordinary-Git pack; no shallow/history rewrite or filesystem.
+    let result;
+    try {
+      result = await this.artifacts.import({
+        source: { url },
+        target: { name },
+      });
+    } catch (e: any) {
+      if (
+        e.numericCode !== 10402 &&
+        e.code !== "MEMORY_LIMIT" &&
+        !String(e.message).includes("40MB import limit")
+      )
+        throw e;
+      // The physical name is a fresh app-reserved UUID. Do not replace any existing repo.
+      result = await this.artifacts.create(name, {
+        setDefaultBranch: (await advertisedRefs({ remote: url })).defaultBranch,
+      });
+      try {
+        await importHTTP(
+          { remote: url },
+          { remote: result.remote, plaintext: result.token },
+        );
+      } finally {
+        await this.discard(name, result.token);
+      }
+      return;
+    }
+    await this.discard(name, result.token);
+    const token = await this.token(name, "read");
+    try {
+      const source = await advertisedRefs({ remote: url }),
+        dest = await advertisedRefs(token);
+      check(
+        JSON.stringify(source.refs) === JSON.stringify(dest.refs),
+        502,
+        "Native import branch/tag tips disagree; intent retained",
+      );
+    } finally {
+      await this.discard(name, token.id);
+    }
   }
   async fork(source: string, target: string) {
     using repo = await this.handle(source);
@@ -80,6 +134,31 @@ export class NativeGit implements GitPlane {
   async file(name: string, ref: string, path: string) {
     using repo = await this.handle(name);
     return (await repo.readFile({ ref, path })) as unknown as Blob | null;
+  }
+  async revoke(name: string, token: string) {
+    await this.discard(name, token);
+  }
+  async commit(name: string, sha: string) {
+    using repo = await this.handle(name);
+    const c = await repo.readCommit(sha);
+    return c ? { sha: c.hash, tree: c.treeHash, parents: c.parents } : null;
+  }
+  async publish(
+    source: string,
+    target: string,
+    ref: string,
+    base: string,
+    candidate: string,
+  ) {
+    const read = await this.token(source, "read");
+    let write: any;
+    try {
+      write = await this.token(target, "write");
+      await publishHTTP(read, write, ref, base, candidate);
+    } finally {
+      await this.discard(source, read.id);
+      if (write) await this.discard(target, write.id);
+    }
   }
   async token(name: string, scope: "read" | "write") {
     using repo = await this.handle(name);

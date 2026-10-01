@@ -1,0 +1,13 @@
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+Listing lifecycle rules for bucket 'cf-native-forge-lfs-evaluation'...
+name:     Default Multipart Abort Rule
+enabled:  Yes
+prefix:   (all prefixes)
+action:   Abort incomplete multipart uploads after 7 days
+
+name:     cf-native-forge-staging-expiry
+enabled:  Yes
+prefix:   staging-v1/
+action:   Expire objects after 1 days

@@ -16,7 +16,9 @@
     "bench:lfs": "tsx scripts/lfs-benchmark.ts",
     "report": "tsx scripts/report.ts",
     "test:ui": "tsx scripts/ui-smoke.ts",
-    "test:worker": "tsx scripts/worker-auth-smoke.ts"
+    "test:worker": "tsx scripts/worker-auth-smoke.ts",
+    "test:ui:core": "tsx scripts/ui-core.ts",
+    "test:deployed": "tsx scripts/deployed-core-smoke.ts"
   },
   "dependencies": {
     "@noble/hashes": "2.4.0",

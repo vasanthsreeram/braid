@@ -1,0 +1,5 @@
+
+> cf-native-forge@0.1.0 test:ui:core
+> tsx scripts/ui-core.ts
+
+12 core UI checks passed

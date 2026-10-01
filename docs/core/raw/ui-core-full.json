@@ -1,0 +1,21 @@
+{
+  "boundary": "local loopback app + real bare Git; provider identity not emulated",
+  "browser": "installed system Chrome; in-app bootstrap failed missing sandboxPolicy",
+  "checks": [
+    "local identity and private list",
+    "own/shared name search",
+    "immutable added-file diff preview",
+    "UI approve and actual controlled merge",
+    "README text browsing",
+    "nested tree and file browse",
+    "immutable commit history",
+    "email invitation link creation",
+    "invitation listing and revocation",
+    "clone credential panel (filesystem harness, no native credential claim)",
+    "merge receipt reconciliation",
+    "private evaluation discovery contains no publication"
+  ],
+  "passed": true,
+  "pageErrors": [],
+  "screenshot": "docs/core/ui-core.png"
+}
