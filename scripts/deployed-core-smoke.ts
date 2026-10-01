@@ -39,8 +39,8 @@ for (const [path, method, body, headers, status] of [
     404,
   ],
   ["/__local_identity", "GET", undefined, {}, 401],
-  ["/auth/login", "GET", undefined, {}, 503],
-  ["/auth/callback?code=fake&state=fake", "GET", undefined, {}, 503],
+  ["/auth/login", "GET", undefined, {}, 302],
+  ["/auth/callback?code=fake&state=fake", "GET", undefined, {}, 400],
 ] as [string, string, unknown, Record<string, string>, number][]) {
   const r = await fetch(origin + path, {
     method,
@@ -62,7 +62,7 @@ for (const [path, method, body, headers, status] of [
 }
 const result = {
   origin,
-  boundary: "deployed unauthenticated rejection only; WorkOS unconfigured",
+  boundary: "deployed unauthenticated rejection and configured WorkOS authorization redirect only; actual user session not tested",
   checks: rows,
   passed: rows.every((r) => r.passed),
   at: new Date().toISOString(),

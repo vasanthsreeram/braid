@@ -1,13 +1,13 @@
 {
   "origin": "https://gitflare.lintlabs.org",
-  "boundary": "deployed unauthenticated rejection only; WorkOS unconfigured",
+  "boundary": "deployed unauthenticated rejection and configured WorkOS authorization redirect only; actual user session not tested",
   "checks": [
     {
       "path": "/",
       "method": "GET",
       "status": 401,
       "expected": 401,
-      "body": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Gitflare · Sign in</title><style>body{margin:0;background:#0c1014;color:#e5e7eb;font:16px/1.6 system-ui}main{max-width:540px;margin:12vh auto;padding:32px 24px}h1{font-size:42px}button{min-height:44px;font:inherit;padding:8px 18px;margin-bottom:16px}a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;background:#98cbbb;color:#0c1914;border-radius:6px;text-decoration:none}p{color:#a6b0ba}</style></head><body><main><p>PRIVATE REPOSITORIES · SHARED WORK</p><h1>Gitflare</h1><p>Authentication required</p><p>Sign in to browse your repositories and contribution history.</p><p>Sign-in is temporarily unavailable while setup is completed.</p><a href=\"/auth/login\">Sign in with WorkOS</a></main></body></html>",
+      "body": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Gitflare · Sign in</title><style>body{margin:0;background:#0c1014;color:#e5e7eb;font:16px/1.6 system-ui}main{max-width:540px;margin:12vh auto;padding:32px 24px}h1{font-size:42px}button{min-height:44px;font:inherit;padding:8px 18px;margin-bottom:16px}a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;background:#98cbbb;color:#0c1914;border-radius:6px;text-decoration:none}p{color:#a6b0ba}</style></head><body><main><p>PRIVATE REPOSITORIES · SHARED WORK</p><h1>Gitflare</h1><p>Authentication required</p><p>Sign in to browse your repositories and contribution history.</p><a href=\"/auth/login\">Sign in with WorkOS</a></main></body></html>",
       "cacheControl": "no-store, no-transform",
       "passed": true
     },
@@ -122,22 +122,22 @@
     {
       "path": "/auth/login",
       "method": "GET",
-      "status": 503,
-      "expected": 503,
-      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "status": 302,
+      "expected": 302,
+      "body": "",
       "cacheControl": "no-store",
       "passed": true
     },
     {
       "path": "/auth/callback?code=fake&state=fake",
       "method": "GET",
-      "status": 503,
-      "expected": 503,
-      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "status": 400,
+      "expected": 400,
+      "body": "{\"message\":\"Missing OAuth state\"}",
       "cacheControl": "no-store",
       "passed": true
     }
   ],
   "passed": true,
-  "at": "2026-10-01T22:06:47.485Z"
+  "at": "2026-10-01T23:27:43.968Z"
 }
