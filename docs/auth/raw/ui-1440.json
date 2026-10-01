@@ -1,0 +1,57 @@
+{
+  "boundary": "local loopback app + real bare Git; provider identity not emulated",
+  "browser": "installed system Chrome; in-app bootstrap failed missing sandboxPolicy",
+  "checks": [
+    "local identity and private list",
+    "repository list and import form responsive layout and touch targets",
+    "own/shared name search",
+    "immutable added-file diff preview",
+    "review and merge forms responsive layout and touch targets",
+    "UI approve and actual controlled merge",
+    "README text browsing",
+    "nested tree and file browse",
+    "nested file browsing responsive layout and touch targets",
+    "immutable commit history and detail navigation",
+    "commit details responsive layout and touch targets",
+    "email invitation link creation",
+    "invitation listing and revocation",
+    "clone credential panel (filesystem harness, no native credential claim)",
+    "merge receipt reconciliation",
+    "private evaluation discovery contains no publication",
+    "contribution profile responsive layout and touch targets",
+    "profile to commit navigation responsive layout and touch targets",
+    "commit deep link survives reload after local identity reconnect"
+  ],
+  "passed": true,
+  "pageErrors": [],
+  "network": [
+    {
+      "path": "/api/me",
+      "status": 401
+    },
+    {
+      "path": "/auth/refresh",
+      "status": 404
+    },
+    {
+      "path": "/api/me",
+      "status": 401
+    },
+    {
+      "path": "/auth/refresh",
+      "status": 404
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "viewport": {
+    "width": 1440,
+    "height": 1100
+  },
+  "screenshot": "docs/auth/ui-1440.png"
+}

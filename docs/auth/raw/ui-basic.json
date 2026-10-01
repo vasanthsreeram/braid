@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "provider": "local loopback only",
+  "checks": 6,
+  "passed": true,
+  "pageErrors": [],
+  "screenshot": "docs/auth/ui-basic.png",
+  "browser": "headless system Google Chrome; in-app browser tool failed bootstrap due missing sandboxPolicy"
+}

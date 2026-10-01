@@ -1,0 +1,39 @@
+Hosted pre-login UI - heading "Sign in" [level=1]
+- text: Email
+- textbox "Email":
+  - /placeholder: Your email address
+- button "Continue with email"
+- text: OR
+- link "Continue with Google":
+  - /url: /api/login?provider=GoogleOAuth&state=[REDACTED]&redirect_uri=https%3A%2F%2Fgitflare.lintlabs.org%2Fauth%2Fcallback&client_id=client_01M3WQ9VJ9G2MH74MYP7WBD708&source=signin&authorization_session_id=[REDACTED]&signals_id=[REDACTED]
+  - img
+- link "Continue with Microsoft":
+  - /url: /api/login?provider=MicrosoftOAuth&state=[REDACTED]&redirect_uri=https%3A%2F%2Fgitflare.lintlabs.org%2Fauth%2Fcallback&client_id=client_01M3WQ9VJ9G2MH74MYP7WBD708&source=signin&authorization_session_id=[REDACTED]&signals_id=[REDACTED]
+  - img
+- link "Continue with GitHub":
+  - /url: /api/login?provider=GitHubOAuth&state=[REDACTED]&redirect_uri=https%3A%2F%2Fgitflare.lintlabs.org%2Fauth%2Fcallback&client_id=client_01M3WQ9VJ9G2MH74MYP7WBD708&source=signin&authorization_session_id=[REDACTED]&signals_id=[REDACTED]
+  - img
+- link "Continue with Apple":
+  - /url: /api/login?provider=AppleOAuth&state=[REDACTED]&redirect_uri=https%3A%2F%2Fgitflare.lintlabs.org%2Fauth%2Fcallback&client_id=client_01M3WQ9VJ9G2MH74MYP7WBD708&source=signin&authorization_session_id=[REDACTED]&signals_id=[REDACTED]
+  - img
+- paragraph:
+  - text: Don't have an account?
+  - link "Sign up":
+    - /url: /sign-up?state=[REDACTED]&redirect_uri=https%3A%2F%2Fgitflare.lintlabs.org%2Fauth%2Fcallback&authorization_session_id=[REDACTED]
+- alert
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: 'Continue with Google', exact: true }) to be visible[22m
+
+    at <anonymous> (/Users/admin/projects/cf-native-forge/scripts/deployed-browser-smoke.ts:115:6) {
+  log: [
+    "  - waiting for getByRole('button', { name: 'Continue with Google', exact: true }) to be visible"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v26.5.0

@@ -38,15 +38,11 @@ The old benchmark receipts, >100 MiB local LFS results, and five-repetition loca
 
 ## Minimal dedicated WorkOS setup
 
-Create/configure an AuthKit application for this forge in the intended WorkOS environment. No unrelated application's identity is reused. Required values:
+Gitflare / Staging now exists with dedicated client `client_01M3WQ9VJ9G2MH74MYP7WBD708`, issuer verified through public OIDC discovery, and callback/logout/login/homepage configured for `https://gitflare.lintlabs.org`. Nonsecret runtime values and the custom domain are persisted in `wrangler.jsonc`. [Current setup, identity IDs and evidence](auth/result.md) supersede the original deployment gate receipts below.
 
-- Client ID (`WORKOS_CLIENT_ID`).
-- Exact JWT access-token issuer (`WORKOS_ISSUER`) for that client/environment.
-- Environment API key (`WORKOS_API_KEY`).
-- Registered callback: `https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev/auth/callback`.
-- Registered logout return: `https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev/auth/login`.
+The remaining auth setup is a **dedicated Gitflare Staging API key**. In WorkOS Dashboard, select lintlabs → Gitflare → Staging → API keys; reveal the project's initial key if supported, or create a key named “Gitflare Worker” for this environment/application. Save it manually in macOS Keychain Access as service `gitflare/workos-api-key`, account `gitflare`. Do not paste it into chat, source, an `.env`, or a shell command. Run `python3 scripts/configure-core-secrets.py`; it reads this entry into memory and installs only `WORKOS_API_KEY` through Wrangler stdin. The existing session seal secret remains in `cf-native-forge/session-secret` and Worker secrets. MCP OAuth does not supply an application API key.
 
-A random session seal secret already exists in macOS Keychain (`cf-native-forge/session-secret`, account `cf-native-forge`) and Worker secrets. No cookie can create a provider identity. Put the dedicated WorkOS values in Keychain with account `cf-native-forge`, under `cf-native-forge/workos-client-id`, `cf-native-forge/workos-issuer`, and `cf-native-forge/workos-api-key`. `python3 scripts/configure-core-secrets.py` installs these existing values via Wrangler stdin; no credential enters `.env`, source/config, Git URL or reports. It fails when a required dedicated value is missing and creates no provider account/key. Organization invitations require an existing active WorkOS membership; repo links do not provision org seats.
+Then execute a real login/callback/session/refresh/logout and organization/repository authorization exercise before treating the deployed product as functional. Until then `/auth/login` and callback deliberately return 503. Organization invitations require an existing active WorkOS membership; repo links do not provision org seats.
 
 ## Minimal R2 setup
 

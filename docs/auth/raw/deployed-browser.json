@@ -1,0 +1,105 @@
+{
+  "origin": "https://gitflare.lintlabs.org",
+  "at": "2026-10-01T22:06:50.624Z",
+  "boundary": "Real deployed anonymous UI and provider pre-login only. No authenticated WorkOS session: dedicated Worker API key missing. Responsive authenticated features tested in a separate local Git harness.",
+  "checks": [
+    {
+      "width": 390,
+      "path": "/",
+      "status": 401,
+      "layout": {
+        "width": 390,
+        "scroll": 390,
+        "touchTarget": 60
+      },
+      "tls": {
+        "issuer": "WE1",
+        "protocol": "TLS 1.3",
+        "subjectName": "lintlabs.org",
+        "validFrom": 1790888370,
+        "validTo": 1798667960
+      },
+      "passed": true
+    },
+    {
+      "width": 390,
+      "path": "/auth/login",
+      "status": 503,
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "path": "/",
+      "status": 401,
+      "layout": {
+        "width": 1440,
+        "scroll": 1440,
+        "touchTarget": 60
+      },
+      "tls": {
+        "issuer": "WE1",
+        "protocol": "TLS 1.3",
+        "subjectName": "lintlabs.org",
+        "validFrom": 1790888370,
+        "validTo": 1798667960
+      },
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "path": "/auth/login",
+      "status": 503,
+      "passed": true
+    },
+    {
+      "check": "workers.dev canonical redirect",
+      "status": 308,
+      "location": "https://gitflare.lintlabs.org/",
+      "passed": true
+    },
+    {
+      "check": "HTTP to HTTPS",
+      "status": 308,
+      "location": "https://gitflare.lintlabs.org/",
+      "passed": true
+    },
+    {
+      "check": "direct hosted provider pre-login (outside app flow)",
+      "url": "https://sunny-prophecy-65-staging.authkit.app/",
+      "status": 200,
+      "googleVisible": true,
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "network": [
+    {
+      "width": 390,
+      "path": "/",
+      "status": 401
+    },
+    {
+      "width": 390,
+      "path": "/auth/login",
+      "status": 503
+    },
+    {
+      "width": 1440,
+      "path": "/",
+      "status": 401
+    },
+    {
+      "width": 1440,
+      "path": "/auth/login",
+      "status": 503
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 503 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 503 ()"
+  ],
+  "unexpectedConsole": [],
+  "passed": true
+}

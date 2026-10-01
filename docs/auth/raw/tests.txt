@@ -1,0 +1,49 @@
+
+> cf-native-forge@0.1.0 test
+> tsx --test test/*.test.ts
+
+✔ private default, missing identity, same-tenant stranger, other tenant, and discovery leak resistance (73.894958ms)
+✔ sharing grants immediate read, cannot write, and revoke removes access (47.892833ms)
+✔ LFS Batch/basic transfer, duplicate upload, missing OID, range rejection and per-repo ACL (96.779542ms)
+✔ invalid imports, unknown transfer/hash, invalid OID/size, methods and malformed JSON rejected (36.377208ms)
+✔ production entry denies accidental dev credentials and reports missing WorkOS setup (1.889833ms)
+✔ real local Git task fork, immutable proposal, stale-base refusal, excluded native check endpoint (598.321916ms)
+✔ direct-staging flow verifies whole bytes before manifest publication, hides ticket across tenants (48.189375ms)
+✔ WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, session claims and tenant (108.959292ms)
+✔ WorkOS callback without state fails locally without exchanging a fake code (5.142417ms)
+✔ canonical OAuth flow binds S256 PKCE and state, preserves invitation, and seals a host-only session (provider contract double) (50.87ms)
+✔ presigned PUT is bounded in time, method, exact key and signed content length; never GET (3.803625ms)
+✔ provider-backed session lifecycle checks current session and org membership, rotates refresh, rejects CSRF and clears revoked sessions (16.611584ms)
+✔ benchmark transport requires app-authorized task capabilities and rechecks revoked identity (584.632958ms)
+✔ email-bound invitations: verified acceptance, wrong email/org denial, expiry/revoke, one-time grant and safe search (68.411209ms)
+✔ personal sharing crosses personal identity, organization sharing cannot cross organizations (131.980333ms)
+✔ task -> immutable diff -> approval -> real controlled publication; empty seed, replay, concurrent stale-head safety (851.00325ms)
+✔ uncertain publisher retains fence; confirmed push can recover; unchanged head never retries blindly (269.217958ms)
+✔ lifecycle reconciliation refuses fabricated readiness and incomplete source snapshots (43.976667ms)
+✔ native revocation covers tasks beyond listing pages and closes issuance after grant withdrawal (57.55675ms)
+✔ real Git RPC publisher verifies raw packs with and without native flush, preserves old-head CAS and rejects damaged packs (650.123417ms)
+✔ real Git contribution history: every merge parent, UTC author dates, original identities, fork dedupe and revoked visibility (926.56925ms)
+✔ local Miniflare R2 binding: conditional publication, verified checksum, same-OID idempotency and corrupt-chunk abort (280.380541ms)
+✔ CDC boundaries are deterministic across network segmentation, bounded, golden hash (433.254833ms)
+✔ verified ingest / exact streaming reconstruction / idempotent manifest and chunk dedupe (509.801958ms)
+✔ same tenant different repo cannot discover manifest; different tenant has separate chunks (357.689ms)
+✔ failed SHA ingest never publishes (177.038042ms)
+✔ failed short ingest never publishes (0.318083ms)
+✔ failed long ingest never publishes (0.308584ms)
+✔ failed interrupted ingest never publishes (77.605084ms)
+✔ concurrent duplicate ingest has one immutable publication (386.711917ms)
+✔ download detects missing chunks or manifest (176.962792ms)
+✔ download detects corrupt chunks or manifest (179.874292ms)
+✔ download detects length chunks or manifest (176.903917ms)
+✔ download detects order chunks or manifest (239.581916ms)
+✔ manifest rejects traversal, unknown version, inconsistent bounds/length and excessive entries (0.156417ms)
+✔ zero-byte LFS object checks SHA and roundtrips (0.385833ms)
+✔ corrupt preexisting content-addressed chunk prevents publication (205.246541ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3380.936417

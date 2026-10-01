@@ -74,6 +74,7 @@ async function open(id) {
   $("git-credential").hidden = true;
   $("git-secret").value = "";
   $("files").replaceChildren();
+  $("commit-list").replaceChildren();
   $("detail").hidden = false;
   $("repo-header").textContent = r.name + " · " + r.visibility + " · " + r.id;
   $("content").textContent = JSON.stringify(r.git, null, 2);
@@ -87,6 +88,7 @@ $("connect").onclick = action(async () => {
   const p = await api("/api/me");
   $("identity").textContent = p.id + " / " + p.tenant;
   await list();
+  await restoreRoute();
 });
 $("local").onclick = action(async () => {
   const r = await fetch("/__local_identity");
@@ -98,6 +100,7 @@ $("local").onclick = action(async () => {
   const p = await api("/api/me");
   $("identity").textContent = p.id;
   await list();
+  await restoreRoute();
 });
 $("mine").onclick = action(() => list());
 $("discover").onclick = action(() => list(true));
@@ -133,15 +136,85 @@ $("readme").onclick = action(async () => {
     "/api/repos/" + selected + "/file?path=README.md",
   );
 });
+async function showCommit(id, sha) {
+  await open(id);
+  const c = await api(`/api/repos/${id}/commit?sha=${sha}`);
+  $("content").textContent =
+    `${c.sha}\n\n${c.message}\n\nAuthor: ${c.author.name} <${c.author.email}>\nAuthor date: ${new Date(c.authoredAt * 1000).toISOString()}\nCommitter: ${c.committer.name} <${c.committer.email}>\nCommitter date: ${new Date(c.committedAt * 1000).toISOString()}\nParents: ${c.parents.join(" ")}\n\nGit identities are self-declared; they are not verified WorkOS identities.`;
+  $("browse").elements.ref.value = sha;
+  await browseTree(c.tree, "", sha);
+  window.history.replaceState(null, "", `?repo=${id}&commit=${sha}`);
+  $("detail").scrollIntoView({ block: "start" });
+}
+function commitLink(id, sha, label) {
+  const link = document.createElement("a");
+  link.href = `?repo=${id}&commit=${sha}`;
+  link.textContent = label;
+  link.onclick = action(() => showCommit(id, sha));
+  return link;
+}
 $("history").onclick = action(async () => {
   const logs = await api("/api/repos/" + selected + "/log");
-  $("content").textContent = JSON.stringify(logs, null, 2);
-  if (logs[0]) {
-    const tree = await api(
-      "/api/repos/" + selected + "/tree?sha=" + logs[0].tree,
+  $("content").textContent = logs.length
+    ? "Select a commit to view its identity, timestamps and files. History list shows the latest 50 first-parent commits; contribution scans follow all parents."
+    : "No reachable commits.";
+  $("commit-list").replaceChildren(
+    ...logs.map((c) => commitLink(selected, c.sha, `${c.sha} · ${c.message}`)),
+  );
+});
+$("profile").onclick = action(async () => {
+  const p = await api("/api/profile");
+  $("profile-view").hidden = false;
+  $("profile-summary").textContent =
+    `${p.user} · ${p.total} commits · ${p.start} to ${p.end} (UTC)${p.email ? " · " + p.email : " · Verify your account email to see attribution"}`;
+  $("profile-definition").textContent = p.definition;
+  $("profile-limits").textContent =
+    (p.incomplete ? "Partial scan. " : "Scan complete within stated limits. ") +
+    p.limitations;
+  $("heatmap").replaceChildren(
+    ...p.days.map((d) => {
+      const cell = document.createElement("span");
+      cell.className = "day";
+      cell.dataset.level =
+        d.count === 0 ? "0" : d.count === 1 ? "1" : d.count < 5 ? "2" : "3";
+      cell.title = `${d.date}: ${d.count} commits (UTC)`;
+      return cell;
+    }),
+  );
+  $("heatmap").parentElement.scrollLeft = $("heatmap").scrollWidth;
+  $("activity-day").replaceChildren(
+    ...[...p.days].reverse().map((d) => {
+      const option = document.createElement("option");
+      option.value = d.date;
+      option.textContent = `${d.date} · ${d.count} commits`;
+      return option;
+    }),
+  );
+  const active = p.days.filter((d) => d.count > 0).at(-1);
+  if (active) $("activity-day").value = active.date;
+  const render = () => {
+    const rows = p.activity.filter(
+      (c) =>
+        new Date(c.authoredAt * 1000).toISOString().slice(0, 10) ===
+        $("activity-day").value,
     );
-    $("content").textContent += "\n\n" + JSON.stringify(tree, null, 2);
-  }
+    $("activity").replaceChildren(
+      ...rows.flatMap((c) =>
+        c.repositories.map((r) =>
+          commitLink(
+            r.id,
+            c.sha,
+            `${r.name} · ${c.message.split("\n")[0]} · ${c.sha.slice(0, 12)}`,
+          ),
+        ),
+      ),
+    );
+    if (!rows.length)
+      $("activity").textContent = "No attributed commits on this day.";
+  };
+  $("activity-day").onchange = render;
+  render();
+  $("profile-view").scrollIntoView({ block: "start" });
 });
 $("proposals").onclick = action(async () => {
   const ps = await api("/api/repos/" + selected + "/proposals");
@@ -182,10 +255,17 @@ $("proposals").onclick = action(async () => {
     $("reviews").append(row);
   }
 });
+async function restoreRoute() {
+  const u = new URL(location.href),
+    id = u.searchParams.get("repo"),
+    sha = u.searchParams.get("commit");
+  if (id && sha) await showCommit(id, sha);
+  else if (id) await open(id);
+}
 api("/api/me")
   .then((p) => {
     $("identity").textContent = p.id;
-    return list();
+    return list().then(restoreRoute);
   })
   .catch(() => {});
 
@@ -263,16 +343,28 @@ $("access").onclick = action(async () => {
     $("reviews").append(row);
   }
 });
-async function browseTree(sha, prefix, ref) {
+async function browseTree(sha, prefix, ref, parents = []) {
   const tree = await api("/api/repos/" + selected + "/tree?sha=" + sha);
   $("files").replaceChildren();
+  if (parents.length) {
+    const back = document.createElement("button");
+    back.textContent = "Back to parent folder";
+    const prior = parents.at(-1);
+    back.onclick = action(() =>
+      browseTree(prior.sha, prior.prefix, prior.ref, parents.slice(0, -1)),
+    );
+    $("files").append(back);
+  }
   for (const f of tree || []) {
     const button = document.createElement("button");
     button.textContent =
       (f.type === "tree" ? "Folder: " : "File: ") + prefix + f.name;
     button.onclick = action(async () => {
       if (f.type === "tree")
-        await browseTree(f.hash, prefix + f.name + "/", ref);
+        await browseTree(f.hash, prefix + f.name + "/", ref, [
+          ...parents,
+          { sha, prefix, ref },
+        ]);
       else
         $("content").textContent = await api(
           "/api/repos/" +

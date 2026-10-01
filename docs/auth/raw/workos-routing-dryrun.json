@@ -1,0 +1,54 @@
+[
+  {
+    "call": {
+      "tool": "mutate",
+      "arguments": {
+        "operation": "setRedirectUris",
+        "environment_id": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+        "variables": {
+          "dryRun": true,
+          "redirectUris": [
+            {
+              "uri": "https://gitflare.lintlabs.org/auth/callback",
+              "isDefault": true
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"setRedirectUris\": {\n    \"__typename\": \"RedirectUrisSet\",\n    \"redirectUris\": [\n      {\n        \"uri\": \"https://gitflare.lintlabs.org/auth/callback\",\n        \"isDefault\": true,\n        \"id\": \"01M3WQE1KYPZTA2NDSXBMWE6FQ\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "mutate",
+      "arguments": {
+        "operation": "setLogoutUris",
+        "environment_id": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+        "variables": {
+          "dryRun": true,
+          "logoutUris": [
+            {
+              "uri": "https://gitflare.lintlabs.org/auth/login",
+              "isDefault": true
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"setLogoutUris\": {\n    \"__typename\": \"LogoutUrisSet\",\n    \"logoutUris\": [\n      {\n        \"uri\": \"https://gitflare.lintlabs.org/auth/login\",\n        \"isDefault\": true,\n        \"id\": \"01M3WQE25884N465M80AATMKTA\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    }
+  }
+]

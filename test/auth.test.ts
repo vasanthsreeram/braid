@@ -47,6 +47,114 @@ test("WorkOS callback without state fails locally without exchanging a fake code
   );
   assert.equal(r!.status, 400);
 });
+test("canonical OAuth flow binds S256 PKCE and state, preserves invitation, and seals a host-only session (provider contract double)", async () => {
+  const { base64url } = await import("jose");
+  const { readSession } = await import("../src/auth.ts");
+  const c = {
+    ...config,
+    ORIGIN: "https://gitflare.lintlabs.org",
+    SESSION_SECRET: "test-fixture-only-".repeat(3),
+    WORKOS_API_KEY: "test-provider-double",
+  };
+  const { publicKey, privateKey } = await generateKeyPair("RS256");
+  const access = await new SignJWT({ sub: "user_a", sid: "session_a" })
+    .setProtectedHeader({ alg: "RS256" })
+    .setIssuer(c.WORKOS_ISSUER)
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(privateKey);
+  let exchanges = 0;
+  const login = (await authRoute(
+    c,
+    new Request(
+      c.ORIGIN +
+        "/auth/login?invite=invite_safe&return_to=https://evil.invalid",
+    ),
+  ))!;
+  const authorize = new URL(login.headers.get("location")!);
+  assert.equal(
+    authorize.searchParams.get("redirect_uri"),
+    c.ORIGIN + "/auth/callback",
+  );
+  assert.equal(authorize.searchParams.get("code_challenge_method"), "S256");
+  const flow = login.headers.get("set-cookie")!;
+  assert.match(flow, /__Host-forge-flow=/);
+  assert.match(flow, /Secure; HttpOnly; SameSite=Lax/);
+  assert.ok(!flow.includes("Domain="));
+  const io = {
+    verify: (token: string) => verifyAccess(c, token, publicKey),
+    request: (async (url: any, init: any) => {
+      const path = new URL(url).pathname;
+      if (path.endsWith("/authenticate")) {
+        exchanges++;
+        const b = JSON.parse(init.body);
+        assert.equal(b.grant_type, "authorization_code");
+        const challenge = base64url.encode(
+          new Uint8Array(
+            await crypto.subtle.digest(
+              "SHA-256",
+              new TextEncoder().encode(b.code_verifier),
+            ),
+          ),
+        );
+        assert.equal(challenge, authorize.searchParams.get("code_challenge"));
+        return Response.json({
+          access_token: access,
+          refresh_token: "contract-refresh",
+        });
+      }
+      if (path.endsWith("/sessions"))
+        return Response.json({
+          data: [
+            {
+              id: "session_a",
+              user_id: "user_a",
+              status: "active",
+              expires_at: new Date(Date.now() + 60000).toISOString(),
+            },
+          ],
+        });
+      if (path.endsWith("/users/user_a"))
+        return Response.json({
+          id: "user_a",
+          email: "owner@example.invalid",
+          email_verified: true,
+        });
+      throw Error("Unexpected provider request");
+    }) as typeof fetch,
+  };
+  const callback = (state: string) =>
+    new Request(c.ORIGIN + "/auth/callback?code=contract-code&state=" + state, {
+      headers: { cookie: flow.split(";")[0] },
+    });
+  assert.equal((await authRoute(c, callback("wrong"), io))!.status, 400);
+  assert.equal(exchanges, 0);
+  const result = (await authRoute(
+    c,
+    callback(authorize.searchParams.get("state")!),
+    io,
+  ))!;
+  assert.equal(result.status, 303);
+  assert.equal(result.headers.get("location"), "/?invite=invite_safe");
+  const seal = result.headers
+    .getSetCookie()
+    .find((x) => x.startsWith("__Host-forge="))!;
+  assert.match(seal, /Secure; HttpOnly; SameSite=Lax/);
+  assert.ok(!seal.includes("Domain="));
+  const session = await readSession(
+    c,
+    new Request(c.ORIGIN, { headers: { cookie: seal.split(";")[0] } }),
+  );
+  assert.equal(session.refresh, "contract-refresh");
+  await assert.rejects(
+    readSession(
+      { ...c, ORIGIN: "https://other.invalid" },
+      new Request("https://other.invalid", {
+        headers: { cookie: seal.split(";")[0] },
+      }),
+    ),
+  );
+});
 test("presigned PUT is bounded in time, method, exact key and signed content length; never GET", async () => {
   const sign = directUpload({
     R2_ACCESS_KEY_ID: "test-only-id",
@@ -174,6 +282,17 @@ test("provider-backed session lifecycle checks current session and org membershi
     }),
   );
   assert.equal(next.refresh, "refresh2");
+  const resume = (await authRoute(
+    c,
+    new Request(c.ORIGIN + "/auth/refresh", {
+      method: "POST",
+      headers: { cookie, origin: c.ORIGIN, accept: "text/html" },
+    }),
+    io,
+  ))!;
+  assert.equal(resume.status, 303);
+  assert.equal(resume.headers.get("location"), "/");
+
   assert.equal(
     (await authRoute(
       c,

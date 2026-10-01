@@ -124,7 +124,16 @@ export interface GitPlane {
   commit(
     name: string,
     sha: string,
-  ): Promise<{ sha: string; tree: string; parents: string[] } | null>;
+  ): Promise<{
+    sha: string;
+    tree: string;
+    parents: string[];
+    message?: string;
+    author?: { name: string; email: string };
+    committer?: { name: string; email: string };
+    authoredAt?: number;
+    committedAt?: number;
+  } | null>;
   publish(
     source: string,
     target: string,

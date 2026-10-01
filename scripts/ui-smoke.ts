@@ -42,9 +42,9 @@ try {
   await page.getByRole("button", { name: "Fork task", exact: true }).click();
   await page.getByText("ui-task", { exact: true }).waitFor();
   checks++;
-  await mkdir("docs/core", { recursive: true });
+  await mkdir("docs/auth", { recursive: true });
   await page.screenshot({
-    path: "docs/core/ui-local.png",
+    path: "docs/auth/ui-basic.png",
     fullPage: true,
   });
   await page.getByRole("button", { name: "Discover", exact: true }).click();
@@ -52,7 +52,7 @@ try {
   checks++;
   if (errors.length) throw Error("UI console errors: " + errors.join(";"));
   await writeFile(
-    "docs/core/raw/ui-core.json",
+    "docs/auth/raw/ui-basic.json",
     JSON.stringify(
       {
         version: 1,
@@ -60,7 +60,7 @@ try {
         checks,
         passed: true,
         pageErrors: errors,
-        screenshot: "docs/core/ui-local.png",
+        screenshot: "docs/auth/ui-basic.png",
         browser:
           "headless system Google Chrome; in-app browser tool failed bootstrap due missing sandboxPolicy",
       },

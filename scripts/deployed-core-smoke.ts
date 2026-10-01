@@ -1,10 +1,18 @@
 import { writeFile } from "node:fs/promises";
-const origin = "https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev";
+const origin = "https://gitflare.lintlabs.org";
 const rows = [];
 for (const [path, method, body, headers, status] of [
   ["/", "GET", undefined, {}, 401],
   ["/app.js", "GET", undefined, {}, 401],
   ["/api/me", "GET", undefined, {}, 401],
+  ["/api/profile", "GET", undefined, {}, 401],
+  [
+    "/api/repos/private/commit?sha=" + "a".repeat(40),
+    "GET",
+    undefined,
+    {},
+    404,
+  ],
   ["/api/discovery", "GET", undefined, {}, 401],
   ["/api/repos", "GET", undefined, {}, 401],
   ["/api/repos", "POST", { name: "forbidden" }, { origin }, 401],
@@ -60,7 +68,7 @@ const result = {
   at: new Date().toISOString(),
 };
 await writeFile(
-  "docs/core/raw/deployed-core-smoke.json",
+  "docs/auth/raw/deployed-core-smoke.json",
   JSON.stringify(result, null, 2) + "\n",
 );
 console.log(

@@ -1,3 +1,4 @@
+import { reachable, contributions } from "./history.ts";
 import type {
   Services,
   Principal,
@@ -242,6 +243,31 @@ export function application(s: Services) {
         result = json(p);
       } else if (
         path[0] === "api" &&
+        path[1] === "profile" &&
+        path.length === 2 &&
+        request.method === "GET"
+      ) {
+        check(p, 401, "Authentication required");
+        const listed = await s.catalog.list(p, false);
+        const histories = [];
+        let incomplete = listed.length > 20;
+        for (const candidate of listed.slice(0, 20)) {
+          // Listing is a candidate set, not authorization: recheck inherited/tenant grants.
+          let repo: Repo;
+          try {
+            repo = await authorize(s, p, candidate.id, "reader");
+          } catch (e) {
+            if (e instanceof Fault && e.status === 404) continue;
+            throw e;
+          }
+          if (repo.state !== "ready") continue;
+          const h = await reachable(s.git, repo);
+          incomplete ||= h.incomplete;
+          histories.push({ repo, commits: h.commits });
+        }
+        result = json({ ...contributions(p, histories), incomplete });
+      } else if (
+        path[0] === "api" &&
         path[1] === "discovery" &&
         request.method === "GET"
       ) {
@@ -470,7 +496,14 @@ export function application(s: Services) {
           result = json(
             await s.git.log(r.physical, url.searchParams.get("ref") ?? "HEAD"),
           );
-        else if (action === "tree" && request.method === "GET") {
+        else if (action === "commit" && request.method === "GET") {
+          const sha = url.searchParams.get("sha") ?? "";
+          check(SHA.test(sha), 400, "Invalid commit ID");
+          const h = await reachable(s.git, r);
+          const c = h.commits.find((c) => c.sha === sha);
+          check(c, 404, "Commit unavailable in reachable history window");
+          result = json(c);
+        } else if (action === "tree" && request.method === "GET") {
           const sha = url.searchParams.get("sha") ?? "";
           check(/^[0-9a-f]{40}$/.test(sha), 400, "Invalid tree");
           result = json(await s.git.tree(r.physical, sha));

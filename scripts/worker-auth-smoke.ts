@@ -97,7 +97,7 @@ try {
     checks.push({ path, method, status: r.status, body: value, passed: true });
   }
   await writeFile(
-    "docs/core/raw/worker-auth-smoke-core.json",
+    "docs/auth/raw/worker-auth-smoke.json",
     JSON.stringify(
       {
         version: 1,

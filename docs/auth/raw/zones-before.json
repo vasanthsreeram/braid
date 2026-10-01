@@ -1,0 +1,97 @@
+{
+  "result": [
+    {
+      "id": "3c222b4150acc70d0ea326b290ef8f7d",
+      "name": "lintlabs.org",
+      "status": "active",
+      "paused": false,
+      "type": "full",
+      "development_mode": 0,
+      "name_servers": [
+        "donald.ns.cloudflare.com",
+        "grannbo.ns.cloudflare.com"
+      ],
+      "original_name_servers": null,
+      "original_registrar": null,
+      "original_dnshost": null,
+      "modified_on": "2026-07-10T17:54:34.764365Z",
+      "created_on": "2026-07-10T17:54:34.343646Z",
+      "activated_on": "2026-07-10T17:54:34.670328Z",
+      "vanity_name_servers": [],
+      "vanity_name_servers_ips": null,
+      "meta": {
+        "step": 4,
+        "custom_certificate_quota": 0,
+        "page_rule_quota": 3,
+        "phishing_detected": false
+      },
+      "owner": {
+        "id": null,
+        "type": "user",
+        "email": null
+      },
+      "account": {
+        "id": "7efeb52ec5727a903edd8ef7ae8eb925",
+        "name": "S.vasanthrojin@gmail.com's Account"
+      },
+      "tenant": {
+        "id": null,
+        "name": null
+      },
+      "tenant_unit": {
+        "id": null
+      },
+      "permissions": [
+        "#organization:edit",
+        "#organization:read",
+        "#zone_settings:edit",
+        "#dns_records:edit",
+        "#zone_settings:read",
+        "#dns_records:read",
+        "#connectivity_read",
+        "#connectivity_write",
+        "#worker:edit",
+        "#worker:read",
+        "#ssl:read",
+        "#ssl:edit",
+        "#d1:edit",
+        "#analytics:read",
+        "#zone:read",
+        "#r2_bucket_warehouse_sql:read",
+        "#r2_bucket_warehouse:read",
+        "#r2_bucket_warehouse:edit",
+        "#vectorize:read",
+        "#vectorize:edit",
+        "#query_cache:read",
+        "#query_cache:edit",
+        "#r2_bucket_item:read",
+        "#r2_bucket_item:edit",
+        "#r2_bucket:read",
+        "#r2_bucket:edit",
+        "#member:read"
+      ],
+      "plan": {
+        "id": "0feeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "name": "Free Website",
+        "price": 0,
+        "currency": "USD",
+        "frequency": "",
+        "is_subscribed": false,
+        "can_subscribe": false,
+        "legacy_id": "free",
+        "legacy_discount": false,
+        "externally_managed": false
+      }
+    }
+  ],
+  "result_info": {
+    "page": 1,
+    "per_page": 20,
+    "total_pages": 1,
+    "count": 1,
+    "total_count": 1
+  },
+  "success": true,
+  "errors": [],
+  "messages": []
+}

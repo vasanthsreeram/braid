@@ -1,0 +1,30 @@
+{
+  "origin": "https://gitflare.lintlabs.org",
+  "workos": {
+    "project": "project_01M3WQ9V2JJ6M2WRXJWYTBCHBW",
+    "environment": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+    "client": "client_01M3WQ9VJ9G2MH74MYP7WBD708",
+    "application": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+    "mcpAuthenticated": true,
+    "nonsecretSetupComplete": true,
+    "runtimeAPIKeyPresent": false,
+    "liveAppLoginVerified": false
+  },
+  "checks": {
+    "tests": 37,
+    "ui390": 19,
+    "ui1440": 19,
+    "basicUI": 6,
+    "worker": 7,
+    "deployedDenials": 15,
+    "deployedBrowser": 7,
+    "typecheck": true,
+    "build": true
+  },
+  "limitations": [
+    "No authenticated deployed session or app import/review/merge/profile execution until Gitflare server API key installed.",
+    "R2 S3 signing keys still missing; live large LFS remains unverified.",
+    "Contributions are bounded, visibility-scoped commit/email attribution, not ownership or GitHub activity parity."
+  ],
+  "workerVersion": "0c04f6fd-5d30-4da8-88ab-485f99f11dc7"
+}

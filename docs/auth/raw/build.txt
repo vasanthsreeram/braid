@@ -1,0 +1,23 @@
+
+> cf-native-forge@0.1.0 build
+> wrangler deploy --dry-run --outdir dist
+
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+✨ Read 3 files from the assets directory /Users/admin/projects/cf-native-forge/web
+Total Upload: 182.80 KiB / gzip: 46.99 KiB
+Your Worker has access to the following bindings:
+Binding                                                                Resource                  
+env.DB (cf-native-forge-evaluation)                                    D1 Database               
+env.BUCKET (cf-native-forge-lfs-evaluation)                            R2 Bucket                 
+env.ARTIFACTS (cf-native-forge-evaluation)                             Artifacts                 
+env.ASSETS                                                             Assets                    
+env.WORKOS_CLIENT_ID ("client_01M3WQ9VJ9G2MH74MYP7WBD708")             Environment Variable      
+env.WORKOS_ISSUER ("https://api.workos.com/user_managemen...")         Environment Variable      
+env.ORIGIN ("https://gitflare.lintlabs.org")                           Environment Variable      
+env.ALLOW_PUBLIC ("false")                                             Environment Variable      
+env.R2_ACCOUNT_ID ("7efeb52ec5727a903edd8ef7ae8eb925")                 Environment Variable      
+env.R2_BUCKET_NAME ("cf-native-forge-lfs-evaluation")                  Environment Variable      
+
+--dry-run: exiting now.

@@ -1,0 +1,31 @@
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+🌀 Building list of assets...
+✨ Read 3 files from the assets directory /Users/admin/projects/cf-native-forge/web
+🌀 Starting asset upload...
+🌀 Found 1 new or modified static asset to upload. Proceeding with upload...
++ /app.js
+Uploaded 1 of 1 asset
+✨ Success! Uploaded 1 file (2 already uploaded) (1.42 sec)
+
+Total Upload: 182.80 KiB / gzip: 46.99 KiB
+Worker Startup Time: 3 ms
+Your Worker has access to the following bindings:
+Binding                                                                Resource                  
+env.DB (cf-native-forge-evaluation)                                    D1 Database               
+env.BUCKET (cf-native-forge-lfs-evaluation)                            R2 Bucket                 
+env.ARTIFACTS (cf-native-forge-evaluation)                             Artifacts                 
+env.ASSETS                                                             Assets                    
+env.WORKOS_CLIENT_ID ("client_01M3WQ9VJ9G2MH74MYP7WBD708")             Environment Variable      
+env.WORKOS_ISSUER ("https://api.workos.com/user_managemen...")         Environment Variable      
+env.ORIGIN ("https://gitflare.lintlabs.org")                           Environment Variable      
+env.ALLOW_PUBLIC ("false")                                             Environment Variable      
+env.R2_ACCOUNT_ID ("7efeb52ec5727a903edd8ef7ae8eb925")                 Environment Variable      
+env.R2_BUCKET_NAME ("cf-native-forge-lfs-evaluation")                  Environment Variable      
+
+Uploaded cf-native-forge-evaluation (10.46 sec)
+Deployed cf-native-forge-evaluation triggers (4.61 sec)
+  https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev
+  gitflare.lintlabs.org (custom domain)
+Current Version ID: 0c04f6fd-5d30-4da8-88ab-485f99f11dc7

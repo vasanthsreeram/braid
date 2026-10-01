@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"createProjectWithNewEnvironments\": {\n    \"__typename\": \"ProjectCreated\",\n    \"project\": {\n      \"id\": \"project_01M3WQ9V2JJ6M2WRXJWYTBCHBW\",\n      \"name\": \"Gitflare\"\n    }\n  }\n}"
+    }
+  ]
+}

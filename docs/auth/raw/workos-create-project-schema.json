@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "# createProjectWithNewEnvironments (mutation)\n\nCreate a project provisioned with fresh environments \u2014 a staging environment, and a production environment unless opted out\n\n## Parameters\n- includeProductionEnvironment: boolean (optional)\n- name: string (required)\n\nExecute with the mutate tool: {\"operation\":\"createProjectWithNewEnvironments\",\"variables\":{\"includeProductionEnvironment\":false,\"name\":\"<string>\"}}"
+    }
+  ]
+}

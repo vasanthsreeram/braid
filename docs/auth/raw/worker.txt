@@ -1,0 +1,5 @@
+
+> cf-native-forge@0.1.0 test:worker
+> tsx scripts/worker-auth-smoke.ts
+
+Local workerd auth smoke: 7 checks passed (401, 503, 401, 401, 403, 401, 404).

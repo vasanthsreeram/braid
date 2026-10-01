@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "provider": "local workerd/Miniflare auth boundary only; no Artifacts/R2/D1 bindings or remote operations",
+  "checks": [
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "body": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Gitflare · Sign in</title><style>body{margin:0;background:#0c1014;color:#e5e7eb;font:16px/1.6 system-ui}main{max-width:540px;margin:12vh auto;padding:32px 24px}h1{font-size:42px}button{min-height:44px;font:inherit;padding:8px 18px;margin-bottom:16px}a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;background:#98cbbb;color:#0c1914;border-radius:6px;text-decoration:none}p{color:#a6b0ba}</style></head><body><main><p>PRIVATE REPOSITORIES · SHARED WORK</p><h1>Gitflare</h1><p>Authentication required</p><p>Sign in to browse your repositories and contribution history.</p><p>Sign-in is temporarily unavailable while setup is completed.</p><a href=\"/auth/login\">Sign in with WorkOS</a></main></body></html>",
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "status": 503,
+      "body": "{\"message\":\"WorkOS environment unavailable\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/discovery",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "GET",
+      "status": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 403,
+      "body": "{\"message\":\"Origin required\"}",
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "passed": true
+    },
+    {
+      "path": "/lfs/private/objects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "method": "GET",
+      "status": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "passed": true
+    }
+  ],
+  "endpoint": "http://localhost:55008",
+  "runtime": "wrangler 4.146.0",
+  "passed": true
+}

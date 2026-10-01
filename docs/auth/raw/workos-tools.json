@@ -1,0 +1,146 @@
+{
+  "data": [
+    {
+      "name": "workos",
+      "runtimeStatus": "connected",
+      "pluginId": null,
+      "httpOrigin": "https://mcp.workos.com",
+      "serverInfo": {
+        "name": "WorkOS",
+        "title": null,
+        "version": "0.1.0",
+        "description": null,
+        "icons": null,
+        "websiteUrl": null
+      },
+      "serverCapabilities": {
+        "tools": {
+          "listChanged": true
+        }
+      },
+      "tools": {
+        "query": {
+          "name": "query",
+          "description": "Run a query against your WorkOS account by name. Call list_operations first to discover available operations and their parameters. Pass environment_id to choose the environment (whoami returns your available environments); when the operation declares an environmentId parameter it is applied automatically, so you don\u2019t pass it twice. Without environment_id, operations that don\u2019t require one run against a sandbox environment.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "description": "The query name from list_operations, e.g. 'organizations'."
+              },
+              "variables": {
+                "type": "object",
+                "additionalProperties": {},
+                "description": "Parameters for the operation, keyed by name (without the $). See list_operations for each operation\u2019s parameters."
+              },
+              "environment_id": {
+                "type": "string",
+                "description": "The WorkOS environment to operate in (returned by whoami). Defaults to a sandbox environment. When the operation declares an environmentId parameter, this value is applied to it automatically."
+              }
+            },
+            "required": [
+              "operation"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "annotations": {
+            "title": "Query WorkOS",
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        "mutate": {
+          "name": "mutate",
+          "description": "Run a mutation against your WorkOS account by name. Mutations change real data in the targeted environment. Call list_operations first to discover available operations and their parameters. Pass environment_id to choose the environment (whoami returns your available environments); when the operation declares an environmentId parameter it is applied automatically, so you don\u2019t pass it twice. Without environment_id, operations that don\u2019t require one run against a sandbox environment. Destructive operations (permanent deletes) and billing changes require a confirmation token \u2014 the first call returns the impact plus a single-use \"confirmation_token\" and does not execute; pass the token back with the same arguments to proceed.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "description": "The mutation name from list_operations, e.g. 'createOrganization'."
+              },
+              "variables": {
+                "type": "object",
+                "additionalProperties": {},
+                "description": "Parameters for the operation, keyed by name (without the $). See list_operations for each operation\u2019s parameters."
+              },
+              "environment_id": {
+                "type": "string",
+                "description": "The WorkOS environment to operate in (returned by whoami). Defaults to a sandbox environment. When the operation declares an environmentId parameter, this value is applied to it automatically."
+              },
+              "confirmation_token": {
+                "type": "string",
+                "description": "Single-use token issued by a prior call to this operation (a permanent deletion or a billing change). Pass it back with the same arguments to execute. Ignored by operations that don\u2019t require confirmation."
+              }
+            },
+            "required": [
+              "operation"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "annotations": {
+            "title": "Mutate WorkOS",
+            "readOnlyHint": false,
+            "destructiveHint": true,
+            "openWorldHint": true
+          }
+        },
+        "list_operations": {
+          "name": "list_operations",
+          "description": "Discover the WorkOS operations available through the query and mutate tools. Without arguments, returns the full index of operation names \u2014 call it once and reuse the result. Pass filter to narrow the index by keyword (operation name or description). Pass operation for that operation\u2019s parameters and input types, or type to fully expand a specific input/enum type by name. Call whoami to see available environments and their IDs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "description": "An operation name from the index to get its parameters and input types."
+              },
+              "type": {
+                "type": "string",
+                "description": "An input or enum type name (e.g. one named in an operation\u2019s parameters) to fully expand \u2014 use this to resolve deeply nested input shapes without triggering an error."
+              },
+              "filter": {
+                "type": "string",
+                "description": "Case-insensitive keyword to narrow the index by operation name or description, e.g. \"branding\", \"sso\", \"organization\"."
+              }
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "annotations": {
+            "title": "List operations",
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        "whoami": {
+          "name": "whoami",
+          "title": "Who am I",
+          "description": "Return the identity, role, and capability posture of the authenticated caller. Includes the team, a description of what the role can and cannot do, and the available environments grouped by project, each with its ID and OAuth client ID. Environment names repeat across projects, so identify an environment by its client ID (match the WORKOS_CLIENT_ID in the app\u2019s config) or by its project, not by name. Use the returned environment IDs as the environment_id argument for query and mutate calls.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          },
+          "annotations": {
+            "title": "Who am I",
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      },
+      "toolsError": null,
+      "resources": [],
+      "resourceTemplates": [],
+      "authStatus": "oAuth"
+    }
+  ],
+  "nextCursor": null
+}

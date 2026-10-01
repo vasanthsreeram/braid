@@ -262,14 +262,19 @@ export class LocalGit implements GitPlane {
           this.path(name),
           "show",
           "-s",
-          "--format=%H %T %P",
+          "--format=%H%x00%T%x00%P%x00%B%x00%an%x00%ae%x00%cn%x00%ce%x00%at%x00%ct",
           sha,
         ])
-      ).split(" ");
+      ).split("\0");
       return {
         sha: parts[0],
         tree: parts[1],
-        parents: parts.slice(2).filter(Boolean),
+        parents: parts[2].split(" ").filter(Boolean),
+        message: parts[3].trimEnd(),
+        author: { name: parts[4], email: parts[5] },
+        committer: { name: parts[6], email: parts[7] },
+        authoredAt: Number(parts[8]),
+        committedAt: Number(parts[9]),
       };
     } catch {
       return null;

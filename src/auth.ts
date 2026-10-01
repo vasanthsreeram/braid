@@ -309,6 +309,15 @@ export async function authRoute(
         "Refresh identity changed",
       );
       const next = await sessionCookie(c, tokens, io);
+      if (r.headers.get("accept")?.includes("text/html"))
+        return new Response(null, {
+          status: 303,
+          headers: {
+            location: "/",
+            "set-cookie": next,
+            "cache-control": "no-store",
+          },
+        });
       return Response.json(
         { ok: true },
         { headers: { "set-cookie": next, "cache-control": "no-store" } },
@@ -326,7 +335,12 @@ export async function authRoute(
           ),
         ),
       );
-      const flow = await new EncryptJWT({ state, verifier })
+      const invite = u.searchParams.get("invite");
+      const returnTo =
+        invite && ID.test(invite)
+          ? "/?invite=" + encodeURIComponent(invite)
+          : "/";
+      const flow = await new EncryptJWT({ state, verifier, returnTo })
         .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
         .setIssuer(c.ORIGIN)
         .setAudience("forge-oauth")
@@ -380,7 +394,15 @@ export async function authRoute(
       },
       io,
     );
-    const headers = new Headers({ location: "/", "cache-control": "no-store" });
+    const returnTo =
+      typeof payload.returnTo === "string" &&
+      /^\/\?invite=[A-Za-z0-9_-]+$/.test(payload.returnTo)
+        ? payload.returnTo
+        : "/";
+    const headers = new Headers({
+      location: returnTo,
+      "cache-control": "no-store",
+    });
     headers.append("set-cookie", await sessionCookie(c, tokens, io));
     headers.append("set-cookie", sealedCookie("__Host-forge-flow", "", 0));
     return new Response(null, { status: 303, headers });

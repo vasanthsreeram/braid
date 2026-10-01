@@ -182,3 +182,139 @@ footer {
     flex-direction: column;
   }
 }
+
+/* Grid children must shrink; source and heatmap panes own their overflow. */
+main > *,
+article,
+#reviews > div,
+#files,
+#commit-list {
+  min-width: 0;
+}
+header {
+  height: auto;
+  min-height: 88px;
+  flex-wrap: wrap;
+  padding-block: 16px;
+}
+header form {
+  margin: 0;
+}
+button,
+input,
+select,
+header a {
+  min-height: 44px;
+}
+button,
+input,
+select {
+  font-size: 16px;
+}
+header a {
+  display: inline-flex;
+  align-items: center;
+}
+label,
+form {
+  max-width: 100%;
+  min-width: 0;
+}
+form > label {
+  flex: 1 1 180px;
+}
+form > input {
+  flex: 1 1 180px;
+}
+form select {
+  max-width: 100%;
+}
+.tools,
+.repo,
+.section-title {
+  flex-wrap: wrap;
+}
+.repo strong,
+#repo-header,
+#reviews,
+#identity,
+#profile-view {
+  overflow-wrap: anywhere;
+}
+#files,
+#commit-list,
+#activity {
+  display: grid;
+  gap: 8px;
+}
+#files button,
+#commit-list a,
+#activity a {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+#commit-list a,
+#activity a {
+  padding: 10px;
+  min-height: 44px;
+  border: 1px solid #33414e;
+  border-radius: 4px;
+}
+pre {
+  white-space: pre;
+  word-break: normal;
+  max-width: 100%;
+}
+.heatmap-scroll {
+  max-width: 100%;
+  overflow: auto;
+  margin: 20px 0;
+}
+#heatmap {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 16px);
+  grid-auto-columns: 16px;
+  gap: 4px;
+  width: max-content;
+  padding: 4px;
+}
+.day {
+  background: #1d2932;
+  border-radius: 3px;
+}
+.day[data-level="1"] {
+  background: #315d4d;
+}
+.day[data-level="2"] {
+  background: #548f74;
+}
+.day[data-level="3"] {
+  background: #98cbbb;
+}
+:focus-visible {
+  outline: 2px solid #e0be7f;
+  outline-offset: 3px;
+}
+@media (max-width: 800px) {
+  main {
+    margin: 28px 5vw;
+  }
+  article {
+    padding: 16px;
+  }
+  form > label,
+  form > input {
+    flex-basis: auto;
+    width: 100%;
+  }
+  .repo {
+    padding: 16px 0;
+  }
+  .repo strong {
+    flex-basis: 100%;
+  }
+  .tools button {
+    flex: 1 1 140px;
+  }
+}

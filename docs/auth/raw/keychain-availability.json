@@ -1,0 +1,42 @@
+[
+  {
+    "service": "gitflare/workos-client-id",
+    "account": "gitflare",
+    "present": false
+  },
+  {
+    "service": "gitflare/workos-issuer",
+    "account": "gitflare",
+    "present": false
+  },
+  {
+    "service": "gitflare/workos-api-key",
+    "account": "gitflare",
+    "present": false
+  },
+  {
+    "service": "gitflare/session-secret",
+    "account": "gitflare",
+    "present": false
+  },
+  {
+    "service": "cf-native-forge/workos-client-id",
+    "account": "cf-native-forge",
+    "present": false
+  },
+  {
+    "service": "cf-native-forge/workos-issuer",
+    "account": "cf-native-forge",
+    "present": false
+  },
+  {
+    "service": "cf-native-forge/workos-api-key",
+    "account": "cf-native-forge",
+    "present": false
+  },
+  {
+    "service": "cf-native-forge/session-secret",
+    "account": "cf-native-forge",
+    "present": true
+  }
+]

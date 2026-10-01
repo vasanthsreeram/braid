@@ -4,7 +4,7 @@ The original proposal is retained in [the archive](archive/roadmap-planning.md).
 
 The feasible core implementation and dedicated deployment are complete enough for the retained local/provider evidence. The following gates remain before claiming a fully exercised authenticated product:
 
-1. Supply a dedicated WorkOS AuthKit client ID, exact access-token issuer and API key; register the evaluation callback/logout URLs. Exercise real login, refresh, org switching, revoked sessions and removed memberships through the deployed UI and API.
+1. Install the dedicated Gitflare/Staging API key as described in [current setup](auth/result.md); client ID, discovered issuer and canonical callback/logout URLs are configured. Exercise real login, refresh, org switching, revoked sessions and removed memberships through the deployed UI and API.
 2. Supply already-existing bucket-scoped R2 S3 signing credentials, or explicitly authorize narrowly scoped credential generation. Exercise real git-lfs staging/verify/download above 100 MiB and confirm checksum, signature/length, CPU and deduplication behavior on the deployed adapter.
 3. With a real identity, exercise the deployed binding paths for repository create/import/fork, invitations, native credentials, proposal/diff/review/publish/reconcile. The direct provider migration and Git tests are separate evidence.
 

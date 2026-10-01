@@ -1,0 +1,173 @@
+{
+  "passed": true,
+  "compared": [
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    }
+  ]
+}

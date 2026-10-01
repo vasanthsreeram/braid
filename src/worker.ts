@@ -12,7 +12,14 @@ import {
   directUpload,
   type SigningConfig,
 } from "./cloudflare.ts";
-import { authenticate, authRoute, workos, type AuthConfig } from "./auth.ts";
+import {
+  cookie,
+  authenticate,
+  authReady,
+  authRoute,
+  workos,
+  type AuthConfig,
+} from "./auth.ts";
 export interface Env extends AuthConfig, SigningConfig {
   DB: D1Database;
   BUCKET: R2Bucket;
@@ -22,6 +29,21 @@ export interface Env extends AuthConfig, SigningConfig {
 }
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    if (
+      url.hostname ===
+        "cf-native-forge-evaluation.s-vasanthrojin.workers.dev" ||
+      (url.hostname === new URL(env.ORIGIN).hostname &&
+        url.protocol !== "https:")
+    ) {
+      return new Response(null, {
+        status: ["GET", "HEAD"].includes(request.method) ? 308 : 421,
+        headers: {
+          location: env.ORIGIN + url.pathname + url.search,
+          "cache-control": "no-store, no-transform",
+        },
+      });
+    }
     // Production entry point has no local/dev authentication branch, even if someone sets a dev variable.
     const catalog = new SQLCatalog(env.DB as any);
     const authIO = {
@@ -57,18 +79,18 @@ export default {
       if (!principal)
         return new Response(
           path === "/"
-            ? '<!doctype html><html lang="en"><meta charset="utf-8"><title>CF Native Forge</title><h1>CF Native Forge</h1><p>Authentication required</p><a href="/auth/login">Sign in with WorkOS</a></html>'
+            ? `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gitflare · Sign in</title><style>body{margin:0;background:#0c1014;color:#e5e7eb;font:16px/1.6 system-ui}main{max-width:540px;margin:12vh auto;padding:32px 24px}h1{font-size:42px}button{min-height:44px;font:inherit;padding:8px 18px;margin-bottom:16px}a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;background:#98cbbb;color:#0c1914;border-radius:6px;text-decoration:none}p{color:#a6b0ba}</style></head><body><main><p>PRIVATE REPOSITORIES · SHARED WORK</p><h1>Gitflare</h1><p>Authentication required</p><p>Sign in to browse your repositories and contribution history.</p>${authReady(env) ? "" : "<p>Sign-in is temporarily unavailable while setup is completed.</p>"}${authReady(env) && cookie(request, "__Host-forge") ? '<form method="post" action="/auth/refresh"><button>Resume session</button></form>' : ""}<a href="/auth/login${url.searchParams.get("invite") && /^[A-Za-z0-9_-]+$/.test(url.searchParams.get("invite")!) ? "?invite=" + encodeURIComponent(url.searchParams.get("invite")!) : ""}">Sign in with WorkOS</a></main></body></html>`
             : "Authentication required",
           {
             status: 401,
             headers: {
-              "cache-control": "no-store",
+              "cache-control": "no-store, no-transform",
               "content-type":
                 path === "/"
                   ? "text/html; charset=utf-8"
                   : "text/plain; charset=utf-8",
               "content-security-policy":
-                "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
+                "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'",
               "x-content-type-options": "nosniff",
             },
           },
@@ -76,6 +98,7 @@ export default {
       const response = (await env.ASSETS.fetch(
         request as any,
       )) as unknown as Response;
+      response.headers.set("cache-control", "no-store, no-transform");
       response.headers.set(
         "content-security-policy",
         "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'",

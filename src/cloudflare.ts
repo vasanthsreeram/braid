@@ -141,7 +141,7 @@ export class NativeGit implements GitPlane {
   async commit(name: string, sha: string) {
     using repo = await this.handle(name);
     const c = await repo.readCommit(sha);
-    return c ? { sha: c.hash, tree: c.treeHash, parents: c.parents } : null;
+    return c ? { ...c, sha: c.hash, tree: c.treeHash } : null;
   }
   async publish(
     source: string,

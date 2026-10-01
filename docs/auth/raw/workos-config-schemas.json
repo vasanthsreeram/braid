@@ -1,0 +1,111 @@
+[
+  {
+    "call": {
+      "tool": "whoami"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"userName\": \"Vasanth sreeram\",\n  \"userEmail\": \"s.vasanthrojin@gmail.com\",\n  \"teamName\": \"lintlabs\",\n  \"role\": \"ADMIN\",\n  \"roleDescription\": \"Full access. Can manage all resources, team members, billing, and compliance exports.\",\n  \"projects\": [\n    {\n      \"id\": \"project_01M0C73MYAM08HYDQDPQAVSZX1\",\n      \"name\": \"LintLabs Course\",\n      \"environments\": [\n        {\n          \"id\": \"environment_01M0C73MYF02R9T13ETW9WKP8P\",\n          \"name\": \"Staging\",\n          \"sandbox\": true,\n          \"clientId\": \"client_01M0C73N9321FW6PAXJRQR2RP7\"\n        },\n        {\n          \"id\": \"environment_01M0C73NGBXRSG5JNY35G993MY\",\n          \"name\": \"Production\",\n          \"sandbox\": false,\n          \"clientId\": \"client_01M0C73NMGGXRABVFDX5JT2KFX\"\n        }\n      ]\n    },\n    {\n      \"id\": \"project_01KZK22XWG9299BAH5CDTTP6WR\",\n      \"name\": \"lintlabs's Project\",\n      \"environments\": [\n        {\n          \"id\": \"environment_01KZK22XWQRXGTGM9T3YVFNP3M\",\n          \"name\": \"Staging\",\n          \"sandbox\": true,\n          \"clientId\": \"client_01KZK22Y6N9KFZZB3MTNDZP3HQ\"\n        },\n        {\n          \"id\": \"environment_01KZK22YE8DY2ET3GESRTYZQCQ\",\n          \"name\": \"Production\",\n          \"sandbox\": false,\n          \"clientId\": \"client_01KZK22YKY4DJ5XQCQPJYM8FBF\"\n        }\n      ]\n    },\n    {\n      \"id\": \"project_01M0AVP747S50Y5EF6VG9JT4NK\",\n      \"name\": \"lintedu\",\n      \"environments\": [\n        {\n          \"id\": \"environment_01M0AVP74D0PT1TZKQD6KTPSG7\",\n          \"name\": \"Staging\",\n          \"sandbox\": true,\n          \"clientId\": \"client_01M0AVP7M6TTRY42KH3CEB1HBA\"\n        },\n        {\n          \"id\": \"environment_01M0AVP7V1E699D2H77031JWDJ\",\n          \"name\": \"Production\",\n          \"sandbox\": false,\n          \"clientId\": \"client_01M0AVP82362204AF1ZMSDK2K1\"\n        }\n      ]\n    },\n    {\n      \"id\": \"project_01M3WQ9V2JJ6M2WRXJWYTBCHBW\",\n      \"name\": \"Gitflare\",\n      \"environments\": [\n        {\n          \"id\": \"environment_01M3WQ9V3GK4KJ67E7BXDB1YXB\",\n          \"name\": \"Staging\",\n          \"sandbox\": true,\n          \"clientId\": \"client_01M3WQ9VJ9G2MH74MYP7WBD708\"\n        }\n      ]\n    }\n  ]\n}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "authkitSettings"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# authkitSettings (query)\n\nReturn an environment's AuthKit settings (localization, default locale, SSO sign-in consent)\n\n## Parameters\n- environmentId: string (required) \u2014 WorkOS environment ID (`environment_\u2026`). Discover environment IDs with the `dashboardSession` operation.\n\nExecute with the query tool: {\"operation\":\"authkitSettings\",\"environment_id\":\"<environment_id>\"}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "setRedirectUris"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# setRedirectUris (mutation)\n\nSet the full list of allowed redirect URIs for an environment or application (supports dry-run). List the current URIs and their IDs first with the redirectUris query.\n\n## Parameters\n- applicationId: string (optional) \u2014 Targets a specific application. Provide exactly one of environmentId or applicationId \u2014 they are mutually exclusive.\n- dryRun: boolean (optional) \u2014 Validate the redirect URIs without persisting them to the database.\n- environmentId: string (optional) \u2014 Targets the environment's default AuthKit application. Provide exactly one of environmentId or applicationId \u2014 they are mutually exclusive.\n- redirectUris: SetRedirectUriInput[] (required)\n\n## Input types\n\n### SetRedirectUriInput (input object)\n- id: string \u2014 The `redir_\u2026` ID of an existing redirect URI to update. Omit to create a new redirect URI. Discover existing IDs with the `redirectUris` query.\n- isDefault: boolean\n- uri: string (required)\n\nExecute with the mutate tool: {\"operation\":\"setRedirectUris\",\"environment_id\":\"<environment_id>\",\"variables\":{\"applicationId\":\"<string>\",\"dryRun\":false,\"redirectUris\":[]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "setLogoutUris"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# setLogoutUris (mutation)\n\nSet the full list of allowed logout URIs for an environment (supports dry-run validation)\n\n## Parameters\n- dryRun: boolean (optional) \u2014 Validate the logout URIs without persisting them to the database.\n- environmentId: string (required)\n- logoutUris: SetLogoutUriInput[] (required)\n\n## Input types\n\n### SetLogoutUriInput (input object)\n- id: string\n- isDefault: boolean\n- uri: string (required)\n\nExecute with the mutate tool: {\"operation\":\"setLogoutUris\",\"environment_id\":\"<environment_id>\",\"variables\":{\"dryRun\":false,\"logoutUris\":[]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "updateAuthkitSettings"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# updateAuthkitSettings (mutation)\n\nUpdate an environment's AuthKit authentication settings: auth methods, password policy, MFA, sessions, and signup\n\n## Parameters\n- accessTokenExpiry: number (optional)\n- allowSignUp: boolean (optional)\n- appHomepageUrl: string (optional)\n- environmentId: string (required)\n- inactivityTimeout: number (optional)\n- invitationExpiry: number (optional)\n- isAppleOauthEnabled: boolean (optional)\n- isAuthkitClientIdMetadataDocumentEnabled: boolean (optional)\n- isAuthkitDynamicClientRegistrationEnabled: boolean (optional)\n- isAuthkitEnabled: boolean (optional)\n- isAuthkitIdpInitiatedSsoEnabled: boolean (optional)\n- isBitbucketOauthEnabled: boolean (optional)\n- isDiscordOauthEnabled: boolean (optional)\n- isEmailVerificationRequired: boolean (optional) \u2014 Gated by an account-level capability that is disabled for most workspaces \u2014 passing this field fails with \"not supported in this environment\" unless WorkOS has enabled the capability for the account. Omit it unless the capability is known to be enabled.\n- isGitLabOauthEnabled: boolean (optional)\n- isGithubOauthEnabled: boolean (optional)\n- isGoogleOauthEnabled: boolean (optional)\n- isGrokOauthEnabled: boolean (optional)\n- isIntuitOauthEnabled: boolean (optional)\n- isLinkedInOauthEnabled: boolean (optional)\n- isMagicAuthEnabled: boolean (optional)\n- isMfaRequired: boolean (optional)\n- isMicrosoftOauthEnabled: boolean (optional)\n- isPasskeyAuthEnabled: boolean (optional)\n- isPasskeyProgressiveEnrollmentEnabled: boolean (optional)\n- isPasswordAuthEnabled: boolean (optional)\n- isPasswordHistoryEnabled: boolean (optional)\n- isPasswordLowercaseRequired: boolean (optional)\n- isPasswordNumberRequired: boolean (optional)\n- isPasswordPwnedRequired: boolean (optional)\n- isPasswordSymbolRequired: boolean (optional)\n- isPasswordUppercaseRequired: boolean (optional)\n- isSalesforceOauthEnabled: boolean (optional)\n- isSlackOauthEnabled: boolean (optional)\n- isSsoEnabled: boolean (optional)\n- isVercelMarketplaceOauthEnabled: boolean (optional)\n- isVercelOauthEnabled: boolean (optional)\n- isWaitlistEnabled: boolean (optional)\n- isXOauthEnabled: boolean (optional)\n- isXeroOauthEnabled: boolean (optional)\n- maxSessionTime: number (optional)\n- mfaEnabled: UserlandSettingsMfaEnabled (optional)\n- passwordHistorySize: number (optional)\n- passwordMinimumLength: number (optional)\n- passwordMinimumStrength: number (optional)\n- passwordResetUrl: string (optional)\n- signUpUrl: string (optional)\n- userInvitationUrl: string (optional)\n\n## Input types\n\n### UserlandSettingsMfaEnabled (enum)\nThe configuration for MFA for the environment.\nValues: Off, Optional, Required\n\nExecute with the mutate tool: {\"operation\":\"updateAuthkitSettings\",\"environment_id\":\"<environment_id>\",\"variables\":{\"accessTokenExpiry\":0,\"allowSignUp\":false,\"appHomepageUrl\":\"<string>\",\"inactivityTimeout\":0,\"invitationExpiry\":0,\"isAppleOauthEnabled\":false,\"isAuthkitClientIdMetadataDocumentEnabled\":false,\"isAuthkitDynamicClientRegistrationEnabled\":false,\"isAuthkitEnabled\":false,\"isAuthkitIdpInitiatedSsoEnabled\":false,\"isBitbucketOauthEnabled\":false,\"isDiscordOauthEnabled\":false,\"isEmailVerificationRequired\":false,\"isGitLabOauthEnabled\":false,\"isGithubOauthEnabled\":false,\"isGoogleOauthEnabled\":false,\"isGrokOauthEnabled\":false,\"isIntuitOauthEnabled\":false,\"isLinkedInOauthEnabled\":false,\"isMagicAuthEnabled\":false,\"isMfaRequired\":false,\"isMicrosoftOauthEnabled\":false,\"isPasskeyAuthEnabled\":false,\"isPasskeyProgressiveEnrollmentEnabled\":false,\"isPasswordAuthEnabled\":false,\"isPasswordHistoryEnabled\":false,\"isPasswordLowercaseRequired\":false,\"isPasswordNumberRequired\":false,\"isPasswordPwnedRequired\":false,\"isPasswordSymbolRequired\":false,\"isPasswordUppercaseRequired\":false,\"isSalesforceOauthEnabled\":false,\"isSlackOauthEnabled\":false,\"isSsoEnabled\":false,\"isVercelMarketplaceOauthEnabled\":false,\"isVercelOauthEnabled\":false,\"isWaitlistEnabled\":false,\"isXOauthEnabled\":false,\"isXeroOauthEnabled\":false,\"maxSessionTime\":0,\"mfaEnabled\":\"Off\",\"passwordHistorySize\":0,\"passwordMinimumLength\":0,\"passwordMinimumStrength\":0,\"passwordResetUrl\":\"<string>\",\"signUpUrl\":\"<string>\",\"userInvitationUrl\":\"<string>\"}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "updateAuthkitApplication"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# updateAuthkitApplication (mutation)\n\nUpdate an AuthKit application's URLs, session timeouts, and token expiry settings\n\n## Parameters\n- accessTokenExpiry: number (optional)\n- appHomepageUrl: string (optional)\n- applicationId: string (required)\n- inactivityTimeout: number (optional)\n- initiateLoginUri: string (optional)\n- maxSessionTime: number (optional)\n- name: string (optional)\n- passwordResetUrl: string (optional)\n- signUpUrl: string (optional)\n- userInvitationUrl: string (optional)\n\nExecute with the mutate tool: {\"operation\":\"updateAuthkitApplication\",\"variables\":{\"accessTokenExpiry\":0,\"appHomepageUrl\":\"<string>\",\"applicationId\":\"<string>\",\"inactivityTimeout\":0,\"initiateLoginUri\":\"<string>\",\"maxSessionTime\":0,\"name\":\"<string>\",\"passwordResetUrl\":\"<string>\",\"signUpUrl\":\"<string>\",\"userInvitationUrl\":\"<string>\"}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "defaultAuthkitApplication"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# defaultAuthkitApplication (query)\n\nReturn an application's customized AuthKit branding, or null when it inherits the environment's branding\n\n## Parameters\n- environmentId: string (required) \u2014 WorkOS environment ID (`environment_\u2026`). Discover environment IDs with the `dashboardSession` operation.\n\nExecute with the query tool: {\"operation\":\"defaultAuthkitApplication\",\"environment_id\":\"<environment_id>\"}"
+        }
+      ]
+    }
+  }
+]

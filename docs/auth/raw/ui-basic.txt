@@ -1,0 +1,5 @@
+
+> cf-native-forge@0.1.0 test:ui
+> tsx scripts/ui-smoke.ts
+
+UI smoke: 6 checks passed, no page errors.

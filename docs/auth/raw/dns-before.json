@@ -1,0 +1,247 @@
+{
+  "result": [
+    {
+      "id": "db44df368750a7cb532ac74ad0b8c94a",
+      "name": "autodiscover.lintlabs.org",
+      "type": "CNAME",
+      "content": "autodiscover.outlook.com",
+      "proxiable": true,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T11:57:21.566863Z",
+      "modified_on": "2026-08-16T11:57:21.566863Z"
+    },
+    {
+      "id": "fe22e7c2fab0db46a299b0d3f1f2de69",
+      "name": "course.lintlabs.org",
+      "type": "CNAME",
+      "content": "lintlabs-course.pages.dev",
+      "proxiable": true,
+      "proxied": true,
+      "ttl": 1,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-18T15:54:13.27315Z",
+      "modified_on": "2026-08-18T15:54:13.27315Z"
+    },
+    {
+      "id": "f4210b860d78e291f584335e09c277f0",
+      "name": "dev.lintlabs.org",
+      "type": "CNAME",
+      "content": "preview-partner-best.lintweb-main-with-astro-v2.pages.dev",
+      "proxiable": true,
+      "proxied": true,
+      "ttl": 1,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-13T13:42:39.186864Z",
+      "modified_on": "2026-08-13T13:42:39.186864Z"
+    },
+    {
+      "id": "e30a465681ba32679196bf2f72de64ad",
+      "name": "enterpriseenrollment.lintlabs.org",
+      "type": "CNAME",
+      "content": "enterpriseenrollment-s.manage.microsoft.com",
+      "proxiable": true,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T11:57:23.009252Z",
+      "modified_on": "2026-08-16T11:57:23.009252Z"
+    },
+    {
+      "id": "832507d58136df48ea8e0f74eddffa13",
+      "name": "enterpriseregistration.lintlabs.org",
+      "type": "CNAME",
+      "content": "enterpriseregistration.windows.net",
+      "proxiable": true,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T11:57:22.343609Z",
+      "modified_on": "2026-08-16T11:57:22.343609Z"
+    },
+    {
+      "id": "78eca554dcfed0004afdcd7bc245e6e7",
+      "name": "learn.lintlabs.org",
+      "type": "CNAME",
+      "content": "lintlabs-course.pages.dev",
+      "proxiable": true,
+      "proxied": true,
+      "ttl": 1,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": "student portal canonical host",
+      "tags": [],
+      "created_on": "2026-08-24T04:16:15.448914Z",
+      "modified_on": "2026-08-24T04:16:15.448914Z",
+      "comment_modified_on": "2026-08-24T04:16:15.448914Z"
+    },
+    {
+      "id": "db6513baed14ec83b1aea735fd656a93",
+      "name": "lintlabs.org",
+      "type": "CNAME",
+      "content": "lintweb-main-with-astro-v2.pages.dev",
+      "proxiable": true,
+      "proxied": true,
+      "ttl": 1,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": "Main marketing site - Pages lintweb-main-with-astro-v2",
+      "tags": [],
+      "created_on": "2026-07-11T21:41:00.215173Z",
+      "modified_on": "2026-07-11T21:41:00.215173Z",
+      "comment_modified_on": "2026-07-11T21:41:00.215173Z"
+    },
+    {
+      "id": "853276f5934a7e35ac65c83016f3734f",
+      "name": "research.lintlabs.org",
+      "type": "CNAME",
+      "content": "lintlabs-research.pages.dev",
+      "proxiable": true,
+      "proxied": true,
+      "ttl": 1,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": "LintLabs research notes -> Pages lintlabs-research",
+      "tags": [],
+      "created_on": "2026-09-24T23:39:41.17087Z",
+      "modified_on": "2026-09-24T23:39:41.17087Z",
+      "comment_modified_on": "2026-09-24T23:39:41.17087Z"
+    },
+    {
+      "id": "f8e4d19008cb4e3e4c6620fb1ae9cb34",
+      "name": "www.lintlabs.org",
+      "type": "CNAME",
+      "content": "lintweb-main-with-astro-v2.pages.dev",
+      "proxiable": true,
+      "proxied": true,
+      "ttl": 1,
+      "settings": {
+        "flatten_cname": false
+      },
+      "meta": {},
+      "comment": "www -> main marketing Pages",
+      "tags": [],
+      "created_on": "2026-07-11T21:41:01.949581Z",
+      "modified_on": "2026-07-11T21:41:01.949581Z",
+      "comment_modified_on": "2026-07-11T21:41:01.949581Z"
+    },
+    {
+      "id": "c908b09ddd7d439fdb8193c2cb7bf5e8",
+      "name": "lintlabs.org",
+      "type": "MX",
+      "content": "lintlabs-org.mail.protection.outlook.com",
+      "priority": 0,
+      "proxiable": false,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {},
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T11:57:20.320823Z",
+      "modified_on": "2026-08-16T11:57:20.320823Z"
+    },
+    {
+      "id": "a218b05d67173570e6c6762fd5d33c39",
+      "name": "_dmarc.lintlabs.org",
+      "type": "TXT",
+      "content": "v=DMARC1; p=none; rua=mailto:vas@lintlabs.org",
+      "proxiable": false,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {},
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T11:57:21.990552Z",
+      "modified_on": "2026-08-16T11:57:21.990552Z"
+    },
+    {
+      "id": "9284695ad8d8622bb3a98b7b4d263e95",
+      "name": "lintlabs.org",
+      "type": "TXT",
+      "content": "v=spf1 include:spf.protection.outlook.com -all",
+      "proxiable": false,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {},
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T11:57:20.966115Z",
+      "modified_on": "2026-08-16T11:57:20.966115Z"
+    },
+    {
+      "id": "5e6f804f10223c77da3b8b009929c03a",
+      "name": "lintlabs.org",
+      "type": "TXT",
+      "content": "\"MS=ms98068487\"",
+      "proxiable": false,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {},
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-03T13:14:02.095875Z",
+      "modified_on": "2026-08-03T13:14:02.095875Z"
+    },
+    {
+      "id": "ce957af3bac6628b5c0c927f615e0775",
+      "name": "_smtp._tls.lintlabs.org",
+      "type": "TXT",
+      "content": "v=TLSRPTv1; rua=mailto:vas@lintlabs.org",
+      "proxiable": false,
+      "proxied": false,
+      "ttl": 3600,
+      "settings": {},
+      "meta": {},
+      "comment": null,
+      "tags": [],
+      "created_on": "2026-08-16T12:06:56.559782Z",
+      "modified_on": "2026-08-16T12:06:56.559782Z"
+    }
+  ],
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result_info": {
+    "page": 1,
+    "per_page": 500,
+    "count": 14,
+    "total_count": 14,
+    "total_pages": 1
+  }
+}

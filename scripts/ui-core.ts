@@ -12,10 +12,41 @@ const browser = await chromium.launch({
     process.env.FORGE_CHROME_PATH ??
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
 });
-const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } }),
+const page = await browser.newPage({
+    viewport: {
+      width: Number(process.env.FORGE_UI_WIDTH ?? 1440),
+      height: 1100,
+    },
+  }),
   errors: string[] = [],
   checks: string[] = [];
 page.on("pageerror", (e) => errors.push(e.message));
+const network: { path: string; status: number }[] = [],
+  consoleErrors: string[] = [];
+page.on("response", (r) => {
+  if (r.status() >= 400)
+    network.push({ path: new URL(r.url()).pathname, status: r.status() });
+});
+page.on("console", (m) => {
+  if (m.type() === "error") consoleErrors.push(m.text());
+});
+const layout = async (view: string) => {
+  const dimensions = await page.evaluate(() => ({
+    width: innerWidth,
+    scroll: document.documentElement.scrollWidth,
+  }));
+  if (dimensions.scroll > dimensions.width)
+    throw Error(`Page overflow in ${view}: ${JSON.stringify(dimensions)}`);
+  const small = await page
+    .locator("button:visible, input:visible, select:visible")
+    .evaluateAll((nodes) =>
+      nodes
+        .filter((n) => n.getBoundingClientRect().height < 44)
+        .map((n) => n.outerHTML.slice(0, 90)),
+    );
+  if (small.length) throw Error(`Touch targets too small in ${view}: ${small}`);
+  checks.push(view + " responsive layout and touch targets");
+};
 const call = async (path: string, body?: any) => {
   const r = await fetch(local.url + path, {
     method: body ? "POST" : "GET",
@@ -26,6 +57,11 @@ const call = async (path: string, body?: any) => {
   return r.json();
 };
 try {
+  local.credentials.set(local.token, {
+    ...local.principal,
+    email: "fixture@example.invalid",
+    emailVerified: true,
+  });
   const repo = await call("/api/repos", { name: "core-ui-private" });
   const task = await call("/api/repos/" + repo.id + "/tasks", {
     name: "core-ui-task",
@@ -53,6 +89,13 @@ try {
   await page.getByRole("button", { name: "Use local test identity" }).click();
   await page.getByText("core-ui-private", { exact: true }).waitFor();
   checks.push("local identity and private list");
+  await page
+    .getByRole("textbox", { name: "Optional public GitHub URL" })
+    .fill("https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated");
+  await layout("repository list and import form");
+  await page
+    .getByRole("textbox", { name: "Optional public GitHub URL" })
+    .fill("");
   await page.getByRole("searchbox").fill("core-ui-private");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await page
@@ -66,6 +109,7 @@ try {
   await page.getByRole("button", { name: "View diff", exact: true }).click();
   await page.getByText("Safe source text.", { exact: false }).waitFor();
   checks.push("immutable added-file diff preview");
+  await layout("review and merge forms");
   await page.getByRole("button", { name: "approved", exact: true }).click();
   await page.getByText("Decision recorded.", { exact: true }).waitFor();
   await page.getByRole("button", { name: "Proposals", exact: true }).click();
@@ -98,11 +142,15 @@ try {
     .click();
   await page.getByText("Nested fixture content", { exact: true }).waitFor();
   checks.push("nested tree and file browse");
+  await layout("nested file browsing");
   await page
     .getByRole("button", { name: "History & files", exact: true })
     .click();
-  await page.locator("#content").filter({ hasText: candidate }).waitFor();
-  checks.push("immutable commit history");
+  await page.locator("#commit-list").filter({ hasText: candidate }).waitFor();
+  await page.locator("#commit-list a").click();
+  await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
+  checks.push("immutable commit history and detail navigation");
+  await layout("commit details");
   await page
     .getByRole("textbox", { name: "Invite by verified email" })
     .fill("guest@example.invalid");
@@ -145,10 +193,52 @@ try {
     .getByText("No repositories in this view.", { exact: true })
     .waitFor();
   checks.push("private evaluation discovery contains no publication");
+  await page
+    .getByRole("button", { name: "My contribution profile", exact: true })
+    .click();
+  await page
+    .locator("#profile-summary")
+    .filter({ hasText: "1 commits" })
+    .waitFor();
+  await page.locator("#activity a").first().waitFor();
+  if ((await page.locator("#heatmap .day").count()) !== 365)
+    throw Error("Missing real daily counts");
+  await layout("contribution profile");
+  await page.screenshot({
+    path: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile.png`,
+    fullPage: true,
+  });
+  await page.screenshot({
+    path: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile-viewport.png`,
+    fullPage: false,
+  });
+  await page.locator("#activity a").first().click();
+  await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
+  await layout("profile to commit navigation");
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Use local test identity", exact: true })
+    .click();
+  await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
+  checks.push(
+    "commit deep link survives reload after local identity reconnect",
+  );
+
+  const unexpected = network.filter(
+    (r) => !["/api/me", "/auth/refresh", "/favicon.ico"].includes(r.path),
+  );
+  if (unexpected.length) throw Error(JSON.stringify(unexpected));
+  const unexpectedConsole = consoleErrors.filter(
+    (message) => !/responded with a status of (401|404)/.test(message),
+  );
+  if (unexpectedConsole.length) throw Error(unexpectedConsole.join("; "));
   if (errors.length) throw Error(errors.join("; "));
-  await page.screenshot({ path: "docs/core/ui-core.png", fullPage: true });
+  await page.screenshot({
+    path: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
+    fullPage: true,
+  });
   await writeFile(
-    "docs/core/raw/ui-core-full.json",
+    `docs/auth/raw/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.json`,
     JSON.stringify(
       {
         boundary:
@@ -158,7 +248,10 @@ try {
         checks,
         passed: true,
         pageErrors: errors,
-        screenshot: "docs/core/ui-core.png",
+        network,
+        consoleErrors,
+        viewport: page.viewportSize(),
+        screenshot: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
       },
       null,
       2,

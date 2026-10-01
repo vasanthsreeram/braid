@@ -1,0 +1,77 @@
+[
+  {
+    "call": {
+      "tool": "mutate",
+      "arguments": {
+        "operation": "setRedirectUris",
+        "environment_id": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+        "variables": {
+          "dryRun": false,
+          "redirectUris": [
+            {
+              "uri": "https://gitflare.lintlabs.org/auth/callback",
+              "isDefault": true
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"setRedirectUris\": {\n    \"__typename\": \"RedirectUrisSet\",\n    \"redirectUris\": [\n      {\n        \"uri\": \"https://gitflare.lintlabs.org/auth/callback\",\n        \"isDefault\": true,\n        \"id\": \"redir_01M3WQESK8HPAYVM76SXPP276F\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "mutate",
+      "arguments": {
+        "operation": "setLogoutUris",
+        "environment_id": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+        "variables": {
+          "dryRun": false,
+          "logoutUris": [
+            {
+              "uri": "https://gitflare.lintlabs.org/auth/login",
+              "isDefault": true
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"setLogoutUris\": {\n    \"__typename\": \"LogoutUrisSet\",\n    \"logoutUris\": [\n      {\n        \"uri\": \"https://gitflare.lintlabs.org/auth/login\",\n        \"isDefault\": true,\n        \"id\": \"logout_uri_01M3WQET5KZEBK2E6JGRH2KCHF\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "mutate",
+      "arguments": {
+        "operation": "updateAuthkitApplication",
+        "environment_id": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+        "variables": {
+          "applicationId": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+          "name": "Gitflare",
+          "initiateLoginUri": "https://gitflare.lintlabs.org/auth/login",
+          "appHomepageUrl": "https://gitflare.lintlabs.org"
+        }
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"updateUserlandApplication\": {\n    \"__typename\": \"UserlandApplicationUpdated\",\n    \"userlandApplication\": {\n      \"id\": \"app_01M3WQ9VPR19MF2K8359SNVN0S\",\n      \"name\": \"Gitflare\",\n      \"clientId\": \"client_01M3WQ9VJ9G2MH74MYP7WBD708\",\n      \"environmentId\": \"environment_01M3WQ9V3GK4KJ67E7BXDB1YXB\",\n      \"createdAt\": \"2026-10-01T21:53:04.580Z\",\n      \"updatedAt\": \"2026-10-01T21:55:48.071Z\",\n      \"initiateLoginUri\": \"https://gitflare.lintlabs.org/auth/login\",\n      \"appHomepageUrl\": \"https://gitflare.lintlabs.org\",\n      \"signUpUrl\": null,\n      \"passwordResetUrl\": null,\n      \"userInvitationUrl\": null,\n      \"maxSessionTime\": 31536000,\n      \"accessTokenExpiry\": 300,\n      \"inactivityTimeout\": 172800,\n      \"isDefault\": true,\n      \"appBranding\": null,\n      \"keys\": [\n        {\n          \"id\": \"key_01M3WQ9VPVR0B8B7K30AEMS5NZ\",\n          \"createdAt\": \"2026-10-01T21:53:04.580Z\",\n          \"expiredAt\": null,\n          \"lastUsedAt\": null,\n          \"name\": \"WorkOS API key\",\n          \"platform\": null,\n          \"applicationId\": \"app_01M3WQ9VPR19MF2K8359SNVN0S\"\n        }\n      ],\n      \"redirectUris\": [\n        {\n          \"id\": \"redir_01M3WQESK8HPAYVM76SXPP276F\",\n          \"uri\": \"https://gitflare.lintlabs.org/auth/callback\",\n          \"isDefault\": true\n        }\n      ],\n      \"logoutUris\": [\n        {\n          \"id\": \"logout_uri_01M3WQET5KZEBK2E6JGRH2KCHF\",\n          \"uri\": \"https://gitflare.lintlabs.org/auth/login\",\n          \"isDefault\": true\n        }\n      ],\n      \"webOrigins\": []\n    }\n  }\n}"
+        }
+      ]
+    }
+  }
+]
