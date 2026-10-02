@@ -1,0 +1,24 @@
+{
+  "boundary": "Private own-source preflight and verified unrestricted bundle only; destination app import is NOT performed",
+  "sourceCommit": "adaf46498d98337547650b3ca4dc671870423689",
+  "refs": [
+    "refs/heads/main adaf46498d98337547650b3ca4dc671870423689"
+  ],
+  "unsupportedAdditionalRefs": [],
+  "bundle": "/Users/admin/projects/cf-native-forge/.tmp/gitflare-private.bundle",
+  "compressedBytes": 10756902,
+  "reachableObjects": 592,
+  "uncompressedObjectBytes": 15096806,
+  "largestBlob": {
+    "id": "d52fa78919babb7106b3226c1205b5249028eec8",
+    "type": "blob",
+    "size": 525863
+  },
+  "inventorySha256": "4f526f02cc9939d07333e808eabb0b1344ca428ac6b1c9e69b2493e88fb5cfbe",
+  "artifactsLimits": {
+    "blobBytes": 33554432,
+    "repositoryBytes": 1073741824,
+    "receiverValidationStillRequired": true
+  },
+  "at": "2026-10-02T01:11:09.752Z"
+}

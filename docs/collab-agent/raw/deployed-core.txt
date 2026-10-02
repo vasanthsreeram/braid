@@ -1,0 +1,5 @@
+
+> cf-native-forge@0.1.0 test:deployed
+> tsx scripts/deployed-core-smoke.ts
+
+27/27 deployed denials pass

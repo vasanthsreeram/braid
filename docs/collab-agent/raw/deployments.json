@@ -1,0 +1,163 @@
+[
+  {
+    "id": "9ea0f6f0-1898-4626-94f7-84e18554a6dd",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "ad0402f9-ddc7-4f84-8965-6443b76e4640",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-01T21:55:33.952295Z"
+  },
+  {
+    "id": "7e9cb279-518b-4d96-9269-f1c8eebc6107",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "dbbb960f-5500-4205-8823-5d209e2268b7",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-01T21:58:21.131504Z"
+  },
+  {
+    "id": "bb247119-128d-4e6d-a299-2609464e5392",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "4a276661-28bb-41fb-b349-66751ae81618",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-01T22:01:34.973184Z"
+  },
+  {
+    "id": "97bbe312-e00c-4a75-b1ac-ce8f1bd72b69",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "0c04f6fd-5d30-4da8-88ab-485f99f11dc7",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-01T22:06:40.214803Z"
+  },
+  {
+    "id": "75953b02-a9ef-4d7b-8851-5b724ca34d9b",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "secret"
+    },
+    "versions": [
+      {
+        "version_id": "83c40723-068c-4f4f-b2d0-d9cbf3d1e016",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-01T23:26:28.636955Z"
+  },
+  {
+    "id": "e4826ed0-5a3c-428b-b2e1-773366efadf8",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "4990fb17-ac1a-4641-a248-d8b722e20f3e",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-01T23:50:26.721523Z"
+  },
+  {
+    "id": "d3429607-1f7c-4a45-b658-371323901508",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "e1cbb199-3e4f-4ead-9f4e-c398d639d574",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-02T00:00:03.194154Z"
+  },
+  {
+    "id": "56497c91-5083-4f68-817f-b2ec402c2104",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/message": "Automatic deployment on upload.",
+      "workers/triggered_by": "upload"
+    },
+    "versions": [
+      {
+        "version_id": "613ae2f7-489b-4a3e-b6ed-864abcf701b8",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-02T00:39:39.317463Z"
+  },
+  {
+    "id": "7e236c53-1b87-4373-8854-4eb8c5bd2daa",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "fdfe4de1-7c72-407b-b11e-c4ea5711da47",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-02T01:02:49.072318Z"
+  },
+  {
+    "id": "6c0bf5ba-876a-46a3-bc3b-14e3bf70857c",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "7a1749a8-824f-48e2-8a75-6e60d0c99d5f",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-02T01:10:13.262468Z"
+  }
+]

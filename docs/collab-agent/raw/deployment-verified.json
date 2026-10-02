@@ -1,0 +1,20 @@
+{
+  "codeCommit": "adaf46498d98337547650b3ca4dc671870423689",
+  "latestDeployment": {
+    "id": "6c0bf5ba-876a-46a3-bc3b-14e3bf70857c",
+    "source": "wrangler",
+    "strategy": "percentage",
+    "author_email": "s.vasanthrojin@gmail.com",
+    "annotations": {
+      "workers/triggered_by": "deployment"
+    },
+    "versions": [
+      {
+        "version_id": "7a1749a8-824f-48e2-8a75-6e60d0c99d5f",
+        "percentage": 100
+      }
+    ],
+    "created_on": "2026-10-02T01:10:13.262468Z"
+  },
+  "customDomain": "https://gitflare.lintlabs.org"
+}

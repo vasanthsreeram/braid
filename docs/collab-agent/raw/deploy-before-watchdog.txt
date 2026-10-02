@@ -1,0 +1,36 @@
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+🌀 Building list of assets...
+✨ Read 3 files from the assets directory /Users/admin/projects/cf-native-forge/web
+🌀 Starting asset upload...
+🌀 Found 2 new or modified static assets to upload. Proceeding with upload...
++ /style.css
++ /app.js
+Uploaded 1 of 2 assets
+Uploaded 2 of 2 assets
+✨ Success! Uploaded 2 files (1 already uploaded) (1.55 sec)
+
+Total Upload: 1183.06 KiB / gzip: 231.56 KiB
+Worker Startup Time: 11 ms
+Your Worker has access to the following bindings:
+Binding                                                                          Resource                  
+env.REVIEWS (ReviewCoordinator)                                                  Durable Object            
+env.DB (cf-native-forge-evaluation)                                              D1 Database               
+env.BUCKET (cf-native-forge-lfs-evaluation)                                      R2 Bucket                 
+env.ARTIFACTS (cf-native-forge-evaluation)                                       Artifacts                 
+env.AI                                                                           AI                        
+env.ASSETS                                                                       Assets                    
+env.WORKOS_CLIENT_ID ("client_01M3WQ9VJ9G2MH74MYP7WBD708")                       Environment Variable      
+env.WORKOS_ACCESS_TOKEN_ISSUER ("https://api.workos.com")                        Environment Variable      
+env.WORKOS_ISSUER ("https://api.workos.com/user_managemen...")                   Environment Variable      
+env.ORIGIN ("https://gitflare.lintlabs.org")                                     Environment Variable      
+env.ALLOW_PUBLIC ("false")                                                       Environment Variable      
+env.R2_ACCOUNT_ID ("7efeb52ec5727a903edd8ef7ae8eb925")                           Environment Variable      
+env.R2_BUCKET_NAME ("cf-native-forge-lfs-evaluation")                            Environment Variable      
+
+Uploaded cf-native-forge-evaluation (12.81 sec)
+Deployed cf-native-forge-evaluation triggers (4.65 sec)
+  https://cf-native-forge-evaluation.s-vasanthrojin.workers.dev
+  gitflare.lintlabs.org (custom domain)
+Current Version ID: fdfe4de1-7c72-407b-b11e-c4ea5711da47

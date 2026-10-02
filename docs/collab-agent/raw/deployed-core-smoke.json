@@ -1,0 +1,251 @@
+{
+  "origin": "https://gitflare.lintlabs.org",
+  "boundary": "deployed unauthenticated rejection and configured WorkOS authorization redirect only; actual user session not tested",
+  "checks": [
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Gitflare · Sign in</title><style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#faf8f3;color:#292722;font:16px/1.65 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif}header{height:82px;padding:20px 5vw;border-bottom:1px solid #ded8cd;background:#fffdfa;font-weight:800;font-size:21px;letter-spacing:-.7px}main{max-width:1100px;margin:12vh auto;padding:32px 5vw;display:grid;grid-template-columns:1.2fr .8fr;gap:70px}h1{font-size:clamp(42px,6vw,64px);line-height:1.08;letter-spacing:-2.4px;margin:20px 0 28px;font-weight:650}.eyebrow{font:11px ui-monospace,monospace;letter-spacing:1.7px;color:#b8430c}button{min-height:44px;font:inherit;padding:10px 20px;margin-bottom:16px;border:1px solid #c5bdb0;border-radius:24px;background:#fffdfa}a{display:inline-flex;align-items:center;min-height:48px;padding:12px 24px;background:#b8430c;color:#fff;border-radius:28px;text-decoration:none;font-weight:600}p{color:#6c655d}.card{background:#fffdfa;border:1px solid #ded8cd;border-radius:18px;padding:30px;align-self:center}.card p{padding:14px 0;border-bottom:1px solid #ded8cd}.card p:last-child{border:0}.mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#ff681e;color:#fff;margin-right:10px;font-size:25px}:focus-visible{outline:3px solid #a4380b;outline-offset:4px}@media(max-width:700px){main{grid-template-columns:1fr;gap:26px;margin:5vh auto}.card{padding:22px}h1{font-size:48px}}</style></head><body><header><span class=\"mark\">↗</span>GITFLARE</header><main><div><p class=\"eyebrow\">PRIVATE REPOSITORIES / SHARED WORK</p><h1>Good work<br>starts together.</h1><p>Code, issues, and conversations in one private workspace.</p><p>Authentication required · Sign in to continue.</p><a href=\"/auth/login\">Sign in with GitHub</a></div><aside class=\"card\"><p class=\"eyebrow\">A HOME FOR YOUR NEXT COMMIT</p><h2>Keep the context.</h2><p>Private Git history with your authors, dates, branches, and tags.</p><p>Issues and collaboration with clear repository permissions.</p><p>Read-only reviews with source citations and evidence.</p></aside></main></body></html>",
+      "cacheControl": "no-store, no-transform",
+      "passed": true
+    },
+    {
+      "path": "/app.js",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "Authentication required",
+      "cacheControl": "no-store, no-transform",
+      "passed": true
+    },
+    {
+      "path": "/api/github",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/github/repos",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/github/import",
+      "method": "POST",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/me",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/profile",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/commit?sha=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/issues",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/issues/1",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/issues",
+      "method": "POST",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/collaborators",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/discussion/proposal",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/agents",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private/agents",
+      "method": "POST",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/bundles?name=forbidden",
+      "method": "POST",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/bundles?name=forbidden",
+      "method": "POST",
+      "status": 403,
+      "expected": 403,
+      "body": "{\"message\":\"Origin required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/discovery",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 401,
+      "expected": 401,
+      "body": "{\"message\":\"Authentication required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "POST",
+      "status": 403,
+      "expected": 403,
+      "body": "{\"message\":\"Origin required\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/api/repos/private",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/lfs/private/objects/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "method": "GET",
+      "status": 404,
+      "expected": 404,
+      "body": "{\"message\":\"Not found\"}",
+      "cacheControl": null,
+      "passed": true
+    },
+    {
+      "path": "/__local_identity",
+      "method": "GET",
+      "status": 401,
+      "expected": 401,
+      "body": "Authentication required",
+      "cacheControl": "no-store, no-transform",
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "status": 302,
+      "expected": 302,
+      "body": "",
+      "cacheControl": "no-store",
+      "passed": true
+    },
+    {
+      "path": "/auth/callback?[redacted]",
+      "method": "GET",
+      "status": 400,
+      "expected": 400,
+      "body": "{\"message\":\"Missing OAuth state\",\"phase\":\"oauth_state\"}",
+      "cacheControl": "no-store",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "at": "2026-10-02T01:11:59.573Z"
+}
