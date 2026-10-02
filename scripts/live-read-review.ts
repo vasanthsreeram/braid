@@ -36,6 +36,10 @@ const infer = (input: any, signal: AbortSignal) =>
         const receipt = JSON.parse(out);
         if (receipt.httpStatus !== 200 || !receipt.success)
           throw Error(`Workers AI status ${receipt.httpStatus}`);
+        void writeFile(
+          `docs/collab-agent/raw/live-model-response-${requests}.json`,
+          JSON.stringify(receipt.result, null, 2) + "\n",
+        );
         resolve(receipt.result);
       } catch (e) {
         reject(e);
@@ -67,7 +71,7 @@ try {
   const scope = reviewScope(repo, {
     sha,
     base,
-    paths: ["src/bundle.ts", "src/pi-storage.ts", "src/issues.ts"],
+    paths: ["src/review-coordinator.ts"],
   });
   const broker = new ReadBroker(plane, scope, async () => {});
   const control = new AbortController(),

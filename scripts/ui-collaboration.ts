@@ -129,6 +129,11 @@ try {
     await p.getByLabel("Update state").selectOption("closed");
     await p.getByRole("button", { name: "Save issue" }).click();
     await p.getByText("Issue saved.", { exact: true }).waitFor();
+    await p.locator("#issue-meta").filter({ hasText: "closed" }).waitFor();
+    assert.equal(
+      (await ownerCall(prefix + "/issues/" + issue.number)).issue.state,
+      "closed",
+    );
     await layout(p, "issue detail");
     await layout(r, "reader detail");
     await p.screenshot({

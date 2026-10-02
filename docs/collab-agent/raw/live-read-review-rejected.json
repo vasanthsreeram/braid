@@ -1,0 +1,8 @@
+{
+  "boundary": "Actual source/real provider attempt, no WorkOS app identity or import",
+  "sourceCommit": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+  "provider": "@cf/qwen/qwen3-30b-a3b-fp8",
+  "requests": 1,
+  "passed": false,
+  "error": "Finding evidence does not match cited lines"
+}

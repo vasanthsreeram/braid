@@ -1,0 +1,97 @@
+{
+  "boundary": "Real local workerd Durable Object journal and Pi runtime; actual private project source snapshot adapter; real remote Workers AI binding. No WorkOS app identity or app-owned import.",
+  "sourceCommit": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+  "originalPath": "src/bundle.ts",
+  "hash": "bacbf0f372c27ce99de816305adbec6a77c3c3bf",
+  "checks": [
+    {
+      "journal": {
+        "persisted": {
+          "value": 42
+        },
+        "id": 1,
+        "same": true,
+        "runtime": "real local workerd DO SQLite + Pi JSONL"
+      },
+      "passed": true
+    },
+    {
+      "deploymentBudget": 36,
+      "request37": 429,
+      "realInference": false,
+      "passed": true
+    }
+  ],
+  "review": {
+    "passed": false,
+    "error": "Finding evidence does not match cited lines",
+    "requests": 1,
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": null,
+            "audio": null,
+            "content": "\n\n{\"findings\":[{\"title\":\"Potential infinite loop in bundle header parsing\",\"path\":\"bundle.ts\",\"start\":20,\"end\":37,\"evidence\":\"    while (headerEnd < 0) {\\n      const next = await reader.read();\\n      check(!next.done, 422, \\\"Truncated bundle\\\");\\n      const b = new Uint8Array(pending.length + next.value.length);\\n      b.set(pending);\\n      b.set(next.value, pending.length);\\n      pending = b;\\n      for (let i = 0; i < Math.min(pending.length - 1, 65536); i++)\\n        if (pending[i] === 10 && pending[i + 1] === 10) {\\n          headerEnd = i + 2;\\n          break;\\n        }\\n      check(\\n        headerEnd >= 0 || pending.length <= 65536,\\n        413,\\n        \\\"Bundle header exceeds 64 KiB\\\",\\n      );\\n    }\",\"explanation\":\"The code may enter an infinite loop if the bundle header does not contain two consecutive newline characters (10) within the first 65536 bytes. The check for headerEnd >= 0 is only performed after processing each chunk, but if the header is malformed and never finds the double newline, the loop will continue indefinitely. This could lead to a denial of service attack by sending a malicious bundle that never completes the header parsing.\",\"sha\":\"12bfa66f551ad90936f7d70cc63d96bba1a1426b\",\"severity\":\"high\"},{\"title\":\"Missing validation for bundle header length\",\"path\":\"bundle.ts\",\"start\":38,\"end\":40,\"evidence\":\"    const lines = dec.decode(pending.subarray(0, headerEnd - 1)).split(\\\"\\\\n\\\");\\n    check(\\n      lines.shift() === \\\"# v2 git bundle\\\",\\n      422,\\n      \\\"Only unrestricted v2 SHA-1 Git bundles are supported\\\",\\n    );\",\"explanation\":\"The code assumes that the headerEnd is valid and that the header is properly formatted, but there is no explicit check to ensure that headerEnd is within the bounds of the pending array. If headerEnd is not properly calculated, this could lead to out-of-bounds access when slicing the pending array. This could result in undefined behavior or security vulnerabilities.\",\"sha\":\"12bfa66f551ad90936f7d70cc63d96bba1a1426b\",\"severity\":\"medium\"}]}",
+            "function_call": null,
+            "reasoning": "\n\n",
+            "reasoning_content": "\n\n",
+            "refusal": null,
+            "role": "assistant"
+          },
+          "routed_experts": null,
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "created": 1790902333,
+      "ec_transfer_params": null,
+      "id": "chatcmpl-6e9e3edb-ddd7-4cdc-99b9-747689184bb8",
+      "kv_transfer_params": null,
+      "metrics": null,
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "object": "chat.completion",
+      "prompt_logprobs": null,
+      "prompt_text": null,
+      "prompt_token_ids": null,
+      "response": {
+        "findings": [
+          {
+            "end": 37,
+            "evidence": "    while (headerEnd < 0) {\n      const next = await reader.read();\n      check(!next.done, 422, \"Truncated bundle\");\n      const b = new Uint8Array(pending.length + next.value.length);\n      b.set(pending);\n      b.set(next.value, pending.length);\n      pending = b;\n      for (let i = 0; i < Math.min(pending.length - 1, 65536); i++)\n        if (pending[i] === 10 && pending[i + 1] === 10) {\n          headerEnd = i + 2;\n          break;\n        }\n      check(\n        headerEnd >= 0 || pending.length <= 65536,\n        413,\n        \"Bundle header exceeds 64 KiB\",\n      );\n    }",
+            "explanation": "The code may enter an infinite loop if the bundle header does not contain two consecutive newline characters (10) within the first 65536 bytes. The check for headerEnd >= 0 is only performed after processing each chunk, but if the header is malformed and never finds the double newline, the loop will continue indefinitely. This could lead to a denial of service attack by sending a malicious bundle that never completes the header parsing.",
+            "path": "bundle.ts",
+            "severity": "high",
+            "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+            "start": 20,
+            "title": "Potential infinite loop in bundle header parsing"
+          },
+          {
+            "end": 40,
+            "evidence": "    const lines = dec.decode(pending.subarray(0, headerEnd - 1)).split(\"\\n\");\n    check(\n      lines.shift() === \"# v2 git bundle\",\n      422,\n      \"Only unrestricted v2 SHA-1 Git bundles are supported\",\n    );",
+            "explanation": "The code assumes that the headerEnd is valid and that the header is properly formatted, but there is no explicit check to ensure that headerEnd is within the bounds of the pending array. If headerEnd is not properly calculated, this could lead to out-of-bounds access when slicing the pending array. This could result in undefined behavior or security vulnerabilities.",
+            "path": "bundle.ts",
+            "severity": "medium",
+            "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+            "start": 38,
+            "title": "Missing validation for bundle header length"
+          }
+        ]
+      },
+      "service_tier": null,
+      "tool_calls": [],
+      "usage": {
+        "prompt_tokens": 3574,
+        "completion_tokens": 585,
+        "total_tokens": 4159,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "neurons": 34.355995178222656
+      }
+    }
+  }
+}

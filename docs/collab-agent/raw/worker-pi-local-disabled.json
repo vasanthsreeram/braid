@@ -1,0 +1,35 @@
+{
+  "boundary": "Real local workerd Durable Object journal and Pi runtime; actual private project source snapshot adapter; real remote Workers AI binding. No WorkOS app identity or app-owned import.",
+  "sourceCommit": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+  "originalPath": "src/bundle.ts",
+  "hash": "bacbf0f372c27ce99de816305adbec6a77c3c3bf",
+  "checks": [
+    {
+      "journal": {
+        "persisted": {
+          "value": 42
+        },
+        "id": 1,
+        "same": true,
+        "runtime": "real local workerd DO SQLite + Pi JSONL"
+      },
+      "passed": true
+    },
+    {
+      "deploymentBudget": 36,
+      "request37": 429,
+      "realInference": false,
+      "passed": true
+    }
+  ],
+  "review": {
+    "passed": false,
+    "error": "Model review did not complete",
+    "requests": 1,
+    "response": {
+      "errorType": "Error",
+      "code": null,
+      "message": "Binding AI needs to be run remotely"
+    }
+  }
+}

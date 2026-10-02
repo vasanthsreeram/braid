@@ -32,3 +32,40 @@ registerStorageConformance(
     }
   },
 );
+
+it("journal directory listing rejects other journal scopes and treats SQL wildcards literally", async () => {
+  const db = new DatabaseSync(":memory:");
+  const sql = {
+    exec(q: string, ...p: any[]) {
+      const stmt = db.prepare(q);
+      if (q.startsWith("SELECT")) return { toArray: () => stmt.all(...p) };
+      stmt.run(...p);
+      return { toArray: () => [] };
+    },
+  };
+  try {
+    const own = journalFiles(sql, "/job_%"),
+      other = journalFiles(sql, "/job_ab");
+    expect(
+      (await own.writeFile("/job_%/own", "private", BACKGROUND_CONTEXT)).ok,
+    ).toBe(true);
+    expect(
+      (
+        await other.writeFile(
+          "/job_ab/other",
+          "other-private",
+          BACKGROUND_CONTEXT,
+        )
+      ).ok,
+    ).toBe(true);
+    const list = await own.listDir("/job_%", BACKGROUND_CONTEXT);
+    expect(list.ok).toBe(true);
+    if (list.ok) expect(list.value.map((e) => e.name)).toEqual(["own"]);
+    expect((await own.listDir("/job_ab", BACKGROUND_CONTEXT)).ok).toBe(false);
+    expect((await own.listDir("/job_%/../job_ab", BACKGROUND_CONTEXT)).ok).toBe(
+      false,
+    );
+  } finally {
+    db.close();
+  }
+});

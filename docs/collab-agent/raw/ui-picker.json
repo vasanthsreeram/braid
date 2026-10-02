@@ -1,0 +1,11 @@
+{
+  "boundary": "Local authenticated app with GitHub provider contract doubles and real empty local Git import destinations; no live Vas identity or GitHub imports",
+  "checks": [
+    "390px: connected fixture account, public badge, pagination/search, private import through app, ownership, import status, layout and touch targets",
+    "390px: disconnect removes repository picker",
+    "1440px: connected fixture account, public badge, pagination/search, private import through app, ownership, import status, layout and touch targets",
+    "1440px: disconnect removes repository picker"
+  ],
+  "errors": [],
+  "passed": true
+}

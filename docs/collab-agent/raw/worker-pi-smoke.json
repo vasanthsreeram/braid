@@ -1,0 +1,84 @@
+{
+  "boundary": "Real local workerd Durable Object journal and Pi runtime; actual private project source snapshot adapter; real remote Workers AI binding. No WorkOS app identity or app-owned import.",
+  "sourceCommit": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+  "originalPath": "src/pi-storage.ts",
+  "hash": "17e31b50fe2b0cd349b418ccbf1660645504670a",
+  "checks": [
+    {
+      "journal": {
+        "persisted": {
+          "value": 42
+        },
+        "id": 1,
+        "same": true,
+        "runtime": "real local workerd DO SQLite + Pi JSONL"
+      },
+      "passed": true
+    },
+    {
+      "deploymentBudget": 36,
+      "request37": 429,
+      "realInference": false,
+      "passed": true
+    }
+  ],
+  "review": {
+    "passed": true,
+    "sourceReads": 1,
+    "findings": [],
+    "model": "@cf/openai/gpt-oss-120b",
+    "requests": 1,
+    "records": [
+      {
+        "model": "@cf/openai/gpt-oss-120b",
+        "usage": {
+          "input": 2203,
+          "output": 581,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 2784,
+          "cost": {
+            "input": 0.0007710499999999999,
+            "output": 0.00043575,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "total": 0.0012067999999999998
+          }
+        },
+        "costIsEstimate": true,
+        "providerNeurons": 109.70867919921875
+      }
+    ],
+    "accesses": [
+      {
+        "kind": "commit",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      },
+      {
+        "kind": "list",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      },
+      {
+        "kind": "diff",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      },
+      {
+        "kind": "read",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      }
+    ],
+    "sourceBytes": 3809,
+    "sourceRequests": 8,
+    "limits": {
+      "requests": 3,
+      "outputTokens": 1200,
+      "requestBytes": 60000,
+      "sourceBytes": 48000,
+      "tools": 12,
+      "timeoutMs": 45000,
+      "files": 8,
+      "sourceRequests": 120
+    },
+    "testsRun": false
+  }
+}

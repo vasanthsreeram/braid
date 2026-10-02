@@ -22,6 +22,33 @@ for (const [path, method, body, headers, status] of [
     {},
     404,
   ],
+  ["/api/repos/private/issues", "GET", undefined, {}, 404],
+  ["/api/repos/private/issues/1", "GET", undefined, {}, 404],
+  [
+    "/api/repos/private/issues",
+    "POST",
+    { title: "forbidden" },
+    { origin },
+    404,
+  ],
+  ["/api/repos/private/collaborators", "GET", undefined, {}, 404],
+  ["/api/repos/private/discussion/proposal", "GET", undefined, {}, 404],
+  ["/api/repos/private/agents", "GET", undefined, {}, 404],
+  [
+    "/api/repos/private/agents",
+    "POST",
+    { sha: "a".repeat(40), paths: ["README.md"] },
+    { origin },
+    404,
+  ],
+  [
+    "/api/bundles?name=forbidden",
+    "POST",
+    undefined,
+    { origin, "content-type": "application/x-git-bundle" },
+    401,
+  ],
+  ["/api/bundles?name=forbidden", "POST", undefined, {}, 403],
   ["/api/discovery", "GET", undefined, {}, 401],
   ["/api/repos", "GET", undefined, {}, 401],
   ["/api/repos", "POST", { name: "forbidden" }, { origin }, 401],
@@ -60,7 +87,9 @@ for (const [path, method, body, headers, status] of [
   });
   const text = await r.text();
   rows.push({
-    path: path.startsWith("/auth/callback") ? "/auth/callback?[redacted]" : path,
+    path: path.startsWith("/auth/callback")
+      ? "/auth/callback?[redacted]"
+      : path,
     method,
     status: r.status,
     expected: status,
@@ -78,7 +107,7 @@ const result = {
   at: new Date().toISOString(),
 };
 await writeFile(
-  "docs/github-auth/raw/deployed-core-smoke.json",
+  "docs/collab-agent/raw/deployed-core-smoke.json",
   JSON.stringify(result, null, 2) + "\n",
 );
 console.log(

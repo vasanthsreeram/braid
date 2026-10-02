@@ -4,7 +4,7 @@ No OpenAI/Codex/Grok credentials, token output, generic proxy or account mutatio
 stdin is JSON model input; stdout contains only inference response/evidence metadata.
 """
 import json,pathlib,tomllib,urllib.request,urllib.error,sys
-MODEL='@cf/qwen/qwen3-30b-a3b-fp8'
+MODEL='@cf/openai/gpt-oss-120b'
 ACCOUNT='7efeb52ec5727a903edd8ef7ae8eb925'
 body=sys.stdin.buffer.read(60001)
 assert len(body)<=60000, 'Inference input too large'

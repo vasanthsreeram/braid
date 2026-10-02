@@ -37,5 +37,12 @@
     "R2_ACCOUNT_ID": "7efeb52ec5727a903edd8ef7ae8eb925",
     "R2_BUCKET_NAME": "cf-native-forge-lfs-evaluation",
   },
+  "ai": { "binding": "AI" },
+  "durable_objects": {
+    "bindings": [{ "name": "REVIEWS", "class_name": "ReviewCoordinator" }],
+  },
+  "migrations": [
+    { "tag": "v1-review", "new_sqlite_classes": ["ReviewCoordinator"] },
+  ],
   "observability": { "enabled": false },
 }

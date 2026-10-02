@@ -1,0 +1,104 @@
+{
+  "boundary": "Actual private cf-native-forge source snapshot and real Workers AI REST inference using existing Cloudflare deployment OAuth; local Pi Durable JSONL harness, NOT WorkOS app identity, hosted app job or app-owned import",
+  "sourceCommit": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+  "base": "c844019963e2362c9eaf8475deb59a23cc7a04ed",
+  "provider": "@cf/qwen/qwen3-30b-a3b-fp8",
+  "sourceRefsBefore": [
+    {
+      "ref": "refs/heads/main",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    }
+  ],
+  "sourceRefsAfter": [
+    {
+      "ref": "refs/heads/main",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    }
+  ],
+  "readOnly": true,
+  "findings": [
+    {
+      "title": "Potential insecure use of AbortSignal.timeout",
+      "path": "src/bundle.ts",
+      "start": 167,
+      "end": 167,
+      "evidence": "signal: AbortSignal.timeout(120000),",
+      "explanation": "The use of AbortSignal.timeout(120000) creates a timeout after 120,000 milliseconds (2 minutes) which may be too short for some operations, potentially leading to premature termination. This could be adjusted to a more appropriate duration based on expected operation times.",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+      "severity": "low"
+    }
+  ],
+  "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+  "requests": 2,
+  "records": [
+    {
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "input": 4411,
+        "output": 27,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 4438,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "usage": {
+        "input": 9470,
+        "output": 163,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 9633,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0
+        }
+      }
+    }
+  ],
+  "accesses": [
+    {
+      "kind": "commit",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    },
+    {
+      "kind": "list",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    },
+    {
+      "kind": "diff",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    },
+    {
+      "kind": "read",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    },
+    {
+      "kind": "read",
+      "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+    }
+  ],
+  "sourceBytes": 12372,
+  "sourceRequests": 17,
+  "limits": {
+    "requests": 3,
+    "outputTokens": 1200,
+    "requestBytes": 60000,
+    "sourceBytes": 48000,
+    "tools": 12,
+    "timeoutMs": 45000,
+    "files": 8,
+    "sourceRequests": 120
+  },
+  "testsRun": false
+}

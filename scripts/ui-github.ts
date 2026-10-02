@@ -105,7 +105,7 @@ try {
     if (small) throw Error("GitHub picker touch target too small");
     await page.locator("#github-view").scrollIntoViewIfNeeded();
     await page.screenshot({
-      path: `docs/github-auth/ui-picker-fixture-${width}.png`,
+      path: `docs/collab-agent/ui-picker-fixture-${width}.png`,
       fullPage: true,
     });
     checks.push(
@@ -126,7 +126,7 @@ try {
   }
   if (errors.length) throw Error("Browser page errors");
   await writeFile(
-    "docs/github-auth/raw/ui-picker.json",
+    "docs/collab-agent/raw/ui-picker.json",
     JSON.stringify(
       {
         boundary:

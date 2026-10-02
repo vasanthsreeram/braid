@@ -72,6 +72,8 @@ async function open(id) {
   selected = id;
   const r = await api("/api/repos/" + id);
   selectedRepo = r;
+  detailEpoch++;
+  $("issue-detail").hidden = true;
   activeJob = undefined;
   activeIssue = undefined;
   $("issues-view").hidden = true;
@@ -587,6 +589,7 @@ $("github-disconnect").onclick = action(async () => {
   }
 });
 
+let detailEpoch = 0;
 let activeIssue,
   collaborators = [],
   activeJob,
@@ -646,7 +649,11 @@ async function showIssues() {
     $("issue-list").append(paragraph("No issues in this view."));
 }
 async function showIssue(number) {
+  const epoch = ++detailEpoch,
+    repo = selected;
+  $("issue-detail").hidden = true;
   const { issue, comments, audit } = await api(repoAPI("issues/" + number));
+  if (epoch !== detailEpoch || repo !== selected) return;
   activeIssue = issue;
   $("issue-detail").hidden = false;
   $("issue-heading").textContent = `#${issue.number} ${issue.title}`;

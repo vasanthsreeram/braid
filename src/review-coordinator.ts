@@ -226,6 +226,23 @@ export class ReviewCoordinator {
         job.repo.id,
         "writer",
       );
+      const sessions = await workos(
+        this.env,
+        `/user_management/users/${p.id}/sessions?limit=100`,
+      );
+      check(
+        sessions.data?.some(
+          (s: any) =>
+            s.id === p.session &&
+            s.status === "active" &&
+            s.user_id === p.id &&
+            (!s.expires_at || Date.parse(s.expires_at) > Date.now()) &&
+            (s.organization_id ?? p.id) === p.tenant,
+        ),
+        401,
+        "Session inactive",
+      );
+      check(!this.controller?.signal.aborted, 409, "Review cancelled");
       if (p.tenant !== p.id) {
         const memberships = await workos(
           this.env,
@@ -245,22 +262,6 @@ export class ReviewCoordinator {
     };
     try {
       await access();
-      const sessions = await workos(
-        this.env,
-        `/user_management/users/${job.actor.id}/sessions?limit=100`,
-      );
-      check(
-        sessions.data?.some(
-          (s: any) =>
-            s.id === job.actor.session &&
-            s.status === "active" &&
-            s.user_id === job.actor.id &&
-            (!s.expires_at || Date.parse(s.expires_at) > Date.now()) &&
-            (s.organization_id ?? job.actor.id) === job.actor.tenant,
-        ),
-        401,
-        "Session inactive",
-      );
       const broker = new ReadBroker(git, job.scope, access),
         storage = await JsonlStorage.open(
           "/" + job.id,

@@ -446,15 +446,22 @@ footer {
   font-size: 12px;
 }
 .skip {
+  position: absolute;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip:focus {
   position: fixed;
-  top: -70px;
+  clip-path: none;
+  width: auto;
+  height: auto;
+  top: 12px;
   left: 16px;
   background: var(--paper);
   padding: 12px;
   z-index: 5;
-}
-.skip:focus {
-  top: 12px;
 }
 :focus-visible {
   outline: 3px solid #a4380b;

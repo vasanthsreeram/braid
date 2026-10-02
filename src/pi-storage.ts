@@ -86,22 +86,25 @@ export function journalFiles(
       attempt(() => {
         sql.exec("DELETE FROM pi_files WHERE path=?", path(p));
       }),
-    listDir: async (p: string) =>
-      ok(
-        sql
+    listDir: (p: string) =>
+      attempt(() => {
+        if (p !== directory) path(p);
+        const prefix = p + "/";
+        return sql
           .exec(
-            "SELECT path,length(content) AS size FROM pi_files WHERE path LIKE ?",
-            p + "/%",
+            "SELECT path,length(content) AS size FROM pi_files WHERE substr(path,1,?)=?",
+            prefix.length,
+            prefix,
           )
           .toArray()
           .map((r: any) => ({
-            name: r.path.slice(p.length + 1),
+            name: r.path.slice(prefix.length),
             path: r.path,
             kind: "file",
             size: r.size,
             mtimeMs: 0,
-          })),
-      ),
+          }));
+      }),
   };
   // Unused FileSystem methods fail closed. No shell or execution environment is supplied.
   for (const key of [

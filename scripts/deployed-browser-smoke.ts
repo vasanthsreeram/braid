@@ -34,7 +34,7 @@ try {
         !!tls,
     });
     await page.screenshot({
-      path: `docs/github-auth/ui-live-gate-${width}.png`,
+      path: `docs/collab-agent/ui-live-gate-${width}.png`,
       fullPage: true,
     });
     const login = await page.request.get(origin + "/auth/login", {
@@ -78,14 +78,14 @@ try {
         "No user credentials entered; no code exchange/session established",
     });
     await page.screenshot({
-      path: `docs/github-auth/ui-live-github-login-${width}.png`,
+      path: `docs/collab-agent/ui-live-github-login-${width}.png`,
       fullPage: true,
     });
     await page.close();
   }
   const passed = checks.every((c) => c.passed) && !errors.length;
   await writeFile(
-    "docs/github-auth/raw/deployed-browser.json",
+    "docs/collab-agent/raw/deployed-browser.json",
     JSON.stringify(
       {
         origin,

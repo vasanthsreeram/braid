@@ -1,0 +1,16 @@
+{
+  "boundary": "Human inspection of real-provider output; evidence validation is not proof that a suggested defect is correct",
+  "default": "@cf/openai/gpt-oss-120b with low reasoning, 1200-token bound, traced-helper instructions",
+  "acceptedActionableLiveFindings": 0,
+  "publishedLiveFindingIssues": 0,
+  "latestRealProvider": "Final workerd binding and local immutable Git/Pi scans completed with empty findings. This does not mean code is defect-free or tests passed.",
+  "rejectedTrials": [
+    {"receipt":"live-read-review-citation-only.json","reason":"A deliberate 120-second timeout was described as insecure without a demonstrated defect; reject as speculative"},
+    {"receipt":"worker-pi-qwen-citation-only.json","reason":"SQL placeholders and separate bindings were incorrectly described as concatenated SQL; reject as false positives"},
+    {"receipt":"worker-pi-gptoss-citation-only.json","reason":"attempt is async and returns a Promise; JavaScript await accepts plain values anyway; reject claimed runtime TypeError"},
+    {"receipt":"worker-pi-gptoss-truncated.json","reason":"1200-token output ended with incomplete JSON; runtime rejected it"},
+    {"receipt":"worker-pi-real-binding-rejected.json","reason":"Citation line/evidence validation rejected the response"},
+    {"receipt":"live-read-review-rejected.json","reason":"Citation line/evidence validation rejected the response"}
+  ],
+  "acceptanceGap": "No genuine hosted actor/app-owned project scan or real-provider actionable finding publication was verified. Trusted publication, idempotency and revocation are proven with explicitly labeled provider contract doubles only. Keep owner publication disabled until human finding-quality acceptance."
+}

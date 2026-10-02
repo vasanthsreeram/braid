@@ -1,0 +1,20 @@
+{
+  "githubDedicatedKeychain": {
+    "github-client-id": {
+      "present": false
+    },
+    "github-client-secret": {
+      "present": false
+    }
+  },
+  "workosApi": {
+    "httpStatus": 200,
+    "users": [
+      {
+        "userId": "user_01M3WWQMED5EVXFH3G0DY2W3B3",
+        "activeSessions": 0
+      }
+    ],
+    "boundary": "Provider user records and session counts only, no app authentication or invented actor"
+  }
+}

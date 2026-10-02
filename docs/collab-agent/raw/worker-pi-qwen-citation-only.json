@@ -1,0 +1,105 @@
+{
+  "boundary": "Real local workerd Durable Object journal and Pi runtime; actual private project source snapshot adapter; real remote Workers AI binding. No WorkOS app identity or app-owned import.",
+  "sourceCommit": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+  "originalPath": "src/pi-storage.ts",
+  "hash": "17e31b50fe2b0cd349b418ccbf1660645504670a",
+  "checks": [
+    {
+      "journal": {
+        "persisted": {
+          "value": 42
+        },
+        "id": 1,
+        "same": true,
+        "runtime": "real local workerd DO SQLite + Pi JSONL"
+      },
+      "passed": true
+    },
+    {
+      "deploymentBudget": 36,
+      "request37": 429,
+      "realInference": false,
+      "passed": true
+    }
+  ],
+  "review": {
+    "passed": true,
+    "sourceReads": 1,
+    "findings": [
+      {
+        "title": "Potential SQL injection vulnerability in file path handling",
+        "path": "pi-storage.ts",
+        "start": 18,
+        "end": 18,
+        "evidence": "if (!p.startsWith(directory + \"/\") || p.includes(\"..\"))",
+        "explanation": "The code checks if a file path starts with the directory and does not contain \"..\", but does not properly sanitize or validate the path. This could allow an attacker to inject malicious SQL commands through the file path, leading to unauthorized data access or modification. To fix this, the code should properly sanitize the file path before using it in SQL queries.",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+        "severity": "high"
+      },
+      {
+        "title": "Insecure use of SQL queries without parameterization",
+        "path": "pi-storage.ts",
+        "start": 25,
+        "end": 25,
+        "evidence": "sql.exec(\"SELECT content FROM pi_files WHERE path=?\", path(p))",
+        "explanation": "The SQL query is constructed by concatenating the path variable, which could allow an attacker to inject malicious SQL commands. This could lead to unauthorized data access or modification. To fix this, the code should use parameterized queries to prevent SQL injection attacks.",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b",
+        "severity": "high"
+      }
+    ],
+    "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+    "requests": 1,
+    "records": [
+      {
+        "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+        "usage": {
+          "input": 2530,
+          "output": 316,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 2846,
+          "cost": {
+            "input": 0.000128777,
+            "output": 0.00010585999999999999,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "total": 0.000234637
+          }
+        },
+        "costIsEstimate": true,
+        "providerNeurons": 21.330219268798828
+      }
+    ],
+    "accesses": [
+      {
+        "kind": "commit",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      },
+      {
+        "kind": "list",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      },
+      {
+        "kind": "diff",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      },
+      {
+        "kind": "read",
+        "sha": "12bfa66f551ad90936f7d70cc63d96bba1a1426b"
+      }
+    ],
+    "sourceBytes": 3809,
+    "sourceRequests": 8,
+    "limits": {
+      "requests": 3,
+      "outputTokens": 1200,
+      "requestBytes": 60000,
+      "sourceBytes": 48000,
+      "tools": 12,
+      "timeoutMs": 45000,
+      "files": 8,
+      "sourceRequests": 120
+    },
+    "testsRun": false
+  }
+}

@@ -1,0 +1,38 @@
+Error: Worker stopped
+
+ ⛅️ wrangler 4.146.0
+────────────────────
+Your Worker has access to the following bindings:
+Binding                              Resource            Mode
+env.PROBE (ProbeJournal)             Durable Object      local
+env.REVIEWS (ReviewCoordinator)      Durable Object      local
+env.AI                               AI                  remote
+
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://localhost:59798/cdn-cgi/local/explorer/api
+Useful routes:
+  GET http://localhost:59798/cdn-cgi/local/explorer/api/local/workers - local Workers and bindings
+  POST http://localhost:59798/cdn-cgi/local/explorer/api/local/scheduled?worker=<name> - invoke a Worker's scheduled handler; cron is required (see the OpenAPI schema for the full request)
+  GET http://localhost:59798/cdn-cgi/local/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://localhost:59798/cdn-cgi/local/explorer/api/d1/database - D1 databases
+  GET http://localhost:59798/cdn-cgi/local/explorer/api/r2/buckets - R2 buckets
+  GET http://localhost:59798/cdn-cgi/local/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://localhost:59798/cdn-cgi/local/explorer/api/workflows - Workflows
+  POST http://localhost:59798/cdn-cgi/local/explorer/api/local/observability/query - run a read-only SQL query (SELECT/WITH only) over captured request traces and console logs. Tables: spans, logs (read attributes via json(attributes)). Example:
+    curl -X POST http://localhost:59798/cdn-cgi/local/explorer/api/local/observability/query -H 'Content-Type: application/json' -d '{"sql":"SELECT service, name, outcome, duration_ms FROM spans WHERE parent_id IS NULL LIMIT 20"}'
+  POST http://localhost:59798/cdn-cgi/local/explorer/api/local/observability/clear - clear all captured traces and logs
+If the routes above don't cover what you need, fetch the full OpenAPI schema (large - use only as a last resort):
+  GET http://localhost:59798/cdn-cgi/local/explorer/api - OpenAPI schema
+⎔ Establishing remote connection...
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mFailed to start the remote proxy session. Error reloading remote server: More than one account available but unable to select one in non-interactive mode.[0m
+
+  Please set the appropriate `account_id` in your Wrangler configuration file or assign it to the `CLOUDFLARE_ACCOUNT_ID` environment variable.
+  Available accounts are (`<name>`: `<account_id>`):
+    `Noverseinc9@gmail.com's Account`: `d548b7a718412ded2345edbf8733cdc3`
+    `S.vasanthrojin@gmail.com's Account`: `7efeb52ec5727a903edd8ef7ae8eb925`
+
+
+[32mIf you think this is a bug then please create an issue at [url omitted]
+⎔ Establishing remote connection...
+🪵  Logs were written to "/Users/admin/.wrangler/logs/wrangler-2026-10-02_00-47-34_500.log"
