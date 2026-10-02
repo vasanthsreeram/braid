@@ -11,3 +11,5 @@ Independent checks after installation:
 A Python urllib login probe initially received HTTP 403; the real Node fetch subsequently verified the 302. This discrepancy is recorded rather than interpreted as an application login failure.
 
 An actual user sign-in/code exchange, established app session and authenticated workflows are still not verified by these checks. The dedicated R2 signing credentials are a separate remaining large-file blocker. Earlier handoff missing-WorkOS-key statements describe the pre-activation state and are superseded by this document.
+
+The [GitHub authentication/import result](../github-auth/result.md) documents the subsequent session-token contract fix, GitHub-only policy and connected picker. Real Vas sign-in/imports still require human GitHub login and dedicated provider-token app setup.

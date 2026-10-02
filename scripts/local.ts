@@ -359,6 +359,16 @@ export async function localServices(
     origin,
     allowPublic: false,
     localUpload: true,
+    github: {
+      account: async () => ({ connected: false, setupReady: false }),
+      repos: async () => {
+        throw Error("No GitHub authorization in local harness");
+      },
+      source: async () => {
+        throw Error("No GitHub authorization in local harness");
+      },
+      disconnect: async () => ({ ok: true, revoked: true }),
+    },
     async authenticate(r) {
       const raw = r.headers.get("authorization") ?? "";
       let candidate = raw.startsWith("Bearer ") ? raw.slice(7) : "";

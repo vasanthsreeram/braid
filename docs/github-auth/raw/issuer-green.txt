@@ -1,0 +1,14 @@
+✔ WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, session claims and tenant (37.667708ms)
+✔ WorkOS callback without state fails locally without exchanging a fake code (1.434375ms)
+✔ canonical OAuth flow binds S256 PKCE and state, preserves invitation, and seals a host-only session (provider contract double) (17.398292ms)
+✔ presigned PUT is bounded in time, method, exact key and signed content length; never GET (1.100042ms)
+✔ provider-backed session lifecycle checks current session and org membership, rotates refresh, rejects CSRF and clears revoked sessions (2.659125ms)
+✔ AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id (26.353ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 184.5425

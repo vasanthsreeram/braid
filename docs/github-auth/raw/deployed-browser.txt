@@ -1,0 +1,5 @@
+
+> cf-native-forge@0.1.0 test:deployed:browser
+> tsx scripts/deployed-browser-smoke.ts
+
+6 deployed browser checks passed; real GitHub sign-in still requires human credentials/consent

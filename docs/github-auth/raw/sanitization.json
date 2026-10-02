@@ -1,0 +1,10 @@
+{
+  "filesScanned": 42,
+  "credentialOrUnredactedCodePatternsFound": [],
+  "passed": true,
+  "scope": "New text evidence; screenshots visually inspected separately. Fixture values are synthetic.",
+  "notes": "No actual callback authorization code, session cookie, access token, refresh token, API key or client secret was saved in the new evidence. Synthetic contract fixtures are labeled.",
+  "stagedTextCredentialScanPassed": true,
+  "stagedPathsScanned": 86,
+  "normalization": "Trailing whitespace removed from new command receipts; prior benchmark evidence unchanged"
+}

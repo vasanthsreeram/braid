@@ -1,0 +1,57 @@
+
+> cf-native-forge@0.1.0 test
+> tsx --test test/*.test.ts
+
+✔ private default, missing identity, same-tenant stranger, other tenant, and discovery leak resistance (79.831292ms)
+✔ sharing grants immediate read, cannot write, and revoke removes access (42.676375ms)
+✔ LFS Batch/basic transfer, duplicate upload, missing OID, range rejection and per-repo ACL (85.58825ms)
+✔ invalid imports, unknown transfer/hash, invalid OID/size, methods and malformed JSON rejected (38.860625ms)
+✔ production entry denies accidental dev credentials and reports missing WorkOS setup (1.137209ms)
+✔ real local Git task fork, immutable proposal, stale-base refusal, excluded native check endpoint (602.671666ms)
+✔ direct-staging flow verifies whole bytes before manifest publication, hides ticket across tenants (44.3485ms)
+✔ GitHub picker routes preserve authentication, CSRF, private destinations and actual app ownership (provider contract double) (48.00925ms)
+✔ WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, session claims and tenant (90.41925ms)
+✔ WorkOS callback without state fails locally without exchanging a fake code (4.296334ms)
+✔ canonical OAuth flow binds S256 PKCE and state, preserves invitation, and seals a host-only session (provider contract double) (32.537375ms)
+✔ presigned PUT is bounded in time, method, exact key and signed content length; never GET (2.18075ms)
+✔ provider-backed session lifecycle checks current session and org membership, rotates refresh, rejects CSRF and clears revoked sessions (7.110125ms)
+✔ AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id (53.049584ms)
+✔ new login pins GitHubOAuth, rejects callback from another authentication method (contract double) (1.912583ms)
+✔ callback diagnostics distinguish exchange, JWT verification and active-session lookup without credential output (contract double) (61.398625ms)
+✔ benchmark transport requires app-authorized task capabilities and rechecks revoked identity (650.1345ms)
+✔ email-bound invitations: verified acceptance, wrong email/org denial, expiry/revoke, one-time grant and safe search (71.928125ms)
+✔ personal sharing crosses personal identity, organization sharing cannot cross organizations (152.721417ms)
+✔ task -> immutable diff -> approval -> real controlled publication; empty seed, replay, concurrent stale-head safety (865.93825ms)
+✔ uncertain publisher retains fence; confirmed push can recover; unchanged head never retries blindly (262.18925ms)
+✔ lifecycle reconciliation refuses fabricated readiness and incomplete source snapshots (42.373208ms)
+✔ native revocation covers tasks beyond listing pages and closes issuance after grant withdrawal (60.145833ms)
+✔ real Git RPC publisher verifies raw packs with and without native flush, preserves old-head CAS and rejects damaged packs (695.377875ms)
+✔ connected account binds verified WorkOS identity and encrypts tokens per user (contract double) (20.254084ms)
+✔ picker only returns public owned repos with bounded pagination and refuses private imports (contract double) (8.073583ms)
+✔ disconnect removes local authority even if remote revocation is unavailable (contract double) (2.540166ms)
+✔ a disconnected user can reconnect a newly verified GitHub identity (3.446708ms)
+✔ real Git contribution history: every merge parent, UTC author dates, original identities, fork dedupe and revoked visibility (933.821083ms)
+✔ local Miniflare R2 binding: conditional publication, verified checksum, same-OID idempotency and corrupt-chunk abort (275.033625ms)
+✔ CDC boundaries are deterministic across network segmentation, bounded, golden hash (463.669084ms)
+✔ verified ingest / exact streaming reconstruction / idempotent manifest and chunk dedupe (497.793417ms)
+✔ same tenant different repo cannot discover manifest; different tenant has separate chunks (347.8275ms)
+✔ failed SHA ingest never publishes (170.152208ms)
+✔ failed short ingest never publishes (0.340625ms)
+✔ failed long ingest never publishes (0.318708ms)
+✔ failed interrupted ingest never publishes (76.905625ms)
+✔ concurrent duplicate ingest has one immutable publication (375.124667ms)
+✔ download detects missing chunks or manifest (173.237625ms)
+✔ download detects corrupt chunks or manifest (178.436334ms)
+✔ download detects length chunks or manifest (172.856333ms)
+✔ download detects order chunks or manifest (235.633166ms)
+✔ manifest rejects traversal, unknown version, inconsistent bounds/length and excessive entries (0.154167ms)
+✔ zero-byte LFS object checks SHA and roundtrips (0.420834ms)
+✔ corrupt preexisting content-addressed chunk prevents publication (202.299167ms)
+ℹ tests 45
+ℹ suites 0
+ℹ pass 45
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3399.53

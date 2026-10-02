@@ -1,0 +1,29 @@
+✖ GitHub picker routes preserve authentication, CSRF, private destinations and actual app ownership (provider contract double) (39.642458ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 142.10475
+
+✖ failing tests:
+
+test at test/api.test.ts:405:1
+✖ GitHub picker routes preserve authentication, CSRF, private destinations and actual app ownership (provider contract double) (39.642458ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  404 !== 401
+
+      at TestContext.<anonymous> (/Users/admin/projects/cf-native-forge/test/api.test.ts:416:9)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

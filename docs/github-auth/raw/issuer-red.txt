@@ -1,0 +1,28 @@
+✖ AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id (42.002125ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 182.24775
+
+✖ failing tests:
+
+test at test/auth.test.ts:333:1
+✖ AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id (42.002125ms)
+  JWTClaimValidationFailed: unexpected "iss" claim value
+      at unexpectedClaim (file:///Users/admin/projects/cf-native-forge/node_modules/jose/dist/webapi/lib/jwt_claims_set.js:51:9)
+      at validateClaimsSet (file:///Users/admin/projects/cf-native-forge/node_modules/jose/dist/webapi/lib/jwt_claims_set.js:69:94)
+      at jwtVerify (file:///Users/admin/projects/cf-native-forge/node_modules/jose/dist/webapi/jwt/verify.js:8:19)
+      at async verifyAccess (/Users/admin/projects/cf-native-forge/src/auth.ts:72:23)
+      at async TestContext.<anonymous> (/Users/admin/projects/cf-native-forge/test/auth.test.ts:339:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    code: 'ERR_JWT_CLAIM_VALIDATION_FAILED',
+    claim: 'iss',
+    reason: 'check_failed',
+    payload: { sub: 'user_a', sid: 'session_a', client_id: 'client_test', iss: 'https://api.workos.com', iat: 1790897747, exp: 1790898047 },
+    [cause]: { claim: 'iss', reason: 'check_failed', payload: { sub: 'user_a', sid: 'session_a', client_id: 'client_test', iss: 'https://api.workos.com', iat: 1790897747, exp: 1790898047 } }
+  }

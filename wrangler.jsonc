@@ -30,6 +30,7 @@
   },
   "vars": {
     "WORKOS_CLIENT_ID": "client_01M3WQ9VJ9G2MH74MYP7WBD708",
+    "WORKOS_ACCESS_TOKEN_ISSUER": "https://api.workos.com",
     "WORKOS_ISSUER": "https://api.workos.com/user_management/client_01M3WQ9VJ9G2MH74MYP7WBD708",
     "ORIGIN": "https://gitflare.lintlabs.org",
     "ALLOW_PUBLIC": "false",

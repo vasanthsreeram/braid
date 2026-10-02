@@ -330,7 +330,16 @@ test("real local Git task fork, immutable proposal, stale-base refusal, excluded
       })
     ).json();
     assert.equal(proposal.candidate, candidate);
-    assert.equal((await l.call("/api/repos/" + task.id + "/check", {contract:"json-parse-v1",commit:candidate,paths:["good.json"]})).status,404);
+    assert.equal(
+      (
+        await l.call("/api/repos/" + task.id + "/check", {
+          contract: "json-parse-v1",
+          commit: candidate,
+          paths: ["good.json"],
+        })
+      ).status,
+      404,
+    );
     await git(
       ["remote", "set-url", "origin", l.plane.path(l.repo.physical)],
       work,
@@ -398,6 +407,71 @@ test("direct-staging flow verifies whole bytes before manifest publication, hide
     assert.equal(v.status, 200);
     assert.equal(await l.store.get(t.key), null);
     assert.equal((await l.call(base + "/objects/" + oid)).status, 200);
+  } finally {
+    await l.close();
+  }
+});
+test("GitHub picker routes preserve authentication, CSRF, private destinations and actual app ownership (provider contract double)", async () => {
+  const l = await setup();
+  try {
+    l.s.github = {
+      account: async () => ({ connected: true, login: "fixture" }),
+      repos: async (p) => ({
+        repos: [{ fullName: p.id + "/example", visibility: "public" }],
+      }),
+      source: async () => ({
+        url: "https://github.com/fixture/example.git",
+        name: "github-example",
+      }),
+      disconnect: async () => ({ ok: true }),
+    };
+    // Public upstream represented by real local Git transport; only this boundary is doubled.
+    (l.plane as import("../src/contracts.ts").GitPlane).source = async () => ({
+      refs: [],
+    });
+    (l.plane as import("../src/contracts.ts").GitPlane).import = async (
+      name: string,
+    ) => l.plane.create(name);
+    assert.equal((await l.call("/api/github", undefined, null)).status, 401);
+    assert.equal(
+      (await l.call("/api/github/repos", undefined, null)).status,
+      401,
+    );
+    const listed = await (await l.call("/api/github/repos")).json();
+    assert.equal(listed.repos[0].fullName, l.principal.id + "/example");
+    const imported = await l.call("/api/github/import", {
+      repository: "fixture/example",
+    });
+    assert.equal(imported.status, 201);
+    const repo = await imported.json();
+    assert.equal(repo.owner, l.principal.id);
+    assert.equal(repo.tenant, l.principal.tenant);
+    assert.equal(repo.visibility, "private");
+    l.credentials.set("stranger", {
+      id: "stranger",
+      tenant: l.principal.tenant,
+    });
+    assert.equal(
+      (await l.call("/api/repos/" + repo.id, undefined, "stranger")).status,
+      404,
+    );
+    l.s.authenticate = async () => l.principal;
+    assert.equal(
+      (
+        await l.call("/api/github/disconnect", {}, null, "POST", {
+          origin: "https://evil.invalid",
+        })
+      ).status,
+      403,
+    );
+    assert.equal(
+      (
+        await l.call("/api/github/disconnect", {}, null, "POST", {
+          origin: l.s.origin,
+        })
+      ).status,
+      200,
+    );
   } finally {
     await l.close();
   }

@@ -1,0 +1,9 @@
+{
+  "baseline": "docs/auth/raw/workos-settings-after.json at baseline 08d18b8",
+  "current": "workos-other-apps-current.json",
+  "comparedQueries": 24,
+  "otherEnvironments": 6,
+  "unchangedFromPriorVerifiedBaseline": true,
+  "differences": [],
+  "boundary": "Read-only comparison to prior baseline; no mutation to these environments was performed in this task"
+}

@@ -1,5 +1,7 @@
 # Gitflare auth, domain, responsive UI and contribution result
 
+Historical baseline: key availability was superseded by [key activation](key-activation.md). Current GitHub-only authentication, connected picker, and remaining real-account/import blockers are documented in [the latest result](../github-auth/result.md). The evidence below remains historical; it is not a claim about current login completion.
+
 Gitflare's real Worker is deployed at **https://gitflare.lintlabs.org**. Dedicated WorkOS Gitflare/Staging configuration is complete, and responsive application/contribution code is implemented. **Live application authentication remains blocked by its missing dedicated WorkOS API key.** An anonymous sign-in gate and a reachable hosted provider page are not evidence of an authenticated product. No live app session, app import, app merge or deployed contribution profile is claimed.
 
 The existing core writer had exited before repository mutations. Its final source baseline was `d07c186`. The prior native Git migration, benchmarks, D1/R2/Artifacts resources and excluded feature scope are retained. No Agents SDK, compute Sandbox/Containers, native CI, imported-code execution, paid subscription or repository publication was introduced.

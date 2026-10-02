@@ -238,7 +238,65 @@ export function application(s: Services) {
           "Origin required",
         );
       let result: Response;
-      if (path[0] === "api" && path[1] === "me" && request.method === "GET") {
+      if (path[0] === "api" && path[1] === "github") {
+        check(p, 401, "Authentication required");
+        check(s.github, 503, "GitHub connection unavailable");
+        if (path.length === 2 && request.method === "GET")
+          result = json(await s.github.account(p));
+        else if (
+          path.length === 3 &&
+          path[2] === "repos" &&
+          request.method === "GET"
+        ) {
+          const listed = await s.github.repos(p, url);
+          const visible = await s.catalog.list(p, false);
+          const imports = new Map<string, { id: string; state: string }[]>();
+          for (const candidate of visible) {
+            try {
+              await authorize(s, p, candidate.id, "reader");
+            } catch (e) {
+              if (e instanceof Fault && e.status === 404) continue;
+              throw e;
+            }
+            const op = await s.catalog.getOperation(candidate.id);
+            if (op?.source)
+              imports.set(op.source, [
+                ...(imports.get(op.source) ?? []),
+                { id: candidate.id, state: candidate.state },
+              ]);
+          }
+          result = json({
+            ...listed,
+            repos: listed.repos.map((r: any) => ({
+              ...r,
+              imports:
+                imports.get(`https://github.com/${r.fullName}.git`) ?? [],
+            })),
+            importStatusLimit: 100,
+          });
+        } else if (
+          path.length === 3 &&
+          path[2] === "import" &&
+          request.method === "POST"
+        ) {
+          const b = await bodyJSON(request);
+          const source = await s.github.source(p, b.repository);
+          result = json(
+            await createRepo(s, p, { name: source.name, url: source.url }),
+            201,
+          );
+        } else if (
+          path.length === 3 &&
+          path[2] === "disconnect" &&
+          request.method === "POST"
+        )
+          result = json(await s.github.disconnect(p));
+        else throw new Fault(404, "Not found");
+      } else if (
+        path[0] === "api" &&
+        path[1] === "me" &&
+        request.method === "GET"
+      ) {
         check(p, 401, "Authentication required");
         result = json(p);
       } else if (

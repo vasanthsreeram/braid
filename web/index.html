@@ -11,7 +11,7 @@
     <header>
       <a class="brand" href="/">GITFLARE</a
       ><span class="badge">PRIVATE EVALUATION</span
-      ><a href="/auth/login">Sign in with WorkOS</a>
+      ><a href="/auth/login">Sign in with GitHub</a>
       <form method="post" action="/auth/logout"><button>Sign out</button></form>
     </header>
     <main>
@@ -50,6 +50,40 @@
           <h2>Repositories</h2>
           <span id="environment">Authenticated workspace</span>
         </div>
+        <article id="github-view" aria-labelledby="github-title">
+          <h2 id="github-title">Connected GitHub account</h2>
+          <p id="github-account">Checking GitHub connection…</p>
+          <p>
+            List your public repositories and import complete Git history into a
+            private Gitflare repository. Private GitHub access requires separate
+            repository authorization.
+          </p>
+          <div class="tools">
+            <a id="github-connect" href="/auth/login">Connect GitHub</a>
+            <button id="github-disconnect" hidden>Disconnect GitHub</button>
+          </div>
+          <div id="github-picker" hidden>
+            <form id="github-search">
+              <label
+                >Search your public GitHub repositories<input
+                  id="github-query"
+                  type="search"
+                  maxlength="100"
+                  placeholder="Repository name"
+              /></label>
+              <button>Search GitHub</button>
+            </form>
+            <p id="github-status" role="status"></p>
+            <div id="github-repos"></div>
+            <div class="tools">
+              <button id="github-previous" disabled>
+                Previous GitHub page
+              </button>
+              <span id="github-page"></span>
+              <button id="github-next" disabled>Next GitHub page</button>
+            </div>
+          </div>
+        </article>
         <form id="create">
           <input
             name="name"

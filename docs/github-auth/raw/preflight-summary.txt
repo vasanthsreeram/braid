@@ -1,0 +1,3 @@
+{"name": "cloudnee", "head": "322eaf4cdb8b158ec2e0e626ba9df50371ecf686", "largestBlobBytes": 930330, "bundleBytes": 984489, "reachableUncompressedBytes": 1118637, "fitsNativeBlob32MBAndImporter40MB": true}
+{"name": "himaldb", "head": "ef6727a8e6aae1dce9387d8d02c8f9c5305ffc46", "largestBlobBytes": 254103, "bundleBytes": 359618, "reachableUncompressedBytes": 1381083, "fitsNativeBlob32MBAndImporter40MB": true}
+{"name": "formninja", "head": "4fba8f326b75b3d497149b0fe640075da8c5a78a", "largestBlobBytes": 160597, "bundleBytes": 1008930, "reachableUncompressedBytes": 1926502, "fitsNativeBlob32MBAndImporter40MB": true}

@@ -1,0 +1,67 @@
+{
+  "environment": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+  "oauthCredentials": {
+    "oauthCredentialsByType": {
+      "data": []
+    }
+  },
+  "settings": {
+    "environment": {
+      "localizationEnabled": true,
+      "defaultLocale": "en-US",
+      "ssoSignInConsentEnabled": true,
+      "userlandSettings": {
+        "allowSignUp": true,
+        "isWaitlistEnabled": false,
+        "isAuthkitEnabled": true,
+        "isAuthkitIdpInitiatedSsoEnabled": true,
+        "isAuthkitDynamicClientRegistrationEnabled": false,
+        "isAuthkitClientIdMetadataDocumentEnabled": false,
+        "isEmailVerificationRequired": true,
+        "isAppleOauthEnabled": true,
+        "isBitbucketOauthEnabled": false,
+        "isDiscordOauthEnabled": false,
+        "isGithubOauthEnabled": true,
+        "isGitLabOauthEnabled": false,
+        "isGrokOauthEnabled": false,
+        "isIntuitOauthEnabled": false,
+        "isGoogleOauthEnabled": true,
+        "isLinkedInOauthEnabled": false,
+        "isMicrosoftOauthEnabled": true,
+        "isSalesforceOauthEnabled": false,
+        "isSlackOauthEnabled": false,
+        "isVercelMarketplaceOauthEnabled": false,
+        "isVercelOauthEnabled": false,
+        "isXOauthEnabled": false,
+        "isXeroOauthEnabled": false,
+        "isMagicAuthEnabled": false,
+        "isPasswordAuthEnabled": true,
+        "isPasswordLowercaseRequired": false,
+        "isPasswordNumberRequired": false,
+        "isPasswordPwnedRequired": false,
+        "isPasswordSymbolRequired": false,
+        "isPasswordUppercaseRequired": false,
+        "isPasskeyAuthEnabled": false,
+        "isPasskeyProgressiveEnrollmentEnabled": false,
+        "isImpersonationEnabled": false,
+        "isSsoEnabled": true,
+        "mfaEnabled": "Off",
+        "passwordMinimumLength": 10,
+        "isPasswordHistoryEnabled": false,
+        "passwordHistorySize": 0,
+        "passwordMinimumStrength": 3,
+        "invitationExpiry": 604800,
+        "signUpUrl": null,
+        "externalLoginUri": null
+      }
+    }
+  },
+  "users": [
+    {
+      "id": "user_01M3WWQMED5EVXFH3G0DY2W3B3",
+      "githubLinked": false,
+      "googleLinked": true,
+      "sessionCount": 2
+    }
+  ]
+}

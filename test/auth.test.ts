@@ -12,10 +12,16 @@ test("WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, se
   const { publicKey, privateKey } = await generateKeyPair("RS256");
   const make = (
     claims: any = {},
-    issuer = config.WORKOS_ISSUER,
+    issuer = "https://api.workos.com",
     expiry = "1h",
   ) =>
-    new SignJWT({ sub: "user_a", sid: "session_a", org_id: "org_a", ...claims })
+    new SignJWT({
+      sub: "user_a",
+      sid: "session_a",
+      client_id: config.WORKOS_CLIENT_ID,
+      org_id: "org_a",
+      ...claims,
+    })
       .setProtectedHeader({ alg: "RS256" })
       .setIssuedAt()
       .setIssuer(issuer)
@@ -27,7 +33,7 @@ test("WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, se
   });
   for (const token of [
     await make({}, "https://evil.invalid"),
-    await make({}, config.WORKOS_ISSUER, "-1s"),
+    await make({}, "https://api.workos.com", "-1s"),
     await make({ aud: "wrong" }),
     await make({ org_id: "../other" }),
     await make({ sid: undefined }),
@@ -57,9 +63,13 @@ test("canonical OAuth flow binds S256 PKCE and state, preserves invitation, and 
     WORKOS_API_KEY: "test-provider-double",
   };
   const { publicKey, privateKey } = await generateKeyPair("RS256");
-  const access = await new SignJWT({ sub: "user_a", sid: "session_a" })
+  const access = await new SignJWT({
+    sub: "user_a",
+    sid: "session_a",
+    client_id: c.WORKOS_CLIENT_ID,
+  })
     .setProtectedHeader({ alg: "RS256" })
-    .setIssuer(c.WORKOS_ISSUER)
+    .setIssuer("https://api.workos.com")
     .setIssuedAt()
     .setExpirationTime("5m")
     .sign(privateKey);
@@ -99,6 +109,7 @@ test("canonical OAuth flow binds S256 PKCE and state, preserves invitation, and 
         );
         assert.equal(challenge, authorize.searchParams.get("code_challenge"));
         return Response.json({
+          authentication_method: "GitHubOAuth",
           access_token: access,
           refresh_token: "contract-refresh",
         });
@@ -327,4 +338,117 @@ test("provider-backed session lifecycle checks current session and org membershi
   assert.equal(failedLogout.status, 503);
   assert.equal(revoked, true);
   assert.ok(failedLogout.headers.get("set-cookie")!.includes("Max-Age=0"));
+});
+
+// Official /reference/authkit/session-tokens/access-token contract, not a live token.
+test("AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id", async () => {
+  const { publicKey, privateKey } = await generateKeyPair("RS256");
+  const make = (claims: any = {}, issuer = "https://api.workos.com") =>
+    new SignJWT({
+      sub: "user_a",
+      sid: "session_a",
+      client_id: config.WORKOS_CLIENT_ID,
+      ...claims,
+    })
+      .setProtectedHeader({ alg: "RS256" })
+      .setIssuer(issuer)
+      .setIssuedAt()
+      .setExpirationTime("5m")
+      .sign(privateKey);
+  assert.deepEqual(await verifyAccess(config, await make(), publicKey), {
+    id: "user_a",
+    tenant: "user_a",
+  });
+  await assert.rejects(
+    verifyAccess(config, await make({ client_id: "client_other" }), publicKey),
+  );
+  await assert.rejects(
+    verifyAccess(config, await make({ client_id: undefined }), publicKey),
+  );
+  await assert.rejects(
+    verifyAccess(config, await make({}, "https://evil.invalid"), publicKey),
+  );
+});
+
+test("new login pins GitHubOAuth, rejects callback from another authentication method (contract double)", async () => {
+  const c = {
+    ...config,
+    SESSION_SECRET: "x".repeat(32),
+    WORKOS_API_KEY: "fixture",
+  };
+  const login = (await authRoute(c, new Request(c.ORIGIN + "/auth/login")))!;
+  const u = new URL(login.headers.get("location")!);
+  assert.equal(u.searchParams.get("provider"), "GitHubOAuth");
+  const callback = (await authRoute(
+    c,
+    new Request(
+      c.ORIGIN +
+        "/auth/callback?code=fixture&state=" +
+        u.searchParams.get("state"),
+      { headers: { cookie: login.headers.get("set-cookie")!.split(";")[0] } },
+    ),
+    {
+      request: (async () =>
+        Response.json({
+          authentication_method: "GoogleOAuth",
+        })) as typeof fetch,
+    },
+  ))!;
+  assert.equal(callback.status, 401);
+  assert.equal(callback.headers.has("set-cookie"), false);
+});
+test("callback diagnostics distinguish exchange, JWT verification and active-session lookup without credential output (contract double)", async () => {
+  const c = {
+    ...config,
+    WORKOS_API_KEY: "fixture",
+    SESSION_SECRET: "x".repeat(32),
+  };
+  const { publicKey, privateKey } = await generateKeyPair("RS256");
+  const token = await new SignJWT({
+    sub: "user_a",
+    sid: "session_a",
+    client_id: c.WORKOS_CLIENT_ID,
+  })
+    .setProtectedHeader({ alg: "RS256" })
+    .setIssuer("https://api.workos.com")
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(privateKey);
+  const run = async (mode: "exchange" | "jwt" | "session") => {
+    const login = (await authRoute(c, new Request(c.ORIGIN + "/auth/login")))!;
+    const u = new URL(login.headers.get("location")!);
+    const r = (await authRoute(
+      c,
+      new Request(
+        c.ORIGIN +
+          "/auth/callback?code=fixture&state=" +
+          u.searchParams.get("state"),
+        { headers: { cookie: login.headers.get("set-cookie")!.split(";")[0] } },
+      ),
+      {
+        verify: (t) =>
+          mode === "jwt"
+            ? Promise.reject(Error("fixture token rejected"))
+            : verifyAccess(c, t, publicKey),
+        request: (async (input: any) =>
+          new URL(input).pathname.endsWith("/authenticate")
+            ? mode === "exchange"
+              ? new Response(null, { status: 401 })
+              : Response.json({
+                  access_token: token,
+                  refresh_token: "fixture-refresh",
+                  authentication_method: "GitHubOAuth",
+                })
+            : Response.json({ data: [] })) as typeof fetch,
+      },
+    ))!;
+    assert.equal(r.status, 401);
+    assert.equal(r.headers.has("set-cookie"), false);
+    const body = await r.text();
+    assert.ok(!body.includes(token) && !body.includes("fixture-refresh"));
+    return JSON.parse(body).phase;
+  };
+  assert.equal(await run("exchange"), "code_exchange");
+  assert.equal(await run("jwt"), "token_verification");
+  assert.equal(await run("session"), "session_lookup");
 });

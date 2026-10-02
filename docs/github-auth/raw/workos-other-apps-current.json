@@ -1,0 +1,410 @@
+[
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"environment\": {\"localizationEnabled\": true, \"defaultLocale\": \"en-US\", \"ssoSignInConsentEnabled\": true, \"userlandSettings\": {\"allowSignUp\": true, \"isWaitlistEnabled\": false, \"isAuthkitEnabled\": true, \"isAuthkitIdpInitiatedSsoEnabled\": true, \"isAuthkitDynamicClientRegistrationEnabled\": false, \"isAuthkitClientIdMetadataDocumentEnabled\": false, \"isEmailVerificationRequired\": true, \"isAppleOauthEnabled\": true, \"isBitbucketOauthEnabled\": false, \"isDiscordOauthEnabled\": false, \"isGithubOauthEnabled\": true, \"isGitLabOauthEnabled\": false, \"isGrokOauthEnabled\": false, \"isIntuitOauthEnabled\": false, \"isGoogleOauthEnabled\": true, \"isLinkedInOauthEnabled\": false, \"isMicrosoftOauthEnabled\": true, \"isSalesforceOauthEnabled\": false, \"isSlackOauthEnabled\": false, \"isVercelMarketplaceOauthEnabled\": false, \"isVercelOauthEnabled\": false, \"isXOauthEnabled\": false, \"isXeroOauthEnabled\": false, \"isMagicAuthEnabled\": false, \"isPasswordAuthEnabled\": true, \"isPasswordLowercaseRequired\": false, \"isPasswordNumberRequired\": false, \"isPasswordPwnedRequired\": false, \"isPasswordSymbolRequired\": false, \"isPasswordUppercaseRequired\": false, \"isPasskeyAuthEnabled\": false, \"isPasskeyProgressiveEnrollmentEnabled\": false, \"isImpersonationEnabled\": false, \"isSsoEnabled\": true, \"mfaEnabled\": \"Off\", \"passwordMinimumLength\": 10, \"isPasswordHistoryEnabled\": false, \"passwordHistorySize\": 0, \"passwordMinimumStrength\": 3, \"invitationExpiry\": 604800, \"signUpUrl\": null, \"externalLoginUri\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"redirectUris\": {\"data\": [], \"listMetadata\": {\"before\": null, \"after\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"logoutUris\": {\"data\": []}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0C73MYF02R9T13ETW9WKP8P"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"defaultUserlandApplication\": {\"id\": \"app_01M0C73NG2P5Q6CQ410MZHGJD6\", \"name\": \"lintlabs's Application\", \"clientId\": \"client_01M0C73N9321FW6PAXJRQR2RP7\", \"environmentId\": \"environment_01M0C73MYF02R9T13ETW9WKP8P\", \"createdAt\": \"2026-08-19T05:15:08.103Z\", \"updatedAt\": \"2026-08-19T05:15:08.103Z\", \"initiateLoginUri\": null, \"appHomepageUrl\": null, \"signUpUrl\": null, \"passwordResetUrl\": null, \"userInvitationUrl\": null, \"maxSessionTime\": 31536000, \"accessTokenExpiry\": 300, \"inactivityTimeout\": 172800, \"isDefault\": true, \"appBranding\": null, \"keys\": [{\"id\": \"key_01M0C73NG7X23M0WMB03Q8MP0G\", \"createdAt\": \"2026-08-19T05:15:08.103Z\", \"expiredAt\": null, \"lastUsedAt\": null, \"name\": \"WorkOS API key\", \"platform\": null, \"applicationId\": \"app_01M0C73NG2P5Q6CQ410MZHGJD6\"}], \"redirectUris\": [], \"logoutUris\": [], \"webOrigins\": []}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"environment\": {\"localizationEnabled\": true, \"defaultLocale\": \"en-US\", \"ssoSignInConsentEnabled\": true, \"userlandSettings\": {\"allowSignUp\": true, \"isWaitlistEnabled\": false, \"isAuthkitEnabled\": true, \"isAuthkitIdpInitiatedSsoEnabled\": true, \"isAuthkitDynamicClientRegistrationEnabled\": false, \"isAuthkitClientIdMetadataDocumentEnabled\": false, \"isEmailVerificationRequired\": true, \"isAppleOauthEnabled\": false, \"isBitbucketOauthEnabled\": false, \"isDiscordOauthEnabled\": false, \"isGithubOauthEnabled\": false, \"isGitLabOauthEnabled\": false, \"isGrokOauthEnabled\": false, \"isIntuitOauthEnabled\": false, \"isGoogleOauthEnabled\": false, \"isLinkedInOauthEnabled\": false, \"isMicrosoftOauthEnabled\": false, \"isSalesforceOauthEnabled\": false, \"isSlackOauthEnabled\": false, \"isVercelMarketplaceOauthEnabled\": false, \"isVercelOauthEnabled\": false, \"isXOauthEnabled\": false, \"isXeroOauthEnabled\": false, \"isMagicAuthEnabled\": false, \"isPasswordAuthEnabled\": false, \"isPasswordLowercaseRequired\": false, \"isPasswordNumberRequired\": false, \"isPasswordPwnedRequired\": false, \"isPasswordSymbolRequired\": false, \"isPasswordUppercaseRequired\": false, \"isPasskeyAuthEnabled\": false, \"isPasskeyProgressiveEnrollmentEnabled\": false, \"isImpersonationEnabled\": false, \"isSsoEnabled\": true, \"mfaEnabled\": \"Off\", \"passwordMinimumLength\": 10, \"isPasswordHistoryEnabled\": false, \"passwordHistorySize\": 0, \"passwordMinimumStrength\": 3, \"invitationExpiry\": 604800, \"signUpUrl\": null, \"externalLoginUri\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"redirectUris\": {\"data\": [], \"listMetadata\": {\"before\": null, \"after\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"logoutUris\": {\"data\": []}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0C73NGBXRSG5JNY35G993MY"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"defaultUserlandApplication\": {\"id\": \"app_01M0C73NST2BN3RE1ED5XR967V\", \"name\": \"lintlabs's Application\", \"clientId\": \"client_01M0C73NMGGXRABVFDX5JT2KFX\", \"environmentId\": \"environment_01M0C73NGBXRSG5JNY35G993MY\", \"createdAt\": \"2026-08-19T05:15:08.103Z\", \"updatedAt\": \"2026-08-19T05:15:08.103Z\", \"initiateLoginUri\": null, \"appHomepageUrl\": null, \"signUpUrl\": null, \"passwordResetUrl\": null, \"userInvitationUrl\": null, \"maxSessionTime\": 31536000, \"accessTokenExpiry\": 300, \"inactivityTimeout\": 172800, \"isDefault\": true, \"appBranding\": null, \"keys\": [], \"redirectUris\": [], \"logoutUris\": [], \"webOrigins\": []}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"environment\": {\"localizationEnabled\": true, \"defaultLocale\": \"en-US\", \"ssoSignInConsentEnabled\": true, \"userlandSettings\": {\"allowSignUp\": true, \"isWaitlistEnabled\": false, \"isAuthkitEnabled\": true, \"isAuthkitIdpInitiatedSsoEnabled\": true, \"isAuthkitDynamicClientRegistrationEnabled\": false, \"isAuthkitClientIdMetadataDocumentEnabled\": false, \"isEmailVerificationRequired\": true, \"isAppleOauthEnabled\": false, \"isBitbucketOauthEnabled\": false, \"isDiscordOauthEnabled\": false, \"isGithubOauthEnabled\": false, \"isGitLabOauthEnabled\": false, \"isGrokOauthEnabled\": false, \"isIntuitOauthEnabled\": false, \"isGoogleOauthEnabled\": true, \"isLinkedInOauthEnabled\": false, \"isMicrosoftOauthEnabled\": false, \"isSalesforceOauthEnabled\": false, \"isSlackOauthEnabled\": false, \"isVercelMarketplaceOauthEnabled\": false, \"isVercelOauthEnabled\": false, \"isXOauthEnabled\": false, \"isXeroOauthEnabled\": false, \"isMagicAuthEnabled\": true, \"isPasswordAuthEnabled\": false, \"isPasswordLowercaseRequired\": false, \"isPasswordNumberRequired\": false, \"isPasswordPwnedRequired\": false, \"isPasswordSymbolRequired\": false, \"isPasswordUppercaseRequired\": false, \"isPasskeyAuthEnabled\": false, \"isPasskeyProgressiveEnrollmentEnabled\": false, \"isImpersonationEnabled\": true, \"isSsoEnabled\": true, \"mfaEnabled\": \"Off\", \"passwordMinimumLength\": 10, \"isPasswordHistoryEnabled\": false, \"passwordHistorySize\": 0, \"passwordMinimumStrength\": 3, \"invitationExpiry\": 604800, \"signUpUrl\": null, \"externalLoginUri\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"redirectUris\": {\"data\": [{\"id\": \"redir_01M0AS2MW0J6KR73W24BCEA2RQ\", \"uri\": \"https://dev.biskt.ai/api/auth/workos/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0AS2MW0E901KSW18V8NX4N8\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0AS2MW04GBG420SWA77GNDN\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": true}], \"listMetadata\": {\"before\": null, \"after\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"logoutUris\": {\"data\": [{\"id\": \"logout_uri_01M0A95DNSM4Y8QRZ7BD8EMV78\", \"uri\": \"http://localhost:4740/\", \"isDefault\": true}]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01KZK22XWQRXGTGM9T3YVFNP3M"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"defaultUserlandApplication\": {\"id\": \"app_01KZK22YDYYA5N4GEN82J2FQ0J\", \"name\": \"gmail.com's Application\", \"clientId\": \"client_01KZK22Y6N9KFZZB3MTNDZP3HQ\", \"environmentId\": \"environment_01KZK22XWQRXGTGM9T3YVFNP3M\", \"createdAt\": \"2026-08-09T10:46:20.633Z\", \"updatedAt\": \"2026-08-18T15:51:20.297Z\", \"initiateLoginUri\": \"https://course.lintlabs.org/sign-in\", \"appHomepageUrl\": null, \"signUpUrl\": null, \"passwordResetUrl\": null, \"userInvitationUrl\": null, \"maxSessionTime\": 31536000, \"accessTokenExpiry\": 300, \"inactivityTimeout\": 172800, \"isDefault\": true, \"appBranding\": null, \"keys\": [{\"id\": \"key_01KZK22YE2ZQVBXSNSCMDVD7GZ\", \"createdAt\": \"2026-08-09T10:46:20.633Z\", \"expiredAt\": null, \"lastUsedAt\": \"2026-08-10T13:35:52.188Z\", \"name\": \"WorkOS API key\", \"platform\": null, \"applicationId\": \"app_01KZK22YDYYA5N4GEN82J2FQ0J\"}], \"redirectUris\": [{\"id\": \"redir_01M0AS2MW0E901KSW18V8NX4N8\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0AS2MW0J6KR73W24BCEA2RQ\", \"uri\": \"https://dev.biskt.ai/api/auth/workos/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0AS2MW04GBG420SWA77GNDN\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": true}], \"logoutUris\": [{\"id\": \"logout_uri_01M0A95DNSM4Y8QRZ7BD8EMV78\", \"uri\": \"http://localhost:4740/\", \"isDefault\": true}], \"webOrigins\": [{\"id\": \"01M0A91WTNCPFNGMHTY0TZ4YEF\", \"origin\": \"http://localhost:4740\"}, {\"id\": \"01M0A91WTNVJNC74Z6AY5HKZ04\", \"origin\": \"https://course.lintlabs.org\"}]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"environment\": {\"localizationEnabled\": true, \"defaultLocale\": \"en-US\", \"ssoSignInConsentEnabled\": true, \"userlandSettings\": {\"allowSignUp\": true, \"isWaitlistEnabled\": false, \"isAuthkitEnabled\": true, \"isAuthkitIdpInitiatedSsoEnabled\": true, \"isAuthkitDynamicClientRegistrationEnabled\": false, \"isAuthkitClientIdMetadataDocumentEnabled\": false, \"isEmailVerificationRequired\": true, \"isAppleOauthEnabled\": false, \"isBitbucketOauthEnabled\": false, \"isDiscordOauthEnabled\": false, \"isGithubOauthEnabled\": false, \"isGitLabOauthEnabled\": false, \"isGrokOauthEnabled\": false, \"isIntuitOauthEnabled\": false, \"isGoogleOauthEnabled\": true, \"isLinkedInOauthEnabled\": false, \"isMicrosoftOauthEnabled\": false, \"isSalesforceOauthEnabled\": false, \"isSlackOauthEnabled\": false, \"isVercelMarketplaceOauthEnabled\": false, \"isVercelOauthEnabled\": false, \"isXOauthEnabled\": false, \"isXeroOauthEnabled\": false, \"isMagicAuthEnabled\": true, \"isPasswordAuthEnabled\": true, \"isPasswordLowercaseRequired\": false, \"isPasswordNumberRequired\": false, \"isPasswordPwnedRequired\": false, \"isPasswordSymbolRequired\": false, \"isPasswordUppercaseRequired\": false, \"isPasskeyAuthEnabled\": false, \"isPasskeyProgressiveEnrollmentEnabled\": false, \"isImpersonationEnabled\": true, \"isSsoEnabled\": true, \"mfaEnabled\": \"Off\", \"passwordMinimumLength\": 10, \"isPasswordHistoryEnabled\": false, \"passwordHistorySize\": 0, \"passwordMinimumStrength\": 3, \"invitationExpiry\": 604800, \"signUpUrl\": null, \"externalLoginUri\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"redirectUris\": {\"data\": [{\"id\": \"redir_01M0AWW46QP06WA8K43DAKEFMB\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0AWW46Q9741M37H4QM39Q77\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}, {\"id\": \"redir_01KZKB7S2743ZZNAFJVJY5J48D\", \"uri\": \"https://chat.biskt.ai/api/auth/workos/callback\", \"isDefault\": true}], \"listMetadata\": {\"before\": null, \"after\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"logoutUris\": {\"data\": []}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01KZK22YE8DY2ET3GESRTYZQCQ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"defaultUserlandApplication\": {\"id\": \"app_01KZK22YRYMBBM79DGXW2W1KKW\", \"name\": \"gmail.com's Application\", \"clientId\": \"client_01KZK22YKY4DJ5XQCQPJYM8FBF\", \"environmentId\": \"environment_01KZK22YE8DY2ET3GESRTYZQCQ\", \"createdAt\": \"2026-08-09T10:46:20.633Z\", \"updatedAt\": \"2026-08-09T10:46:20.633Z\", \"initiateLoginUri\": null, \"appHomepageUrl\": null, \"signUpUrl\": null, \"passwordResetUrl\": null, \"userInvitationUrl\": null, \"maxSessionTime\": 31536000, \"accessTokenExpiry\": 300, \"inactivityTimeout\": 172800, \"isDefault\": true, \"appBranding\": null, \"keys\": [{\"id\": \"key_01KZKB45WH4QB5EQW3ZWBBE1PW\", \"createdAt\": \"2026-08-09T13:24:18.960Z\", \"expiredAt\": null, \"lastUsedAt\": \"2026-09-29T07:49:16.370Z\", \"name\": \"prod\", \"platform\": null, \"applicationId\": \"app_01KZK22YRYMBBM79DGXW2W1KKW\"}], \"redirectUris\": [{\"id\": \"redir_01M0AWW46QP06WA8K43DAKEFMB\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0AWW46Q9741M37H4QM39Q77\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}, {\"id\": \"redir_01KZKB7S2743ZZNAFJVJY5J48D\", \"uri\": \"https://chat.biskt.ai/api/auth/workos/callback\", \"isDefault\": true}], \"logoutUris\": [], \"webOrigins\": [{\"id\": \"01M0AWW4REYRPS52MWPPS1YWSN\", \"origin\": \"https://chat.biskt.ai\"}, {\"id\": \"01M0AWW4REMWJ4QYR120B031W6\", \"origin\": \"https://course.lintlabs.org\"}, {\"id\": \"01M0AWW4RE9509HMQ4DNFMVTVP\", \"origin\": \"http://localhost:4740\"}]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"environment\": {\"localizationEnabled\": true, \"defaultLocale\": \"en-US\", \"ssoSignInConsentEnabled\": true, \"userlandSettings\": {\"allowSignUp\": true, \"isWaitlistEnabled\": false, \"isAuthkitEnabled\": true, \"isAuthkitIdpInitiatedSsoEnabled\": true, \"isAuthkitDynamicClientRegistrationEnabled\": false, \"isAuthkitClientIdMetadataDocumentEnabled\": false, \"isEmailVerificationRequired\": true, \"isAppleOauthEnabled\": true, \"isBitbucketOauthEnabled\": false, \"isDiscordOauthEnabled\": false, \"isGithubOauthEnabled\": true, \"isGitLabOauthEnabled\": false, \"isGrokOauthEnabled\": false, \"isIntuitOauthEnabled\": false, \"isGoogleOauthEnabled\": true, \"isLinkedInOauthEnabled\": false, \"isMicrosoftOauthEnabled\": true, \"isSalesforceOauthEnabled\": false, \"isSlackOauthEnabled\": false, \"isVercelMarketplaceOauthEnabled\": false, \"isVercelOauthEnabled\": false, \"isXOauthEnabled\": false, \"isXeroOauthEnabled\": false, \"isMagicAuthEnabled\": true, \"isPasswordAuthEnabled\": true, \"isPasswordLowercaseRequired\": false, \"isPasswordNumberRequired\": false, \"isPasswordPwnedRequired\": false, \"isPasswordSymbolRequired\": false, \"isPasswordUppercaseRequired\": false, \"isPasskeyAuthEnabled\": false, \"isPasskeyProgressiveEnrollmentEnabled\": false, \"isImpersonationEnabled\": false, \"isSsoEnabled\": true, \"mfaEnabled\": \"Off\", \"passwordMinimumLength\": 10, \"isPasswordHistoryEnabled\": false, \"passwordHistorySize\": 0, \"passwordMinimumStrength\": 3, \"invitationExpiry\": 604800, \"signUpUrl\": null, \"externalLoginUri\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"redirectUris\": {\"data\": [{\"id\": \"redir_01M2ARXKASZRH3XP6S29AZG6WF\", \"uri\": \"https://lintlabs-course-staging.pages.dev/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0C6R7PY43EPHZK49GBF5W0Z\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": true}, {\"id\": \"redir_01M0C6R7PY1Q77KZ4M3QAQPRYX\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}], \"listMetadata\": {\"before\": null, \"after\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"logoutUris\": {\"data\": [{\"id\": \"logout_uri_01M0C6RJSEV840AV511PG5C1MT\", \"uri\": \"http://localhost:4740/login\", \"isDefault\": false}, {\"id\": \"logout_uri_01M0C6RJSE31C5GKWV1SXDPCE9\", \"uri\": \"https://course.lintlabs.org/login\", \"isDefault\": true}]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0AVP74D0PT1TZKQD6KTPSG7"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"defaultUserlandApplication\": {\"id\": \"app_01M0AVP7TS7XX6N89Q85T815WK\", \"name\": \"LintLabs Course\", \"clientId\": \"client_01M0AVP7M6TTRY42KH3CEB1HBA\", \"environmentId\": \"environment_01M0AVP74D0PT1TZKQD6KTPSG7\", \"createdAt\": \"2026-08-18T16:36:19.204Z\", \"updatedAt\": \"2026-08-19T05:08:55.232Z\", \"initiateLoginUri\": \"https://course.lintlabs.org/sign-in\", \"appHomepageUrl\": \"https://course.lintlabs.org/dashboard\", \"signUpUrl\": \"https://course.lintlabs.org/login\", \"passwordResetUrl\": null, \"userInvitationUrl\": null, \"maxSessionTime\": 31536000, \"accessTokenExpiry\": 300, \"inactivityTimeout\": 172800, \"isDefault\": true, \"appBranding\": null, \"keys\": [{\"id\": \"key_01M0AVP7TXV62VMBR2P469BZ9N\", \"createdAt\": \"2026-08-18T16:36:19.204Z\", \"expiredAt\": null, \"lastUsedAt\": null, \"name\": \"WorkOS API key\", \"platform\": null, \"applicationId\": \"app_01M0AVP7TS7XX6N89Q85T815WK\"}, {\"id\": \"key_01M0AVPMJCK5EYA3A5DWEWGTF6\", \"createdAt\": \"2026-08-18T16:36:32.971Z\", \"expiredAt\": null, \"lastUsedAt\": \"2026-09-28T05:03:19.296Z\", \"name\": \"lint\", \"platform\": null, \"applicationId\": \"app_01M0AVP7TS7XX6N89Q85T815WK\"}], \"redirectUris\": [{\"id\": \"redir_01M2ARXKASZRH3XP6S29AZG6WF\", \"uri\": \"https://lintlabs-course-staging.pages.dev/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0C6R7PY43EPHZK49GBF5W0Z\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": true}, {\"id\": \"redir_01M0C6R7PY1Q77KZ4M3QAQPRYX\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}], \"logoutUris\": [{\"id\": \"logout_uri_01M0C6RJSE31C5GKWV1SXDPCE9\", \"uri\": \"https://course.lintlabs.org/login\", \"isDefault\": true}, {\"id\": \"logout_uri_01M0C6RJSEV840AV511PG5C1MT\", \"uri\": \"http://localhost:4740/login\", \"isDefault\": false}], \"webOrigins\": [{\"id\": \"01M0C6R88AAXX9G6ZZCCB91E4H\", \"origin\": \"https://course.lintlabs.org\"}, {\"id\": \"01M0C6R88A5R0K1W0RHF3YQ1GV\", \"origin\": \"http://localhost:4740\"}]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "authkitSettings",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"environment\": {\"localizationEnabled\": true, \"defaultLocale\": \"en-US\", \"ssoSignInConsentEnabled\": true, \"userlandSettings\": {\"allowSignUp\": true, \"isWaitlistEnabled\": false, \"isAuthkitEnabled\": true, \"isAuthkitIdpInitiatedSsoEnabled\": true, \"isAuthkitDynamicClientRegistrationEnabled\": false, \"isAuthkitClientIdMetadataDocumentEnabled\": false, \"isEmailVerificationRequired\": true, \"isAppleOauthEnabled\": false, \"isBitbucketOauthEnabled\": false, \"isDiscordOauthEnabled\": false, \"isGithubOauthEnabled\": false, \"isGitLabOauthEnabled\": false, \"isGrokOauthEnabled\": false, \"isIntuitOauthEnabled\": false, \"isGoogleOauthEnabled\": true, \"isLinkedInOauthEnabled\": true, \"isMicrosoftOauthEnabled\": false, \"isSalesforceOauthEnabled\": false, \"isSlackOauthEnabled\": false, \"isVercelMarketplaceOauthEnabled\": false, \"isVercelOauthEnabled\": false, \"isXOauthEnabled\": false, \"isXeroOauthEnabled\": false, \"isMagicAuthEnabled\": true, \"isPasswordAuthEnabled\": false, \"isPasswordLowercaseRequired\": false, \"isPasswordNumberRequired\": false, \"isPasswordPwnedRequired\": false, \"isPasswordSymbolRequired\": false, \"isPasswordUppercaseRequired\": false, \"isPasskeyAuthEnabled\": false, \"isPasskeyProgressiveEnrollmentEnabled\": false, \"isImpersonationEnabled\": true, \"isSsoEnabled\": true, \"mfaEnabled\": \"Off\", \"passwordMinimumLength\": 10, \"isPasswordHistoryEnabled\": false, \"passwordHistorySize\": 0, \"passwordMinimumStrength\": 3, \"invitationExpiry\": 604800, \"signUpUrl\": null, \"externalLoginUri\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "redirectUris",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"redirectUris\": {\"data\": [{\"id\": \"redir_01M0RZR5EJ2X30DH15HMA1AEHY\", \"uri\": \"https://learn.lintlabs.org/callback\", \"isDefault\": true}, {\"id\": \"redir_01M0PHW814D1RN4QZ289X1E555\", \"uri\": \"https://lintlearn.com/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0C7MADPJVT5B55C3YCJ7TXR\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0C7MADP7A484V630BKW5008\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}], \"listMetadata\": {\"before\": null, \"after\": null}}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "logoutUris",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"logoutUris\": {\"data\": [{\"id\": \"logout_uri_01M0RZR61016306XXX1MR59NA5\", \"uri\": \"https://learn.lintlabs.org/login\", \"isDefault\": true}, {\"id\": \"logout_uri_01M0PHW8K0GCA7TCA1RPCTFS2N\", \"uri\": \"https://lintlearn.com/login\", \"isDefault\": false}, {\"id\": \"logout_uri_01M0C7N92NTGQ73PR9K3ERFXYP\", \"uri\": \"https://course.lintlabs.org/login\", \"isDefault\": false}, {\"id\": \"logout_uri_01M0C7N92NTEEF7DCVX38W6QJY\", \"uri\": \"http://localhost:4740/login\", \"isDefault\": false}]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "query",
+      "arguments": {
+        "operation": "defaultAuthkitApplication",
+        "environment_id": "environment_01M0AVP7V1E699D2H77031JWDJ"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"defaultUserlandApplication\": {\"id\": \"app_01M0AVP86X3Z501CPNZTSVA59G\", \"name\": \"LintLabs Learn\", \"clientId\": \"client_01M0AVP82362204AF1ZMSDK2K1\", \"environmentId\": \"environment_01M0AVP7V1E699D2H77031JWDJ\", \"createdAt\": \"2026-08-18T16:36:19.204Z\", \"updatedAt\": \"2026-08-24T04:16:38.780Z\", \"initiateLoginUri\": \"https://learn.lintlabs.org/sign-in\", \"appHomepageUrl\": \"https://learn.lintlabs.org/dashboard\", \"signUpUrl\": \"https://learn.lintlabs.org/login\", \"passwordResetUrl\": null, \"userInvitationUrl\": null, \"maxSessionTime\": 31536000, \"accessTokenExpiry\": 300, \"inactivityTimeout\": 172800, \"isDefault\": true, \"appBranding\": null, \"keys\": [{\"id\": \"key_01M0C7HHT68B62SZPVPJZPDG65\", \"createdAt\": \"2026-08-19T05:22:43.653Z\", \"expiredAt\": null, \"lastUsedAt\": \"2026-09-29T14:16:18.542Z\", \"name\": \"prd\", \"platform\": null, \"applicationId\": \"app_01M0AVP86X3Z501CPNZTSVA59G\"}], \"redirectUris\": [{\"id\": \"redir_01M0RZR5EJ2X30DH15HMA1AEHY\", \"uri\": \"https://learn.lintlabs.org/callback\", \"isDefault\": true}, {\"id\": \"redir_01M0PHW814D1RN4QZ289X1E555\", \"uri\": \"https://lintlearn.com/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0C7MADP7A484V630BKW5008\", \"uri\": \"http://localhost:4740/callback\", \"isDefault\": false}, {\"id\": \"redir_01M0C7MADPJVT5B55C3YCJ7TXR\", \"uri\": \"https://course.lintlabs.org/callback\", \"isDefault\": false}], \"logoutUris\": [{\"id\": \"logout_uri_01M0C7N92NTEEF7DCVX38W6QJY\", \"uri\": \"http://localhost:4740/login\", \"isDefault\": false}, {\"id\": \"logout_uri_01M0C7N92NTGQ73PR9K3ERFXYP\", \"uri\": \"https://course.lintlabs.org/login\", \"isDefault\": false}, {\"id\": \"logout_uri_01M0PHW8K0GCA7TCA1RPCTFS2N\", \"uri\": \"https://lintlearn.com/login\", \"isDefault\": false}, {\"id\": \"logout_uri_01M0RZR61016306XXX1MR59NA5\", \"uri\": \"https://learn.lintlabs.org/login\", \"isDefault\": true}], \"webOrigins\": [{\"id\": \"01M0C7MAZNF9D89XVZ3FY60ERT\", \"origin\": \"https://course.lintlabs.org\"}, {\"id\": \"01M0C7MAZNRNH26DCEYY0RFVS4\", \"origin\": \"http://localhost:4740\"}, {\"id\": \"01M0PHW94GARGJRNKCYWQWRG9T\", \"origin\": \"https://lintlearn.com\"}, {\"id\": \"01M0RZR6KCPCTYQKT88QR3XZXR\", \"origin\": \"https://learn.lintlabs.org\"}]}}"
+        }
+      ]
+    }
+  }
+]

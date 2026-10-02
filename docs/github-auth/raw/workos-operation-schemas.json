@@ -1,0 +1,82 @@
+[
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "updateOauthCredentials"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# updateOauthCredentials (mutation)\n\nUpdate a social OAuth provider's client credentials and toggle whether it is enabled for AuthKit sign-in\n\n## Parameters\n- appleKeyId: string (optional)\n- applePrivateKey: string (optional)\n- appleTeamId: string (optional)\n- clientId: string (optional)\n- clientSecret: string (optional)\n- customScopes: string[] (optional)\n- isUserlandEnabled: boolean (optional)\n- oauthCredentialId: string (required)\n- redirectUri: string (optional)\n- returnProviderTokens: boolean (optional)\n\nExecute with the mutate tool: {\"operation\":\"updateOauthCredentials\",\"variables\":{\"appleKeyId\":\"<string>\",\"applePrivateKey\":\"<string>\",\"appleTeamId\":\"<string>\",\"clientId\":\"<string>\",\"clientSecret\":\"<string>\",\"customScopes\":[],\"isUserlandEnabled\":false,\"oauthCredentialId\":\"<string>\",\"redirectUri\":\"<string>\",\"returnProviderTokens\":false}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "connectionsByType"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# connectionsByType (query)\n\nList an environment's OAuth credentials filtered by provider type, paginated\n\n## Parameters\n- environmentId: string (required) \u2014 WorkOS environment ID (`environment_\u2026`). Discover environment IDs with the `dashboardSession` operation.\n- type: ConnectionType (required)\n\n## Input types\n\n### ConnectionType (enum)\nEnum represents the type of connection.\nValues: ADFSSAML, AdpOidc, AppleOAuth, Auth0Migration, Auth0SAML, AzureSAML, BitbucketOAuth, CasSAML, ClassLinkSAML, CleverOIDC, CloudflareSAML, CyberArkSAML, DiscordOAuth, DuoSAML, EntraIdOIDC, GenericOIDC, GenericSAML, GitLabOAuth, GithubOAuth, GoogleOAuth, GoogleOIDC, GoogleSAML, GrokOAuth, IntuitOAuth, JumpCloudSAML \u2026and 27 more\n\nExecute with the query tool: {\"operation\":\"connectionsByType\",\"environment_id\":\"<environment_id>\",\"variables\":{\"type\":\"ADFSSAML\"}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "updateAuthkitSettings"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# updateAuthkitSettings (mutation)\n\nUpdate an environment's AuthKit authentication settings: auth methods, password policy, MFA, sessions, and signup\n\n## Parameters\n- accessTokenExpiry: number (optional)\n- allowSignUp: boolean (optional)\n- appHomepageUrl: string (optional)\n- environmentId: string (required)\n- inactivityTimeout: number (optional)\n- invitationExpiry: number (optional)\n- isAppleOauthEnabled: boolean (optional)\n- isAuthkitClientIdMetadataDocumentEnabled: boolean (optional)\n- isAuthkitDynamicClientRegistrationEnabled: boolean (optional)\n- isAuthkitEnabled: boolean (optional)\n- isAuthkitIdpInitiatedSsoEnabled: boolean (optional)\n- isBitbucketOauthEnabled: boolean (optional)\n- isDiscordOauthEnabled: boolean (optional)\n- isEmailVerificationRequired: boolean (optional) \u2014 Gated by an account-level capability that is disabled for most workspaces \u2014 passing this field fails with \"not supported in this environment\" unless WorkOS has enabled the capability for the account. Omit it unless the capability is known to be enabled.\n- isGitLabOauthEnabled: boolean (optional)\n- isGithubOauthEnabled: boolean (optional)\n- isGoogleOauthEnabled: boolean (optional)\n- isGrokOauthEnabled: boolean (optional)\n- isIntuitOauthEnabled: boolean (optional)\n- isLinkedInOauthEnabled: boolean (optional)\n- isMagicAuthEnabled: boolean (optional)\n- isMfaRequired: boolean (optional)\n- isMicrosoftOauthEnabled: boolean (optional)\n- isPasskeyAuthEnabled: boolean (optional)\n- isPasskeyProgressiveEnrollmentEnabled: boolean (optional)\n- isPasswordAuthEnabled: boolean (optional)\n- isPasswordHistoryEnabled: boolean (optional)\n- isPasswordLowercaseRequired: boolean (optional)\n- isPasswordNumberRequired: boolean (optional)\n- isPasswordPwnedRequired: boolean (optional)\n- isPasswordSymbolRequired: boolean (optional)\n- isPasswordUppercaseRequired: boolean (optional)\n- isSalesforceOauthEnabled: boolean (optional)\n- isSlackOauthEnabled: boolean (optional)\n- isSsoEnabled: boolean (optional)\n- isVercelMarketplaceOauthEnabled: boolean (optional)\n- isVercelOauthEnabled: boolean (optional)\n- isWaitlistEnabled: boolean (optional)\n- isXOauthEnabled: boolean (optional)\n- isXeroOauthEnabled: boolean (optional)\n- maxSessionTime: number (optional)\n- mfaEnabled: UserlandSettingsMfaEnabled (optional)\n- passwordHistorySize: number (optional)\n- passwordMinimumLength: number (optional)\n- passwordMinimumStrength: number (optional)\n- passwordResetUrl: string (optional)\n- signUpUrl: string (optional)\n- userInvitationUrl: string (optional)\n\n## Input types\n\n### UserlandSettingsMfaEnabled (enum)\nThe configuration for MFA for the environment.\nValues: Off, Optional, Required\n\nExecute with the mutate tool: {\"operation\":\"updateAuthkitSettings\",\"environment_id\":\"<environment_id>\",\"variables\":{\"accessTokenExpiry\":0,\"allowSignUp\":false,\"appHomepageUrl\":\"<string>\",\"inactivityTimeout\":0,\"invitationExpiry\":0,\"isAppleOauthEnabled\":false,\"isAuthkitClientIdMetadataDocumentEnabled\":false,\"isAuthkitDynamicClientRegistrationEnabled\":false,\"isAuthkitEnabled\":false,\"isAuthkitIdpInitiatedSsoEnabled\":false,\"isBitbucketOauthEnabled\":false,\"isDiscordOauthEnabled\":false,\"isEmailVerificationRequired\":false,\"isGitLabOauthEnabled\":false,\"isGithubOauthEnabled\":false,\"isGoogleOauthEnabled\":false,\"isGrokOauthEnabled\":false,\"isIntuitOauthEnabled\":false,\"isLinkedInOauthEnabled\":false,\"isMagicAuthEnabled\":false,\"isMfaRequired\":false,\"isMicrosoftOauthEnabled\":false,\"isPasskeyAuthEnabled\":false,\"isPasskeyProgressiveEnrollmentEnabled\":false,\"isPasswordAuthEnabled\":false,\"isPasswordHistoryEnabled\":false,\"isPasswordLowercaseRequired\":false,\"isPasswordNumberRequired\":false,\"isPasswordPwnedRequired\":false,\"isPasswordSymbolRequired\":false,\"isPasswordUppercaseRequired\":false,\"isSalesforceOauthEnabled\":false,\"isSlackOauthEnabled\":false,\"isSsoEnabled\":false,\"isVercelMarketplaceOauthEnabled\":false,\"isVercelOauthEnabled\":false,\"isWaitlistEnabled\":false,\"isXOauthEnabled\":false,\"isXeroOauthEnabled\":false,\"maxSessionTime\":0,\"mfaEnabled\":\"Off\",\"passwordHistorySize\":0,\"passwordMinimumLength\":0,\"passwordMinimumStrength\":0,\"passwordResetUrl\":\"<string>\",\"signUpUrl\":\"<string>\",\"userInvitationUrl\":\"<string>\"}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "userSessions"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# userSessions (query)\n\nList an AuthKit end user's authentication sessions\n\n## Parameters\n- userId: string (required)\n- before: string (optional)\n- after: string (optional)\n- limit: number (optional)\n- states: UserlandSessionStateFilter[] (optional)\n\n## Input types\n\n### UserlandSessionStateFilter (enum)\nValues: Ephemeral, Issued, Revoked\n\nExecute with the query tool: {\"operation\":\"userSessions\",\"variables\":{\"userId\":\"<string>\",\"before\":\"<string>\",\"after\":\"<string>\",\"limit\":0,\"states\":[]}}"
+        }
+      ]
+    }
+  },
+  {
+    "call": {
+      "tool": "list_operations",
+      "arguments": {
+        "operation": "users"
+      }
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "# users (query)\n\nList AuthKit end users in an environment, with search, sorting, and role/status filters\n\n## Parameters\n- environmentId: string (required) \u2014 WorkOS environment ID (`environment_\u2026`). Discover environment IDs with the `dashboardSession` operation.\n- search: string (optional)\n- sessionStatus: UserlandUserSessionStatus (optional)\n- dataIntegrationId: string (optional)\n- sortField: UserlandUserSortField (optional)\n- order: PaginationOrder (optional)\n- before: string (optional)\n- after: string (optional)\n- limit: number (optional)\n- status: string[] (optional)\n\n## Input types\n\n### UserlandUserSessionStatus (enum)\nFilter users by their session status - Active (has sessions) or Inactive (no sessions).\nValues: Active, Inactive\n\n### UserlandUserSortField (enum)\nFields available for sorting userland users.\nValues: Email, LastSignInAt, SignInCount\n\n### PaginationOrder (enum)\nEnum represents the pagination order.\nValues: Asc, Desc, Normal\n\nExecute with the query tool: {\"operation\":\"users\",\"environment_id\":\"<environment_id>\",\"variables\":{\"search\":\"<string>\",\"sessionStatus\":\"Active\",\"dataIntegrationId\":\"<string>\",\"sortField\":\"Email\",\"order\":\"Asc\",\"before\":\"<string>\",\"after\":\"<string>\",\"limit\":0,\"status\":[]}}"
+        }
+      ]
+    }
+  }
+]

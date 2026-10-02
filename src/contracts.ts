@@ -149,6 +149,12 @@ export interface Services {
   authenticate(request: Request): Promise<Principal | null>;
   origin: string;
   allowPublic: boolean;
+  github?: {
+    account(p: Principal): Promise<any>;
+    repos(p: Principal, url: URL): Promise<any>;
+    source(p: Principal, name: unknown): Promise<{ url: string; name: string }>;
+    disconnect(p: Principal): Promise<any>;
+  };
   member?: (organization: string, user: string) => Promise<boolean>;
   localUpload?: boolean;
   presign?: (

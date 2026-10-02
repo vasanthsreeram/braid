@@ -28,7 +28,7 @@ try {
     throw Error("Local test identity did not connect");
   checks++;
   await page
-    .getByPlaceholder("Repository name", { exact: true })
+    .getByRole("textbox", { name: "Repository name", exact: true })
     .fill("ui-synthetic-repo");
   await page.getByRole("button", { name: "Create private repo" }).click();
   await page.getByText("ui-synthetic-repo", { exact: true }).waitFor();
@@ -42,9 +42,9 @@ try {
   await page.getByRole("button", { name: "Fork task", exact: true }).click();
   await page.getByText("ui-task", { exact: true }).waitFor();
   checks++;
-  await mkdir("docs/auth", { recursive: true });
+  await mkdir("docs/github-auth", { recursive: true });
   await page.screenshot({
-    path: "docs/auth/ui-basic.png",
+    path: "docs/github-auth/ui-basic.png",
     fullPage: true,
   });
   await page.getByRole("button", { name: "Discover", exact: true }).click();
@@ -52,7 +52,7 @@ try {
   checks++;
   if (errors.length) throw Error("UI console errors: " + errors.join(";"));
   await writeFile(
-    "docs/auth/raw/ui-basic.json",
+    "docs/github-auth/raw/ui-basic.json",
     JSON.stringify(
       {
         version: 1,
@@ -60,7 +60,7 @@ try {
         checks,
         passed: true,
         pageErrors: errors,
-        screenshot: "docs/auth/ui-basic.png",
+        screenshot: "docs/github-auth/ui-basic.png",
         browser:
           "headless system Google Chrome; in-app browser tool failed bootstrap due missing sandboxPolicy",
       },

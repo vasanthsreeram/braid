@@ -1,0 +1,28 @@
+✖ connected account binds verified WorkOS identity and encrypts tokens per user (contract double) (2.562875ms)
+✖ picker only returns public owned repos with bounded pagination and refuses private imports (contract double) (0.99375ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.951875
+
+✖ failing tests:
+
+test at test/github.test.ts:30:1
+✖ connected account binds verified WorkOS identity and encrypts tokens per user (contract double) (2.562875ms)
+  Error: GitHub connection not implemented
+      at GitHubAccounts.connect (/Users/admin/projects/cf-native-forge/src/github.ts:7:59)
+      at TestContext.<anonymous> (/Users/admin/projects/cf-native-forge/test/github.test.ts:33:19)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at test/github.test.ts:46:1
+✖ picker only returns public owned repos with bounded pagination and refuses private imports (contract double) (0.99375ms)
+  Error: GitHub connection not implemented
+      at GitHubAccounts.connect (/Users/admin/projects/cf-native-forge/src/github.ts:7:59)
+      at TestContext.<anonymous> (/Users/admin/projects/cf-native-forge/test/github.test.ts:48:19)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

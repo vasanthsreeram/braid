@@ -4,6 +4,15 @@ const rows = [];
 for (const [path, method, body, headers, status] of [
   ["/", "GET", undefined, {}, 401],
   ["/app.js", "GET", undefined, {}, 401],
+  ["/api/github", "GET", undefined, {}, 401],
+  ["/api/github/repos", "GET", undefined, {}, 401],
+  [
+    "/api/github/import",
+    "POST",
+    { repository: "vasanthsreeram/cloudnee" },
+    { origin },
+    401,
+  ],
   ["/api/me", "GET", undefined, {}, 401],
   ["/api/profile", "GET", undefined, {}, 401],
   [
@@ -51,7 +60,7 @@ for (const [path, method, body, headers, status] of [
   });
   const text = await r.text();
   rows.push({
-    path,
+    path: path.startsWith("/auth/callback") ? "/auth/callback?[redacted]" : path,
     method,
     status: r.status,
     expected: status,
@@ -62,13 +71,14 @@ for (const [path, method, body, headers, status] of [
 }
 const result = {
   origin,
-  boundary: "deployed unauthenticated rejection and configured WorkOS authorization redirect only; actual user session not tested",
+  boundary:
+    "deployed unauthenticated rejection and configured WorkOS authorization redirect only; actual user session not tested",
   checks: rows,
   passed: rows.every((r) => r.passed),
   at: new Date().toISOString(),
 };
 await writeFile(
-  "docs/auth/raw/deployed-core-smoke.json",
+  "docs/github-auth/raw/deployed-core-smoke.json",
   JSON.stringify(result, null, 2) + "\n",
 );
 console.log(

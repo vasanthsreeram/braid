@@ -1,0 +1,12 @@
+✔ connected account binds verified WorkOS identity and encrypts tokens per user (contract double) (7.828125ms)
+✔ picker only returns public owned repos with bounded pagination and refuses private imports (contract double) (4.158458ms)
+✔ disconnect removes local authority even if remote revocation is unavailable (contract double) (0.777292ms)
+✔ a disconnected user can reconnect a newly verified GitHub identity (0.989917ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 111.817083

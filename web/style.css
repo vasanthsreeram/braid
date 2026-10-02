@@ -318,3 +318,27 @@ pre {
     flex: 1 1 140px;
   }
 }
+
+#github-view {
+  margin-block: 24px;
+}
+#github-repos,
+#github-account {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+#github-connect {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #446157;
+  border-radius: 4px;
+}
+#github-page {
+  align-self: center;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

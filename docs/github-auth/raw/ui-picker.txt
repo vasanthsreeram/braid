@@ -1,0 +1,1 @@
+4 GitHub picker UI checks passed (local provider fixtures)

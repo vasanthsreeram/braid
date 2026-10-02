@@ -1,0 +1,12 @@
+[
+  {
+    "service": "gitflare/github-client-id",
+    "account": "gitflare",
+    "available": false
+  },
+  {
+    "service": "gitflare/github-client-secret",
+    "account": "gitflare",
+    "available": false
+  }
+]

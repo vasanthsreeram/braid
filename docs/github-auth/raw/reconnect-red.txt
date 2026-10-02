@@ -1,0 +1,22 @@
+✖ a disconnected user can reconnect a newly verified GitHub identity (10.314167ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 202.332167
+
+✖ failing tests:
+
+test at test/github.test.ts:175:1
+✖ a disconnected user can reconnect a newly verified GitHub identity (10.314167ms)
+  Error: Disconnect the existing GitHub account before changing identity
+      at check (/Users/admin/projects/cf-native-forge/src/storage.ts:20:25)
+      at GitHubAccounts.connect (/Users/admin/projects/cf-native-forge/src/github.ts:149:5)
+      at async TestContext.<anonymous> (/Users/admin/projects/cf-native-forge/test/github.test.ts:178:17)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    status: 409
+  }

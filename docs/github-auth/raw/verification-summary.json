@@ -1,0 +1,52 @@
+{
+  "baseline": "08d18b8",
+  "origin": "https://gitflare.lintlabs.org",
+  "workerVersion": "e1cbb199-3e4f-4ead-9f4e-c398d639d574",
+  "implemented": {
+    "githubOnlySignIn": true,
+    "strictSessionIssuerAndClientBinding": true,
+    "encryptedPerUserProviderTokens": true,
+    "connectedPublicRepoPicker": true,
+    "privateAppImportPipeline": true
+  },
+  "verification": {
+    "testsPassed": 45,
+    "typecheck": true,
+    "build": true,
+    "localWorkerdDenials": 7,
+    "uiBasic": 6,
+    "uiDesktop": 19,
+    "uiMobile": 19,
+    "githubPickerFixtureGroups": 4,
+    "deployedDenials": 18,
+    "deployedBrowserPreloginChecks": 6
+  },
+  "live": {
+    "vasCallbackAndAppSessionVerified": false,
+    "connectedVasRepositoriesVerified": false,
+    "newAppImports": 0,
+    "destinationObjectEqualityVerified": false,
+    "destinationCloneFetchVerified": false,
+    "activeExistingSessionPreservationVerified": false
+  },
+  "preflightPublicNonforkCandidates": [
+    "vasanthsreeram/cloudnee",
+    "vasanthsreeram/himaldb",
+    "vasanthsreeram/formninja"
+  ],
+  "blockers": [
+    "Reachable existing browser is signed out of GitHub; user must complete login/2FA/consent",
+    "Dedicated Gitflare GitHub OAuth App/client ID/secret and WorkOS credential record/token-return configuration are missing"
+  ],
+  "rootCauseBoundary": "Confirmed mismatch against official session-token contract with failing regression; original live Vas callback token not captured, so complete live root cause/fix remains unverified",
+  "privateSourceAndDestinationsRequired": true,
+  "excluded": [
+    "CI",
+    "Agents SDK",
+    "compute Sandbox/Containers",
+    "imported-code execution",
+    "paid plan upgrades",
+    "GitHub source repository mutations"
+  ],
+  "evidence": "docs/github-auth/result.md"
+}

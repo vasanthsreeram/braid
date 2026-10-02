@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"updateUserlandSettings\": {\n    \"__typename\": \"UserlandSettingsUpdated\"\n  }\n}"
+    }
+  ]
+}

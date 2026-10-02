@@ -11,6 +11,8 @@ import { check, ID, Fault, digest } from "./storage.ts";
 export interface AuthConfig {
   WORKOS_CLIENT_ID: string;
   WORKOS_ISSUER?: string;
+  // OIDC discovery is not the issuer of /user_management/authenticate session tokens.
+  WORKOS_ACCESS_TOKEN_ISSUER?: string;
   WORKOS_API_KEY?: string;
   SESSION_SECRET?: string;
   ORIGIN: string;
@@ -20,6 +22,8 @@ export interface AuthIO {
   verify?: (token: string) => Promise<Principal>;
   revoked?: (sid: string) => Promise<boolean>;
   revoke?: (sid: string) => Promise<void>;
+  connectGitHub?: (p: Principal, tokens: any) => Promise<void>;
+  phase?: (phase: string) => void;
   logoutTokens?: (user: string) => Promise<void>;
 }
 export const cookie = (r: Request, n: string) =>
@@ -70,11 +74,12 @@ export async function verifyAccess(
     sets.set(c.WORKOS_CLIENT_ID, keys);
   }
   const { payload } = await jwtVerify(token, keySet ?? keys, {
-    issuer: c.WORKOS_ISSUER,
+    issuer: c.WORKOS_ACCESS_TOKEN_ISSUER ?? "https://api.workos.com",
     algorithms: ["RS256"],
-    requiredClaims: ["sub", "exp", "iat", "sid"],
+    requiredClaims: ["sub", "exp", "iat", "sid", "client_id"],
     maxTokenAge: "1h",
   });
+  check(payload.client_id === c.WORKOS_CLIENT_ID, 401, "Invalid client");
   if (payload.aud !== undefined)
     check(payload.aud === c.WORKOS_CLIENT_ID, 401, "Invalid audience");
   const tenant =
@@ -122,10 +127,12 @@ export async function livePrincipal(
   token: string,
   io: AuthIO = {},
 ) {
+  io.phase?.("token_verification");
   const p = await (io.verify ? io.verify(token) : verifyAccess(c, token));
   const sid = decodeJwt(token).sid;
   check(typeof sid === "string" && ID.test(sid), 401, "Invalid session");
   check(!(await io.revoked?.(sid)), 401, "Session revoked");
+  io.phase?.("session_lookup");
   const sessions = await workos(
     c,
     `/user_management/users/${p.id}/sessions?limit=100`,
@@ -145,6 +152,7 @@ export async function livePrincipal(
     "Session inactive",
   );
   if (p.tenant !== p.id) {
+    io.phase?.("membership_lookup");
     const memberships = await workos(
       c,
       `/user_management/organization_memberships?user_id=${p.id}&organization_id=${p.tenant}&limit=100`,
@@ -162,6 +170,7 @@ export async function livePrincipal(
       "Organization membership inactive",
     );
   }
+  io.phase?.("user_lookup");
   const user = await workos(c, `/user_management/users/${p.id}`, undefined, io);
   check(user.id === p.id, 401, "User unavailable");
   return {
@@ -222,6 +231,12 @@ export async function sessionCookie(
     "Incomplete token exchange",
   );
   const p = await livePrincipal(c, tokens.access_token, io);
+  if (tokens.oauth_tokens?.provider === "GitHubOAuth" && io.connectGitHub) {
+    io.phase?.("github_connection");
+    check(tokens.user?.id === p.id, 401, "Provider identity mismatch");
+    await io.connectGitHub(p, tokens.oauth_tokens);
+  }
+  io.phase?.("session_sealing");
   const sealed = await new EncryptJWT({
     access: tokens.access_token,
     refresh: tokens.refresh_token,
@@ -243,6 +258,13 @@ export async function authRoute(
 ): Promise<Response | null> {
   const u = new URL(r.url);
   if (!u.pathname.startsWith("/auth/")) return null;
+  let phase = "configuration";
+  io = {
+    ...io,
+    phase: (next) => {
+      phase = next;
+    },
+  };
   try {
     check(authReady(c), 503, "WorkOS environment unavailable");
     if (
@@ -354,7 +376,7 @@ export async function authRoute(
         client_id: c.WORKOS_CLIENT_ID,
         redirect_uri: c.ORIGIN + "/auth/callback",
         response_type: "code",
-        provider: "authkit",
+        provider: "GitHubOAuth",
         state,
         code_challenge: challenge,
         code_challenge_method: "S256",
@@ -370,6 +392,7 @@ export async function authRoute(
       });
     }
     check(u.pathname === "/auth/callback", 404, "Not found");
+    phase = "oauth_state";
     const flow = cookie(r, "__Host-forge-flow");
     check(flow, 400, "Missing OAuth state");
     const { payload } = await jwtDecrypt(flow, sessionKey(c), {
@@ -382,6 +405,7 @@ export async function authRoute(
       400,
       "Invalid OAuth state",
     );
+    phase = "code_exchange";
     const tokens = await workos(
       c,
       "/user_management/authenticate",
@@ -393,6 +417,12 @@ export async function authRoute(
         code_verifier: payload.verifier,
       },
       io,
+    );
+    phase = "login_policy";
+    check(
+      tokens.authentication_method === "GitHubOAuth",
+      401,
+      "Sign in with GitHub required",
     );
     const returnTo =
       typeof payload.returnTo === "string" &&
@@ -418,7 +448,10 @@ export async function authRoute(
     )
       headers.set("set-cookie", sealedCookie("__Host-forge", "", 0));
     return Response.json(
-      { message: e instanceof Fault ? e.message : "Authentication failed" },
+      {
+        message: e instanceof Fault ? e.message : "Authentication failed",
+        ...(u.pathname === "/auth/callback" ? { phase } : {}),
+      },
       { status: e instanceof Fault ? e.status : 401, headers },
     );
   }

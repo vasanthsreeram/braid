@@ -96,7 +96,7 @@ try {
   await page
     .getByRole("textbox", { name: "Optional public GitHub URL" })
     .fill("");
-  await page.getByRole("searchbox").fill("core-ui-private");
+  await page.locator("#query").fill("core-ui-private");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await page
     .getByText("core-ui-task", { exact: true })
@@ -205,11 +205,11 @@ try {
     throw Error("Missing real daily counts");
   await layout("contribution profile");
   await page.screenshot({
-    path: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile.png`,
+    path: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile.png`,
     fullPage: true,
   });
   await page.screenshot({
-    path: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile-viewport.png`,
+    path: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile-viewport.png`,
     fullPage: false,
   });
   await page.locator("#activity a").first().click();
@@ -234,11 +234,11 @@ try {
   if (unexpectedConsole.length) throw Error(unexpectedConsole.join("; "));
   if (errors.length) throw Error(errors.join("; "));
   await page.screenshot({
-    path: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
+    path: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
     fullPage: true,
   });
   await writeFile(
-    `docs/auth/raw/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.json`,
+    `docs/github-auth/raw/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.json`,
     JSON.stringify(
       {
         boundary:
@@ -251,7 +251,7 @@ try {
         network,
         consoleErrors,
         viewport: page.viewportSize(),
-        screenshot: `docs/auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
+        screenshot: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
       },
       null,
       2,

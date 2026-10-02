@@ -6,7 +6,7 @@ No .env, provider credential files, OAuth rotation, login or billing actions.
 import subprocess,os,json,sys
 AUTH=['WORKOS_API_KEY']
 R2=['R2_ACCESS_KEY_ID','R2_SECRET_ACCESS_KEY']
-keys=R2 if '--r2' in sys.argv else AUTH
+keys=['GITHUB_CLIENT_ID','GITHUB_CLIENT_SECRET'] if '--github' in sys.argv else R2 if '--r2' in sys.argv else AUTH
 values={}
 for name in keys:
  account = 'cf-native-forge' if '--r2' in sys.argv else 'gitflare'

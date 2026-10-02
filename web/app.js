@@ -89,6 +89,7 @@ $("connect").onclick = action(async () => {
   $("identity").textContent = p.id + " / " + p.tenant;
   await list();
   await restoreRoute();
+  await githubAccount();
 });
 $("local").onclick = action(async () => {
   const r = await fetch("/__local_identity");
@@ -101,6 +102,7 @@ $("local").onclick = action(async () => {
   $("identity").textContent = p.id;
   await list();
   await restoreRoute();
+  await githubAccount();
 });
 $("mine").onclick = action(() => list());
 $("discover").onclick = action(() => list(true));
@@ -265,7 +267,7 @@ async function restoreRoute() {
 api("/api/me")
   .then((p) => {
     $("identity").textContent = p.id;
-    return list().then(restoreRoute);
+    return list().then(restoreRoute).then(githubAccount);
   })
   .catch(() => {});
 
@@ -429,4 +431,108 @@ $("reconcile").onclick = action(async () => {
     null,
     2,
   );
+});
+
+let githubPage = 1,
+  githubNext = null,
+  githubQuery = "",
+  githubFlight = false;
+async function githubAccount() {
+  const account = await api("/api/github");
+  $("github-account").textContent = account.connected
+    ? `Connected as ${account.login} · public repository access`
+    : account.setupReady
+      ? "Connect GitHub to see your public repositories."
+      : "GitHub repository connection is awaiting app setup. URL import remains available.";
+  $("github-connect").textContent = account.connected
+    ? "Reconnect GitHub"
+    : "Connect GitHub";
+  $("github-disconnect").hidden = !account.connected;
+  $("github-picker").hidden = !account.connected;
+  $("github-repos").replaceChildren();
+  if (account.connected) await githubRepos(1);
+}
+async function githubRepos(page) {
+  if (githubFlight) return;
+  githubFlight = true;
+  $("github-status").textContent = "Loading repositories…";
+  $("github-previous").disabled = $("github-next").disabled = true;
+  try {
+    const data = await api(
+      `/api/github/repos?page=${page}&q=${encodeURIComponent(githubQuery)}`,
+    );
+    githubPage = data.page;
+    githubNext = data.nextPage;
+    $("github-repos").replaceChildren();
+    for (const repo of data.repos) {
+      const row = document.createElement("div");
+      row.className = "repo";
+      const name = document.createElement("strong");
+      name.textContent = repo.fullName;
+      const badge = document.createElement("span");
+      badge.textContent = `${repo.visibility}${repo.fork ? " · fork" : ""} · ${repo.imports.length ? repo.imports.map((i) => "import " + i.state).join(", ") : "not imported"}`;
+      const button = document.createElement("button");
+      const ready = repo.imports.find((i) => i.state === "ready");
+      button.textContent = ready ? "Open import" : "Import privately";
+      button.disabled =
+        !ready && repo.imports.some((i) => i.state === "creating");
+      button.onclick = action(async () => {
+        if (ready) {
+          await open(ready.id);
+          return;
+        }
+        button.disabled = true;
+        button.textContent = "Importing…";
+        try {
+          const imported = await api("/api/github/import", {
+            repository: repo.fullName,
+          });
+          $("notice").textContent =
+            imported.state === "ready"
+              ? `Imported ${repo.fullName} privately.`
+              : `Import of ${repo.fullName} is in progress. Open the destination to check its status.`;
+          await list();
+          await open(imported.id);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Refresh import status";
+        }
+        await githubRepos(githubPage);
+      });
+      row.append(name, badge, button);
+      $("github-repos").append(row);
+    }
+    $("github-page").textContent = `Page ${githubPage}`;
+    $("github-status").textContent = data.searchLimited
+      ? "Search results are limited by GitHub; narrow your search."
+      : data.repos.length
+        ? "Public repositories · destinations stay private."
+        : "No public repositories on this page.";
+  } catch (e) {
+    $("github-status").textContent = e.message;
+    throw e;
+  } finally {
+    githubFlight = false;
+    $("github-previous").disabled = githubPage <= 1;
+    $("github-next").disabled = !githubNext;
+  }
+}
+$("github-search").onsubmit = action(async () => {
+  githubQuery = $("github-query").value.trim();
+  await githubRepos(1);
+});
+$("github-previous").onclick = action(() => githubRepos(githubPage - 1));
+$("github-next").onclick = action(() => githubRepos(githubNext));
+$("github-disconnect").onclick = action(async () => {
+  const result = await api("/api/github/disconnect", {});
+  await githubAccount();
+  $("notice").textContent = result.revoked
+    ? "GitHub connection removed and token revoked."
+    : "GitHub connection removed locally. Finish revocation in GitHub Settings → Applications.";
+  if (!result.revoked) {
+    const link = document.createElement("a");
+    link.href = "https://github.com/settings/connections/applications";
+    link.textContent = " Open GitHub application settings";
+    $("notice").append(link);
+  }
 });

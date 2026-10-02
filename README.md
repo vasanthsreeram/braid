@@ -2,16 +2,16 @@
 
 A private forge with a Workers API/UI, WorkOS AuthKit identity, Artifacts Git, explicit repository sharing, reviewed task publishing, and tenant-scoped R2 LFS deduplication.
 
-**Deployed at https://gitflare.lintlabs.org with authentication enforced. Dedicated WorkOS Gitflare/Staging settings are configured; live app login and deployed R2 LFS remain blocked by missing dedicated keys.** The GitHub source and all remote evaluation destinations remain private. No native CI, Agents SDK, Sandbox, Containers, model features, or repository-code execution is part of this product.
+**Deployed at https://gitflare.lintlabs.org with GitHub-only sign-in and authentication enforced. The AuthKit session-token issuer/client contract and connected repository picker are implemented. Real account login and app imports remain blocked by human GitHub sign-in and dedicated token-returning OAuth app setup; deployed R2 LFS remains separately unverified.** The GitHub source and all remote evaluation destinations remain private. No native CI, Agents SDK, Sandbox, Containers, model features, or repository-code execution is part of this product.
 
 Verified:
 
 - Real Artifacts clone/fetch/push, full branch/tag fork, read-only credentials, revocation, checksum-verified streaming publisher, and a concurrent expected-head race with one accepted candidate.
 - Full private migration of [Maggie-s_Farm_consolidated](https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated): original hash `45fb674a919bcbfcb521e9cea1bf1cffd1a8a397`, all 287 reachable objects, its one full-history commit, and all 289 checkout files match. Source refs remained unchanged. This was a **direct provider test**, separate from the WorkOS-gated app importer.
 - Local repository/file/README/history/search UI; verified-email invitation acceptance/revocation; explicit roles; private/public withdrawal; session refresh/logout/revocation contracts; immutable diffs; approved publishing; races and recovery fences. Provider identity tests use labeled test doubles, not fabricated WorkOS success.
-- Deployed unauthenticated denial checks at [Gitflare](https://gitflare.lintlabs.org). Login returns 503 until dedicated WorkOS configuration is supplied.
+- Deployed private API denials, actual GitHub/PKCE redirect and GitHub login page. These are pre-login checks, not proof of a real account callback, connected repo listing or app imports.
 
-[Latest auth, domain, responsive UI and contribution evidence/setup](docs/auth/result.md) · [Core feature matrix](docs/implementation.md) · [deployment/migration evidence](docs/core/result.md) · [security model](docs/security.md). Prior [benchmark reports and raw receipts](docs/benchmarks/gitflare-comparison-v2.md) are retained unchanged; their local-only limitations still apply. Developer tests and benchmark shell scripts are not a product CI runner.
+[Latest GitHub auth, picker, live blockers and import preflight](docs/github-auth/result.md) · [Historical domain/contribution evidence](docs/auth/result.md) · [Core feature matrix](docs/implementation.md) · [deployment/migration evidence](docs/core/result.md) · [security model](docs/security.md). Prior [benchmark reports and raw receipts](docs/benchmarks/gitflare-comparison-v2.md) are retained unchanged; their local-only limitations still apply. Developer tests and benchmark shell scripts are not a product CI runner.
 
 ```sh
 npm ci
@@ -21,7 +21,8 @@ npm run test:worker                # local workerd authentication denials
 npm run test:ui                    # system Chrome, local harness
 npm run test:ui:core               # 1440px: review/merge/files/profile UI
 npm run test:ui:mobile             # 390px: same real Git workflows
-npm run test:deployed:browser      # TLS, gate, redirects, hosted AuthKit pre-login
+npx tsx scripts/ui-github.ts       # 390/1440 connected picker, local provider fixtures
+npm run test:deployed:browser      # TLS, gate, GitHub routing and login blocker
 WRANGLER_SEND_METRICS=false npm run build  # Worker dry run
 npm run dev                       # loopback-only filesystem/bare-Git harness
 npm run test:deployed              # read-only deployed denial verification

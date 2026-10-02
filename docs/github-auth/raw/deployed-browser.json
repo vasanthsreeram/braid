@@ -1,0 +1,75 @@
+{
+  "origin": "https://gitflare.lintlabs.org",
+  "boundary": "Actual deployed anonymous gate, GitHub-only authorization and human sign-in blocker. This is not real account login or import evidence.",
+  "checks": [
+    {
+      "check": "390px deployed gate",
+      "status": 401,
+      "layout": {
+        "width": 390,
+        "scroll": 390,
+        "touchTarget": 60
+      },
+      "tls": {
+        "issuer": "WE1",
+        "protocol": "TLS 1.3",
+        "subjectName": "lintlabs.org",
+        "validFrom": 1790888370,
+        "validTo": 1798667960
+      },
+      "passed": true
+    },
+    {
+      "check": "390px real login redirect",
+      "status": 302,
+      "provider": "GitHubOAuth",
+      "redirect": "https://gitflare.lintlabs.org/auth/callback",
+      "challengeMethod": "S256",
+      "statePresent": true,
+      "challengePresent": true,
+      "passed": true
+    },
+    {
+      "check": "390px GitHub login required",
+      "url": "https://github.com/login",
+      "passed": true,
+      "boundary": "No user credentials entered; no code exchange/session established"
+    },
+    {
+      "check": "1440px deployed gate",
+      "status": 401,
+      "layout": {
+        "width": 1440,
+        "scroll": 1440,
+        "touchTarget": 60
+      },
+      "tls": {
+        "issuer": "WE1",
+        "protocol": "TLS 1.3",
+        "subjectName": "lintlabs.org",
+        "validFrom": 1790888370,
+        "validTo": 1798667960
+      },
+      "passed": true
+    },
+    {
+      "check": "1440px real login redirect",
+      "status": 302,
+      "provider": "GitHubOAuth",
+      "redirect": "https://gitflare.lintlabs.org/auth/callback",
+      "challengeMethod": "S256",
+      "statePresent": true,
+      "challengePresent": true,
+      "passed": true
+    },
+    {
+      "check": "1440px GitHub login required",
+      "url": "https://github.com/login",
+      "passed": true,
+      "boundary": "No user credentials entered; no code exchange/session established"
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "at": "2026-10-02T00:02:01.231Z"
+}
