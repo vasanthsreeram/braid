@@ -27,6 +27,8 @@ No provider credential, WorkOS configuration, storage, budget, sharding, backend
 | Independent LOCAL actor issue/access journeys | 10 checks per width, 20 total | `receipts/ui-collaboration.json` |
 | LOCAL GitHub picker contract fixture | 4 grouped checks at 390/1440: pagination, search, private destination, status, disconnect | `receipts/ui-picker.json` |
 | Anonymous local Worker/game browser | 8 grouped checks: keyboard, touch, score, next, pause/resume/restart, seeded row clear, motion, visibility, resize/DPR, CSP and no overflow | `receipts/local-game.json` |
+| Anonymous real custom-host game/browser | 7 grouped checks passed at 1440/390, zero unexpected JS/console/network failures | `receipts/live-game.json` |
+| Read-only custom-host HTTP | 25 checks passed, strict CSP, private denials, PKCE redirect, all 3 public assets byte-identical to private committed source | `receipts/live-http.json` |
 | Typecheck | Passed | `receipts/typecheck.txt` |
 | Worker dry-run build | Passed with existing bindings | `receipts/build.txt` |
 | Formatting + diff whitespace | Passed | `receipts/formatting.txt` |
@@ -42,6 +44,8 @@ All paths below are relative to this folder. `live-*` means the real anonymous c
 | Surface | Desktop | Mobile |
 | --- | --- | --- |
 | Welcome, before | `screenshots/before-live-welcome-1440.png` | `screenshots/before-live-welcome-390.png` |
+| New welcome, LIVE custom host | `screenshots/live-welcome-1440-viewport.png` | `screenshots/live-welcome-390-viewport.png` |
+| Playing Blocks, LIVE custom host | `screenshots/live-blocks-playing-1440.png` | `screenshots/live-blocks-playing-390.png` |
 | New welcome, local Worker | `screenshots/local-welcome-1440-viewport.png` | `screenshots/local-welcome-390-viewport.png` |
 | Playing Blocks, local Worker | `screenshots/local-blocks-playing-1440.png` | `screenshots/local-blocks-playing-390.png` |
 | LOCAL source/file | `screenshots/local-fixture-source-1440.png` | `screenshots/local-fixture-source-390.png` |
@@ -55,8 +59,14 @@ All paths below are relative to this folder. `live-*` means the real anonymous c
 
 ## Changed implementation and harness files
 
-`src/worker.ts`, `src/welcome.ts`, `web/index.html`, `web/style.css`, `web/app.js`, `web/public/welcome.css`, `web/public/blocks.js`, `web/public/blocks-engine.js`; tests `test/blocks.test.ts`, `test/ui-boundary.test.ts`; local/browser receipt harnesses `scripts/ui-polish-worker.ts`, `scripts/ui-polish-game.ts`, `scripts/ui-polish-core.ts`, `scripts/ui-polish-collaboration.ts`, `scripts/ui-polish-github.ts`; documentation/screenshots/receipts under `docs/ui-polish/`.
+`src/worker.ts`, `src/welcome.ts`, `web/index.html`, `web/style.css`, `web/app.js`, `web/public/welcome.css`, `web/public/blocks.js`, `web/public/blocks-engine.js`; tests `test/blocks.test.ts`, `test/ui-boundary.test.ts`; local/browser receipt harnesses `scripts/ui-polish-worker.ts`, `scripts/ui-polish-game.ts`, `scripts/ui-polish-core.ts`, `scripts/ui-polish-collaboration.ts`, `scripts/ui-polish-github.ts`, `scripts/ui-polish-live.ts`; documentation/screenshots/receipts under `docs/ui-polish/`.
 
 ## Deployment
 
-Target: existing `cf-native-forge-evaluation` Worker, existing account `7efeb52ec5727a903edd8ef7ae8eb925`, existing custom host `https://gitflare.lintlabs.org`. Native Wrangler OAuth was verified for that account with token overrides unset. Source privacy was verified as private (`vasanthsreeram/cf-native-forge`, branch `main`). Deployment/version and live verification receipts are added after publishing this implementation commit. Hosted authenticated screens and completed human OAuth login are not claimed; app verification is local, and live verification covers the anonymous gate and game.
+Target: existing `cf-native-forge-evaluation` Worker, existing account `7efeb52ec5727a903edd8ef7ae8eb925`, existing custom host `https://gitflare.lintlabs.org`. Native Wrangler OAuth was verified for that account with token overrides unset. Source privacy was verified as private (`vasanthsreeram/cf-native-forge`, branch `main`). Deployed implementation: **`1d1276c4dc7245c6fe32db47895781b8b4929001`**, pushed to private `main` and confirmed by GitHub readback before deployment. Wrangler used the unchanged configuration, `--keep-vars`, existing OAuth, tag `git-1d1276c`, and token overrides unset.
+
+Worker version **`b680fa78-3a02-4d56-87d9-d3a86ec6b50b`** (version 19) was uploaded at `2026-10-02T03:28:24.762994Z`; deployment **`0f06dde5-c69a-46b6-9ff2-7d169c25628e`** was created at `2026-10-02T03:28:26.333707Z`. Cloudflare readback confirmed **100% traffic** on that version, with the matching private-code tag. See `receipts/deploy.txt` and filtered, non-secret `receipts/deployment-source.json`.
+
+Read-only checks on `https://gitflare.lintlabs.org` confirmed the intentional 401 welcome, rendered new styling, strict effective CSP, game interaction and mobile controls, denial of private APIs/assets/traversal/source probes, and exact SHA-256 matches for the three public asset files. `/auth/login` still returns a GitHubOAuth PKCE/S256 redirect. No human/provider login was completed and no authenticated hosted browser session was available, so hosted authenticated screens remain unverified. Their coverage is explicitly LOCAL fixture coverage. There is no implementation/deployment blocker; the human login/session verification boundary remains.
+
+A following receipt-only commit adds deployed screenshots and final documentation. It does not change the deployed production UI, Worker, configuration, dependencies, or backend. The deployed implementation SHA above is the code provenance; the final pushed receipt SHA is recorded in the external handoff.

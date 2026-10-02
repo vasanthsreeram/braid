@@ -1,0 +1,39 @@
+{
+  "worker": "cf-native-forge-evaluation",
+  "accountId": "7efeb52ec5727a903edd8ef7ae8eb925",
+  "host": "https://gitflare.lintlabs.org",
+  "source": {
+    "defaultBranchRef": {
+      "name": "main"
+    },
+    "isPrivate": true,
+    "nameWithOwner": "vasanthsreeram/cf-native-forge"
+  },
+  "implementationSha": "1d1276c4dc7245c6fe32db47895781b8b4929001",
+  "sourceReadbackMatches": true,
+  "version": {
+    "id": "b680fa78-3a02-4d56-87d9-d3a86ec6b50b",
+    "number": 19,
+    "created_on": "2026-10-02T03:28:24.762994Z",
+    "source": "wrangler",
+    "annotations": {
+      "workers/message": "Gitflare UI polish and original Blocks; private source 1d1276c",
+      "workers/tag": "git-1d1276c",
+      "workers/triggered_by": "version_upload"
+    }
+  },
+  "deployment": {
+    "id": "0f06dde5-c69a-46b6-9ff2-7d169c25628e",
+    "created_on": "2026-10-02T03:28:26.333707Z",
+    "versions": [
+      {
+        "version_id": "b680fa78-3a02-4d56-87d9-d3a86ec6b50b",
+        "percentage": 100
+      }
+    ]
+  },
+  "nativeWranglerOAuth": true,
+  "tokenOverridesUnset": true,
+  "existingConfigUsed": true,
+  "passed": true
+}

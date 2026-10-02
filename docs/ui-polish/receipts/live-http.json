@@ -1,0 +1,180 @@
+{
+  "origin": "https://gitflare.lintlabs.org",
+  "checkedAt": "2026-10-02T03:30:43.745Z",
+  "checks": [
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/welcome.css",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/public/welcome.css",
+      "method": "HEAD",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/public/blocks.js",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/public/blocks.js",
+      "method": "HEAD",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/public/blocks-engine.js",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/public/blocks-engine.js",
+      "method": "HEAD",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/repos",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/discovery",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/profile",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/app.js",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/style.css",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/index.html",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/not-public.js",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/../app.js",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/%2e%2e/app.js",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/%2f..%2fapp.js",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/blocks.js.map",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/%62locks.js",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/public/blocks.js/",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/src/worker.ts",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/.git/config",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/__local_identity",
+      "method": "GET",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "status": 302,
+      "passed": true
+    }
+  ],
+  "assets": [
+    {
+      "path": "/public/welcome.css",
+      "sha256": "42e1baf543bf3f44ced44f75ccadd8d60bcc869bf462682d5d8174f032a8f35f",
+      "bytes": 10667,
+      "sourceMatches": true
+    },
+    {
+      "path": "/public/blocks.js",
+      "sha256": "279e9ae82458a614d1e25fb05eafa8197f78a0d4a2684a3a08fa86b72f46bda7",
+      "bytes": 9575,
+      "sourceMatches": true
+    },
+    {
+      "path": "/public/blocks-engine.js",
+      "sha256": "1b38a6def0547a9053ff4c4075c3bb754fb0b5a92772d7d989c5a1c8ea93bc48",
+      "bytes": 3425,
+      "sourceMatches": true
+    }
+  ],
+  "csp": "default-src 'none'; script-src 'self'; style-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+  "passed": true,
+  "authBoundary": "Real login route creates PKCE redirect. No human/provider login completed, authenticated screen claim, paid inference or live repository mutation.",
+  "cookiesOrTokensRecorded": false
+}
