@@ -1,0 +1,15 @@
+{
+  "boundary": "Scoped key metadata after deployed invalid-code exchange. Last-used metadata did not advance, so this does NOT establish deployed secret equality. The verified dedicated Keychain key is synchronized separately via stdin; invalid code is not human login.",
+  "keys": [
+    {
+      "id": "key_01M3WQ9VPVR0B8B7K30AEMS5NZ",
+      "applicationId": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+      "lastUsedAt": "2026-10-02T01:30:16.554Z"
+    },
+    {
+      "id": "key_01M3WWNW2Y378B8YPPVK5FTQTB",
+      "applicationId": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+      "lastUsedAt": null
+    }
+  ]
+}

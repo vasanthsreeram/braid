@@ -7,14 +7,16 @@ Usage: python3 scripts/workos-mcp.py list
 import json, subprocess, sys, time, selectors
 p = subprocess.Popen(['codex','app-server','-c','mcp_oauth_credentials_store="keyring"'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
 ENVIRONMENT = 'environment_01M3WQ9V3GK4KJ67E7BXDB1YXB'
-READS = {'authkitSettings','redirectUris','logoutUris','defaultAuthkitApplication','connectionsByType','users','userSessions','userDetails'}
+READS = {'authkitSettings','redirectUris','logoutUris','defaultAuthkitApplication','connectionsByType','users','userSessions','userDetails','apiKeys'}
 WRITES = {'createProjectWithNewEnvironments','setRedirectUris','setLogoutUris','updateAuthkitApplication','updateAuthkitSettings','updateOauthCredentials'}
 def validate(tool, args):
     assert tool in {'whoami','list_operations','query','mutate'}, 'Unsupported MCP tool'
     if tool == 'query':
         assert args.get('operation') in READS, 'Only scoped configuration and auth evidence queries are allowed'
-        if args.get('operation') in {'connectionsByType','users','userSessions','userDetails'}:
+        if args.get('operation') in {'connectionsByType','users','userSessions','userDetails','apiKeys'}:
             assert args.get('environment_id') == ENVIRONMENT, 'Auth evidence restricted to Gitflare'
+        if args.get('operation') == 'apiKeys':
+            assert args.get('variables',{}).get('applicationId') == 'app_01M3WQ9VPR19MF2K8359SNVN0S', 'Key metadata restricted to Gitflare application'
     if tool == 'mutate':
         op = args.get('operation'); assert op in WRITES, 'Mutation outside Gitflare setup scope'
         v = args.get('variables',{})

@@ -1,0 +1,24 @@
+{
+  "environment": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+  "mutations": false,
+  "app": {
+    "id": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+    "name": "Gitflare",
+    "clientId": "client_01M3WQ9VJ9G2MH74MYP7WBD708",
+    "environmentId": "environment_01M3WQ9V3GK4KJ67E7BXDB1YXB",
+    "initiateLoginUri": "https://gitflare.lintlabs.org/auth/login",
+    "accessTokenExpiry": 300
+  },
+  "redirectUris": [
+    "https://gitflare.lintlabs.org/auth/callback"
+  ],
+  "github": [
+    {
+      "state": "Invalid",
+      "dedicatedClientPresent": false,
+      "enabled": true,
+      "returnProviderTokens": false,
+      "customScopes": []
+    }
+  ]
+}

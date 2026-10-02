@@ -36,6 +36,83 @@ export const cookie = (r: Request, n: string) =>
 export const jwksURL = (id: string) =>
   new URL(`https://api.workos.com/sso/jwks/${id}`);
 const sets = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
+type ProviderCategory =
+  | "invalid_client"
+  | "invalid_grant"
+  | "invalid_request"
+  | "rate_limit"
+  | "upstream"
+  | "network"
+  | "unexpected_response";
+class WorkOSFailure extends Fault {
+  readonly correlation = crypto.randomUUID();
+  constructor(
+    readonly category: ProviderCategory,
+    readonly providerStatus: number | null,
+    readonly reason: "pkce_rejected" | "generic" = "generic",
+  ) {
+    super(
+      category === "invalid_client" ||
+        category === "invalid_grant" ||
+        category === "invalid_request"
+        ? 401
+        : 503,
+      "Authentication failed",
+    );
+  }
+}
+// Bound untrusted error bodies. Never retain their contents in an exception/log.
+async function providerErrorBody(r: Response): Promise<unknown> {
+  if (!r.body) return null;
+  const reader = r.body.getReader();
+  const parts: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > 16384) return null;
+      parts.push(value);
+    }
+    const bytes = new Uint8Array(size);
+    let offset = 0;
+    for (const part of parts) {
+      bytes.set(part, offset);
+      offset += part.byteLength;
+    }
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    return null;
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+}
+function providerFailure(status: number, body: unknown) {
+  let category: ProviderCategory = "unexpected_response";
+  let reason: "pkce_rejected" | "generic" = "generic";
+  if (status === 429) category = "rate_limit";
+  else if (status >= 500) category = "upstream";
+  else if (status === 400 || status === 401 || status === 403) {
+    if (body && typeof body === "object" && !Array.isArray(body)) {
+      const b = body as Record<string, unknown>;
+      if (
+        b.error === "invalid_client" ||
+        b.error === "invalid_grant" ||
+        b.error === "invalid_request"
+      )
+        category = b.error;
+      // Exact provider wording observed in the intentionally invalid-code probe.
+      // This classifies that response; it does not establish a real login cause.
+      if (
+        category === "invalid_grant" &&
+        b.error_description === "Invalid code verifier."
+      )
+        reason = "pkce_rejected";
+    }
+  }
+  return new WorkOSFailure(category, status, reason);
+}
 export function authReady(c: AuthConfig) {
   return (
     /^client_[A-Za-z0-9]+$/.test(c.WORKOS_CLIENT_ID) &&
@@ -103,22 +180,42 @@ export async function workos(
   io: AuthIO = {},
 ) {
   check(c.WORKOS_API_KEY, 503, "WorkOS environment unavailable");
-  const r = await (io.request ?? fetch)("https://api.workos.com" + path, {
-    method: body ? "POST" : "GET",
-    redirect: "error",
-    signal: AbortSignal.timeout(15000),
-    headers: {
-      authorization: "Bearer " + c.WORKOS_API_KEY,
-      "content-type": "application/json",
-    },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-  check(
-    r.ok,
-    r.status === 400 || r.status === 401 || r.status === 404 ? 401 : 503,
-    "WorkOS request failed",
-  );
-  return r.status === 204 ? {} : ((await r.json()) as any);
+  let r: Response;
+  try {
+    r = await (io.request ?? fetch)("https://api.workos.com" + path, {
+      method: body ? "POST" : "GET",
+      // workerd rejects redirect:"error" before any provider request. Manual
+      // plus rejecting non-2xx responses also prevents credential forwarding.
+      redirect: "manual",
+      signal: AbortSignal.timeout(15000),
+      headers: {
+        authorization: "Bearer " + c.WORKOS_API_KEY,
+        "content-type": "application/json",
+      },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+  } catch {
+    throw new WorkOSFailure("network", null);
+  }
+  if (!r.ok) throw providerFailure(r.status, await providerErrorBody(r));
+  let data: any;
+  try {
+    data = r.status === 204 ? {} : await r.json();
+  } catch {
+    throw new WorkOSFailure("unexpected_response", r.status);
+  }
+  if (
+    !data ||
+    typeof data !== "object" ||
+    (path === "/user_management/authenticate" &&
+      (Array.isArray(data) ||
+        typeof data.access_token !== "string" ||
+        !data.access_token ||
+        typeof data.refresh_token !== "string" ||
+        !data.refresh_token))
+  )
+    throw new WorkOSFailure("unexpected_response", r.status);
+  return data;
 }
 // Check actual session and active organization membership on EVERY authenticated request.
 // No stale JWT-only authorization, no implicit WorkOS role -> repository grant.
@@ -178,7 +275,10 @@ export async function livePrincipal(
     session: sid,
     email: typeof user.email === "string" ? user.email : undefined,
     emailVerified: user.email_verified === true,
-    name: [user.first_name,user.last_name].filter(v=>typeof v==="string").join(" ") || p.id,
+    name:
+      [user.first_name, user.last_name]
+        .filter((v) => typeof v === "string")
+        .join(" ") || p.id,
   };
 }
 export async function readSession(c: AuthConfig, r: Request) {
@@ -402,7 +502,9 @@ export async function authRoute(
     });
     check(
       payload.state === u.searchParams.get("state") &&
-        u.searchParams.get("code"),
+        u.searchParams.get("code") &&
+        typeof payload.verifier === "string" &&
+        /^[A-Za-z0-9_-]{43}$/.test(payload.verifier),
       400,
       "Invalid OAuth state",
     );
@@ -439,6 +541,12 @@ export async function authRoute(
     return new Response(null, { status: 303, headers });
   } catch (e) {
     const headers = new Headers({ "cache-control": "no-store" });
+    // One attempt only: discard flow on failure and require a fresh login.
+    // Diagnostics are returned only to this state-validated exchange request.
+    if (u.pathname === "/auth/callback") {
+      headers.set("set-cookie", sealedCookie("__Host-forge-flow", "", 0));
+      headers.set("referrer-policy", "no-referrer");
+    }
     if (
       ["/auth/logout", "/auth/refresh", "/auth/organization"].includes(
         u.pathname,
@@ -452,6 +560,23 @@ export async function authRoute(
       {
         message: e instanceof Fault ? e.message : "Authentication failed",
         ...(u.pathname === "/auth/callback" ? { phase } : {}),
+        ...(u.pathname === "/auth/callback" &&
+        phase === "code_exchange" &&
+        e instanceof WorkOSFailure
+          ? {
+              category: e.category,
+              reason: e.reason,
+              provider_status: e.providerStatus,
+              correlation: e.correlation,
+            }
+          : {}),
+        ...(u.pathname === "/auth/callback"
+          ? {
+              retry: "/auth/login",
+              advice:
+                "Start a fresh sign-in; do not reload or reuse the callback URL.",
+            }
+          : {}),
       },
       { status: e instanceof Fault ? e.status : 401, headers },
     );

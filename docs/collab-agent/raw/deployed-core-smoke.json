@@ -241,11 +241,11 @@
       "method": "GET",
       "status": 400,
       "expected": 400,
-      "body": "{\"message\":\"Missing OAuth state\",\"phase\":\"oauth_state\"}",
+      "body": "{\"message\":\"Missing OAuth state\",\"phase\":\"oauth_state\",\"retry\":\"/auth/login\",\"advice\":\"Start a fresh sign-in; do not reload or reuse the callback URL.\"}",
       "cacheControl": "no-store",
       "passed": true
     }
   ],
   "passed": true,
-  "at": "2026-10-02T01:11:59.573Z"
+  "at": "2026-10-02T01:35:46.052Z"
 }

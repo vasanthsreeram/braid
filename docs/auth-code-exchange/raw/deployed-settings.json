@@ -1,0 +1,72 @@
+{
+  "worker": "cf-native-forge-evaluation",
+  "http_status": 200,
+  "bindings": [
+    {
+      "name": "AI",
+      "type": "ai"
+    },
+    {
+      "name": "ALLOW_PUBLIC",
+      "type": "plain_text",
+      "text": "false"
+    },
+    {
+      "name": "ARTIFACTS",
+      "type": "artifacts"
+    },
+    {
+      "name": "ASSETS",
+      "type": "assets"
+    },
+    {
+      "name": "BUCKET",
+      "type": "r2_bucket"
+    },
+    {
+      "name": "DB",
+      "type": "d1"
+    },
+    {
+      "name": "ORIGIN",
+      "type": "plain_text",
+      "text": "https://gitflare.lintlabs.org"
+    },
+    {
+      "name": "R2_ACCOUNT_ID",
+      "type": "plain_text"
+    },
+    {
+      "name": "R2_BUCKET_NAME",
+      "type": "plain_text"
+    },
+    {
+      "name": "REVIEWS",
+      "type": "durable_object_namespace"
+    },
+    {
+      "name": "SESSION_SECRET",
+      "type": "secret_text"
+    },
+    {
+      "name": "WORKOS_ACCESS_TOKEN_ISSUER",
+      "type": "plain_text",
+      "text": "https://api.workos.com"
+    },
+    {
+      "name": "WORKOS_API_KEY",
+      "type": "secret_text"
+    },
+    {
+      "name": "WORKOS_CLIENT_ID",
+      "type": "plain_text",
+      "text": "client_01M3WQ9VJ9G2MH74MYP7WBD708"
+    },
+    {
+      "name": "WORKOS_ISSUER",
+      "type": "plain_text",
+      "text": "https://api.workos.com/user_management/client_01M3WQ9VJ9G2MH74MYP7WBD708"
+    }
+  ],
+  "observability": null
+}

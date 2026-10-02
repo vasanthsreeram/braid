@@ -1,0 +1,7 @@
+{
+  "runtime": "workerd 1.20261001.1 / Miniflare 5.20261001.0-alpha",
+  "probe": "Native fetch to WorkOS users endpoint with redirect:error and no credentials; no provider request is sent.",
+  "failure": "TypeError: invalid redirect value; only follow or manual supported",
+  "scope": "Runtime incompatibility reproduced. No real login, authorization code or human principal tested.",
+  "source": "https://github.com/cloudflare/workerd/blob/main/src/workerd/api/http.c%2B%2B"
+}

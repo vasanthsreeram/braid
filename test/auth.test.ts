@@ -391,11 +391,17 @@ test("new login pins GitHubOAuth, rejects callback from another authentication m
       request: (async () =>
         Response.json({
           authentication_method: "GoogleOAuth",
+          access_token: "fixture-access",
+          refresh_token: "fixture-refresh",
         })) as typeof fetch,
     },
   ))!;
   assert.equal(callback.status, 401);
-  assert.equal(callback.headers.has("set-cookie"), false);
+  assert.match(
+    callback.headers.get("set-cookie")!,
+    /^__Host-forge-flow=;.*Max-Age=0$/,
+  );
+  assert.equal(((await callback.json()) as any).phase, "login_policy");
 });
 test("callback diagnostics distinguish exchange, JWT verification and active-session lookup without credential output (contract double)", async () => {
   const c = {
@@ -433,7 +439,7 @@ test("callback diagnostics distinguish exchange, JWT verification and active-ses
         request: (async (input: any) =>
           new URL(input).pathname.endsWith("/authenticate")
             ? mode === "exchange"
-              ? new Response(null, { status: 401 })
+              ? Response.json({ error: "invalid_client" }, { status: 401 })
               : Response.json({
                   access_token: token,
                   refresh_token: "fixture-refresh",
@@ -443,7 +449,10 @@ test("callback diagnostics distinguish exchange, JWT verification and active-ses
       },
     ))!;
     assert.equal(r.status, 401);
-    assert.equal(r.headers.has("set-cookie"), false);
+    assert.match(
+      r.headers.get("set-cookie")!,
+      /^__Host-forge-flow=;.*Max-Age=0$/,
+    );
     const body = await r.text();
     assert.ok(!body.includes(token) && !body.includes("fixture-refresh"));
     return JSON.parse(body).phase;

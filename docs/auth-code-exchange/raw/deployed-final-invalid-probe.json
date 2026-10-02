@@ -1,0 +1,10 @@
+{
+  "boundary": "After verified dedicated-key synchronization: intentionally invalid code, fresh state-bound app flow. Provider rejection only, not real login.",
+  "status": 401,
+  "phase": "code_exchange",
+  "category": "invalid_grant",
+  "reason": "pkce_rejected",
+  "provider_status": 400,
+  "correlation": "6613b9ba-c2ae-4624-bc68-b26b4ff0404f",
+  "at": "2026-10-02T01:36:24.411Z"
+}

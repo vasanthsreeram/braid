@@ -52,7 +52,7 @@
       "passed": true
     }
   ],
-  "endpoint": "http://localhost:60509",
+  "endpoint": "http://localhost:61728",
   "runtime": "wrangler 4.146.0",
   "passed": true
 }

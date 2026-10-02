@@ -1,0 +1,17 @@
+{
+  "worker": "cf-native-forge-evaluation",
+  "source_fetch_succeeded": true,
+  "module_count": 1,
+  "deployed_worker_matches_dry_run_build": true,
+  "deployed_worker_sha256": "dd93b64a07b0588e8b26c1df27b49e9027c93e45953831a99169b2c83cb608ce",
+  "build_sha256": "dd93b64a07b0588e8b26c1df27b49e9027c93e45953831a99169b2c83cb608ce",
+  "latest_deployment": {
+    "created_on": "2026-10-02T01:34:43.751105Z",
+    "versions": [
+      {
+        "version_id": "106fdbac-33ce-470a-9bd7-7b2eb0fb7436",
+        "percentage": 100
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "tests": 57,
+  "pass": 57,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "typecheck": "passed",
+  "build": "passed",
+  "deployed_denials": {
+    "passed": 27,
+    "total": 27
+  },
+  "local_workerd_denials": {
+    "passed": 7,
+    "total": 7
+  },
+  "human_login": "pending",
+  "at": "2026-10-02T01:34:42.052138+00:00"
+}

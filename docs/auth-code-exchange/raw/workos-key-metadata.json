@@ -1,0 +1,18 @@
+[
+  {
+    "id": "key_01M3WQ9VPVR0B8B7K30AEMS5NZ",
+    "name": "WorkOS API key",
+    "applicationId": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+    "expiredAt": null,
+    "lastUsedAt": "2026-10-02T00:56:04.169Z",
+    "createdAt": "2026-10-01T21:53:04.580Z"
+  },
+  {
+    "id": "key_01M3WWNW2Y378B8YPPVK5FTQTB",
+    "name": "Prod",
+    "applicationId": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+    "expiredAt": null,
+    "lastUsedAt": null,
+    "createdAt": "2026-10-01T23:27:01.726Z"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "inApp": "connection failed: missing sandboxPolicy",
+  "braveAppleEvents": "timed out",
+  "cdpBrowserConnection": "timed out after websocket connection",
+  "humanLoginVerified": false,
+  "githubLoginTargets": 2,
+  "dom": {
+    "loginFieldPresent": true,
+    "passwordFieldPresent": true,
+    "signInHeading": true
+  },
+  "source": "Existing non-headless Brave process with remote debugging port 9333; normal profile (no explicit user-data-dir flag)."
+}

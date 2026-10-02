@@ -1,0 +1,7 @@
+{
+  "boundary": "Intentionally invalid code with fresh state-bound app flow, testing deployed exchange transport only. No real authorization code or human login.",
+  "status": 401,
+  "message": "Authentication failed",
+  "phase": "code_exchange",
+  "at": "2026-10-02T01:27:52.976Z"
+}

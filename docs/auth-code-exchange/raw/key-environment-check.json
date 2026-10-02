@@ -1,0 +1,12 @@
+{
+  "boundary": "Dedicated Keychain API read followed by scoped WorkOS key usage metadata; no key values or users retained. Worker secret values cannot be read back.",
+  "workos_users_http_status": 200,
+  "key_usage_updated_in_gitflare_staging": true,
+  "updated_keys": [
+    {
+      "id": "key_01M3WQ9VPVR0B8B7K30AEMS5NZ",
+      "applicationId": "app_01M3WQ9VPR19MF2K8359SNVN0S",
+      "lastUsedAt": "2026-10-02T01:30:16.554Z"
+    }
+  ]
+}

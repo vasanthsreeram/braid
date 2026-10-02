@@ -1,0 +1,20 @@
+{
+  "boundary": "Intentionally invalid code with fresh state-bound app flow. Live WorkOS HTTP rejection and deployed transport verification only; not human login or real authorization-code acceptance.",
+  "status": 401,
+  "phase": "code_exchange",
+  "category": "invalid_grant",
+  "reason": "pkce_rejected",
+  "provider_status": 400,
+  "correlation": "67f7afd2-db34-4d1d-b3d3-b496966376e9",
+  "flowCleared": true,
+  "noStore": true,
+  "redirect": {
+    "provider": "GitHubOAuth",
+    "clientId": "client_01M3WQ9VJ9G2MH74MYP7WBD708",
+    "callback": "https://gitflare.lintlabs.org/auth/callback",
+    "challengeMethod": "S256",
+    "statePresent": true,
+    "challengePresent": true
+  },
+  "at": "2026-10-02T01:33:00.566Z"
+}

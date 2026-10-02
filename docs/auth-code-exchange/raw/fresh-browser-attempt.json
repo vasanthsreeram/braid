@@ -1,0 +1,21 @@
+{
+  "boundary": "Fresh authorized browser navigation through the app; no credentials, OTP or consent submitted. Query strings, tokens and cookies omitted.",
+  "browser": "Existing non-headless Brave process using normal profile, port 9333",
+  "at": "2026-10-02T01:38:09.487Z",
+  "humanLoginVerified": false,
+  "state": {
+    "origin": "https://github.com",
+    "path": "/login",
+    "ready": "complete",
+    "loginForm": true,
+    "passwordField": true,
+    "challengeForm": false,
+    "consentButtons": []
+  },
+  "appResponses": [
+    {
+      "path": "/auth/login",
+      "status": 302
+    }
+  ]
+}
