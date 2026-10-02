@@ -1,0 +1,16 @@
+✔ blocks: movement, wall collisions, rotation and landing preview (0.57625ms)
+✔ blocks: hard drop clears a full row and preserves incomplete rows (0.164833ms)
+✔ blocks: consecutive clears, soft drop points and restart (0.137417ms)
+✔ blocks: spawn obstruction ends game and prevents further mutations (0.065167ms)
+✔ blocks: a bag contains each of the seven shapes exactly once (0.064292ms)
+✔ welcome: readiness, resume gating and invite escaping (0.758708ms)
+✔ local workerd: exact public allowlist, CSP and private denials (758.769667ms)
+✔ local workerd: AuthKit-ready gate stays 401 and login retains PKCE redirect (736.10975ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1621.399292

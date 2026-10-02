@@ -1,0 +1,37 @@
+✔ exchange diagnostics allowlist malicious bodies, never mint sessions, and isolate correlations to the failing attempt (17.185583ms)
+✔ transport exceptions and non-JSON responses discard arbitrary text and fail closed (2.469209ms)
+✔ expired, tampered, wrong-origin or malformed-verifier flow never reaches exchange or reveals provider diagnostics (2.792958ms)
+✔ real workerd fetch reaches the provider double and rejects redirects without forwarding credentials (98.25225ms)
+✔ WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, session claims and tenant (93.922958ms)
+✔ WorkOS callback without state fails locally without exchanging a fake code (2.465ms)
+✔ canonical OAuth flow binds S256 PKCE and state, preserves invitation, and seals a host-only session (provider contract double) (20.4675ms)
+✔ presigned PUT is bounded in time, method, exact key and signed content length; never GET (2.968041ms)
+✔ provider-backed session lifecycle checks current session and org membership, rotates refresh, rejects CSRF and clears revoked sessions (7.678916ms)
+✔ AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id (23.066792ms)
+✔ new login pins GitHubOAuth, rejects callback from another authentication method (contract double) (1.64525ms)
+✔ callback diagnostics distinguish exchange, JWT verification and active-session lookup without credential output (contract double) (63.813583ms)
+✔ blocks: movement, wall collisions, rotation and landing preview (0.575375ms)
+✔ blocks: hard drop clears a full row and preserves incomplete rows (0.159125ms)
+✔ blocks: consecutive clears, soft drop points and restart (0.141875ms)
+✔ blocks: spawn obstruction ends game and prevents further mutations (0.06975ms)
+✔ blocks: a bag contains each of the seven shapes exactly once (0.070709ms)
+✔ issues: independent local principals create, assign, comment, CAS race, state/search/audit, revocation and tenant denials (80.812333ms)
+✔ verified invitations bind local actors; reader review discussion, current roles, private aggregates and publication policy (56.862291ms)
+✔ email-bound invitations: verified acceptance, wrong email/org denial, expiry/revoke, one-time grant and safe search (69.530083ms)
+✔ personal sharing crosses personal identity, organization sharing cannot cross organizations (137.021875ms)
+✔ task -> immutable diff -> approval -> real controlled publication; empty seed, replay, concurrent stale-head safety (743.150125ms)
+✔ uncertain publisher retains fence; confirmed push can recover; unchanged head never retries blindly (313.80925ms)
+✔ lifecycle reconciliation refuses fabricated readiness and incomplete source snapshots (56.543417ms)
+✔ native revocation covers tasks beyond listing pages and closes issuance after grant withdrawal (87.395ms)
+✔ real Git contribution history: every merge parent, UTC author dates, original identities, fork dedupe and revoked visibility (762.115333ms)
+✔ welcome: readiness, resume gating and invite escaping (0.467917ms)
+✔ local workerd: exact public allowlist, CSP and private denials (887.810792ms)
+✔ local workerd: AuthKit-ready gate stays 401 and login retains PKCE redirect (702.699916ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2263.498458

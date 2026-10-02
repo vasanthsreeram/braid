@@ -10,6 +10,7 @@ import { pushBundle } from "./bundle.ts";
 import { reviewClient } from "./review-coordinator.ts";
 export { ReviewCoordinator } from "./review-coordinator.ts";
 import { application } from "./app.ts";
+import { welcome, publicWelcomeAssets, welcomeCSP } from "./welcome.ts";
 import { Collaboration } from "./issues.ts";
 import { SQLCatalog } from "./catalog.ts";
 import {
@@ -86,12 +87,35 @@ export default {
     const auth = await authRoute(env, request, authIO);
     if (auth) return auth;
     const path = new URL(request.url).pathname;
+    // Exact public allowlist; private UI assets and APIs still pass their auth gates.
+    if (
+      Object.hasOwn(publicWelcomeAssets, path) &&
+      ["GET", "HEAD"].includes(request.method)
+    ) {
+      const asset = await env.ASSETS.fetch(request as any);
+      return new Response(
+        request.method === "HEAD" ? null : (asset.body as any),
+        {
+          status: asset.status,
+          headers: {
+            "content-type": publicWelcomeAssets[path],
+            "cache-control": "public, max-age=0, must-revalidate",
+            "content-security-policy": welcomeCSP,
+            "x-content-type-options": "nosniff",
+          },
+        },
+      );
+    }
     if (!path.startsWith("/api/") && !path.startsWith("/lfs/")) {
       const principal = await authenticate(env, request, authIO);
       if (!principal)
         return new Response(
           path === "/"
-            ? `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gitflare · Sign in</title><style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#faf8f3;color:#292722;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{height:82px;padding:20px 5vw;border-bottom:1px solid #ded8cd;background:#fffdfa;font-weight:800;font-size:21px;letter-spacing:-.7px}main{max-width:1100px;margin:12vh auto;padding:32px 5vw;display:grid;grid-template-columns:1.2fr .8fr;gap:70px}h1{font-size:clamp(42px,6vw,64px);line-height:1.08;letter-spacing:-2.4px;margin:20px 0 28px;font-weight:650}.eyebrow{font:11px ui-monospace,monospace;letter-spacing:1.7px;color:#b8430c}button{min-height:44px;font:inherit;padding:10px 20px;margin-bottom:16px;border:1px solid #c5bdb0;border-radius:24px;background:#fffdfa}a{display:inline-flex;align-items:center;min-height:48px;padding:12px 24px;background:#b8430c;color:#fff;border-radius:28px;text-decoration:none;font-weight:600}p{color:#6c655d}.card{background:#fffdfa;border:1px solid #ded8cd;border-radius:18px;padding:30px;align-self:center}.card p{padding:14px 0;border-bottom:1px solid #ded8cd}.card p:last-child{border:0}.mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#ff681e;color:#fff;margin-right:10px;font-size:25px}:focus-visible{outline:3px solid #a4380b;outline-offset:4px}@media(max-width:700px){main{grid-template-columns:1fr;gap:26px;margin:5vh auto}.card{padding:22px}h1{font-size:48px}}</style></head><body><header><span class="mark">↗</span>GITFLARE</header><main><div><p class="eyebrow">PRIVATE REPOSITORIES / SHARED WORK</p><h1>Good work<br>starts together.</h1><p>Code, issues, and conversations in one private workspace.</p><p>Authentication required · Sign in to continue.</p>${authReady(env) ? "" : "<p>Sign-in is temporarily unavailable while setup is completed.</p>"}${authReady(env) && cookie(request, "__Host-forge") ? '<form method="post" action="/auth/refresh"><button>Resume session</button></form>' : ""}<a href="/auth/login${url.searchParams.get("invite") && /^[A-Za-z0-9_-]+$/.test(url.searchParams.get("invite")!) ? "?invite=" + encodeURIComponent(url.searchParams.get("invite")!) : ""}">Sign in with GitHub</a></div><aside class="card"><p class="eyebrow">A HOME FOR YOUR NEXT COMMIT</p><h2>Keep the context.</h2><p>Private Git history with your authors, dates, branches, and tags.</p><p>Issues and collaboration with clear repository permissions.</p><p>Read-only reviews with source citations and evidence.</p></aside></main></body></html>`
+            ? welcome(
+                authReady(env),
+                !!cookie(request, "__Host-forge"),
+                url.searchParams.get("invite"),
+              )
             : "Authentication required",
           {
             status: 401,
@@ -101,8 +125,7 @@ export default {
                 path === "/"
                   ? "text/html; charset=utf-8"
                   : "text/plain; charset=utf-8",
-              "content-security-policy":
-                "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'",
+              "content-security-policy": welcomeCSP,
               "x-content-type-options": "nosniff",
             },
           },

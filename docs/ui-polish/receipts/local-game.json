@@ -1,0 +1,28 @@
+{
+  "origin": "http://localhost:65448",
+  "hosted": false,
+  "checks": [
+    "1440: 401 gate, strict CSP, rendered original sculpture, reduced-motion static, sign-in link, no page overflow",
+    "1440: Play, focused keyboard move/rotate/soft drop/hard drop, next, Escape pause, timer freeze, resume, restart, pointer controls, 44px controls, unfocused Space stays native",
+    "1440: offscreen auto-pause, hidden-page event stops timer, responsive resize/DPR capped at 2",
+    "390: 401 gate, strict CSP, rendered original sculpture, reduced-motion static, sign-in link, no page overflow",
+    "390: Play, focused keyboard move/rotate/soft drop/hard drop, next, Escape pause, timer freeze, resume, restart, real touch tap, 44px controls, unfocused Space stays native",
+    "390: offscreen auto-pause, hidden-page event stops timer, responsive resize/DPR capped at 2",
+    "Decorative falling blocks animate with motion enabled, stop offscreen, and stop after a live reduced-motion preference change",
+    "local harness: four actual rotations and hard drop complete a deterministic row, score and aria-live update"
+  ],
+  "passed": true,
+  "pageErrors": [],
+  "consoleErrors": [],
+  "network": [
+    {
+      "path": "/",
+      "status": 401
+    },
+    {
+      "path": "/",
+      "status": 401
+    }
+  ],
+  "note": "Isolated local workerd; no remote bindings. Seeded row and hidden event are test-harness-only."
+}

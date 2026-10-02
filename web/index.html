@@ -3,23 +3,38 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Gitflare</title>
+    <meta name="theme-color" content="#faf8f3" />
+    <title>Gitflare · Workspace</title>
     <link rel="stylesheet" href="/style.css" />
     <script defer src="/app.js"></script>
   </head>
   <body>
     <header>
-      <a class="brand" href="/">GITFLARE</a
+      <a class="brand" href="/" aria-label="Gitflare home"
+        ><span class="pixel-mark" aria-hidden="true"></span>gitflare</a
       ><span class="badge">PRIVATE WORKSPACE</span
-      ><a href="/auth/login">Sign in with GitHub</a>
+      ><span class="header-context">CODE / CONTEXT / COLLABORATION</span>
       <form method="post" action="/auth/logout"><button>Sign out</button></form>
     </header>
     <main>
       <a class="skip" href="#workspace">Skip to workspace</a>
-      <aside>
-        <p class="eyebrow">YOUR CODE. YOUR PEOPLE.</p>
-        <h1>Good work<br />starts here.</h1>
-        <p>A private place for code, conversations, and thoughtful reviews.</p>
+      <aside class="workspace-sidebar">
+        <p class="eyebrow">WORKSPACE</p>
+        <h1>Your work.</h1>
+        <p class="sidebar-intro">One place. Shared context.</p>
+        <nav aria-label="Workspace navigation">
+          <button id="mine" aria-current="page">
+            <span aria-hidden="true">▦</span> My &amp; shared repositories
+          </button>
+          <button id="discover">
+            <span aria-hidden="true">⌕</span> Discover
+          </button>
+          <button id="profile">
+            <span aria-hidden="true">▥</span> My contribution profile
+          </button>
+        </nav>
+        <p class="eyebrow sidebar-account">ACCOUNT &amp; CONNECTIONS</p>
+        <p id="identity">Sign in to continue.</p>
         <details>
           <summary>Developer connection</summary>
           <label
@@ -31,12 +46,6 @@
           ><button id="connect">Connect</button
           ><button id="local">Use local test identity</button>
         </details>
-        <nav>
-          <button id="profile">My contribution profile</button
-          ><button id="mine">My & shared repositories</button
-          ><button id="discover">Discover</button>
-        </nav>
-        <p id="identity">Sign in to continue.</p>
         <details>
           <summary>Organization & invitations</summary>
           <form id="organization">
@@ -53,83 +62,106 @@
           </form>
         </details>
       </aside>
-      <section id="workspace">
-        <div class="section-title">
+      <section id="workspace" data-view="overview" aria-label="Workspace">
+        <div class="section-title workspace-heading">
           <div>
-            <p class="eyebrow">WORKSPACE / OVERVIEW</p>
-            <h2>Repositories</h2>
+            <p class="eyebrow" id="view-kicker">YOUR WORKSPACE / OVERVIEW</p>
+            <h2 id="view-title">
+              Repositories<span class="title-dot" aria-hidden="true">.</span>
+            </h2>
           </div>
           <span id="environment">Authenticated workspace</span>
         </div>
-        <article id="github-view" aria-labelledby="github-title">
-          <h2 id="github-title">Connected GitHub account</h2>
-          <p id="github-account">Checking GitHub connection…</p>
-          <p>
-            List your public repositories and import complete Git history into a
-            private Gitflare repository. Private GitHub access requires separate
-            repository authorization.
-          </p>
-          <div class="tools">
-            <a id="github-connect" href="/auth/login">Connect GitHub</a>
-            <button id="github-disconnect" hidden>Disconnect GitHub</button>
-          </div>
-          <div id="github-picker" hidden>
-            <form id="github-search">
-              <label
-                >Search your public GitHub repositories<input
-                  id="github-query"
-                  type="search"
-                  maxlength="100"
-                  placeholder="Repository name"
-              /></label>
-              <button>Search GitHub</button>
-            </form>
-            <p id="github-status" role="status"></p>
-            <div id="github-repos"></div>
+        <div class="overview">
+          <details id="github-view" aria-labelledby="github-title">
+            <summary>
+              <span id="github-title">Connected GitHub account</span
+              ><span class="summary-note">IMPORT YOUR HISTORY ↗</span>
+            </summary>
+            <p id="github-account">Checking GitHub connection…</p>
+            <p>
+              List your public repositories and import complete Git history into
+              a private Gitflare repository. Private GitHub access requires
+              separate repository authorization.
+            </p>
             <div class="tools">
-              <button id="github-previous" disabled>
-                Previous GitHub page
-              </button>
-              <span id="github-page"></span>
-              <button id="github-next" disabled>Next GitHub page</button>
+              <a id="github-connect" href="/auth/login">Connect GitHub</a>
+              <button id="github-disconnect" hidden>Disconnect GitHub</button>
             </div>
-          </div>
-        </article>
-        <details class="panel">
-          <summary>Create or import a repository</summary>
-          <form id="create">
-            <input
-              name="name"
-              aria-label="Repository name"
-              placeholder="Repository name"
-              required
-              pattern="[A-Za-z0-9_-]+"
-            /><input
-              name="url"
-              type="url"
-              aria-label="Optional public GitHub URL"
-              placeholder="Optional public GitHub URL"
-            /><button>Create private repo</button>
-          </form>
-          <form id="bundle-import">
-            <label
-              >Private full-history Git bundle<input
-                name="bundle"
-                type="file"
-                accept=".bundle"
-                required /></label
-            ><label
-              >Destination name<input
+            <div id="github-picker" hidden>
+              <form id="github-search">
+                <label
+                  >Search your public GitHub repositories<input
+                    id="github-query"
+                    type="search"
+                    maxlength="100"
+                    placeholder="Repository name"
+                /></label>
+                <button>Search GitHub</button>
+              </form>
+              <p id="github-status" role="status"></p>
+              <div id="github-repos"></div>
+              <div class="tools">
+                <button id="github-previous" disabled>
+                  Previous GitHub page
+                </button>
+                <span id="github-page"></span>
+                <button id="github-next" disabled>Next GitHub page</button>
+              </div>
+            </div>
+          </details>
+          <details class="panel" id="create-panel">
+            <summary>Create or import a repository</summary>
+            <form id="create">
+              <input
                 name="name"
+                aria-label="Repository name"
+                placeholder="Repository name"
                 required
-                pattern="[A-Za-z0-9_-]+" /></label
-            ><button>Import private bundle</button>
+                pattern="[A-Za-z0-9_-]+"
+              /><input
+                name="url"
+                type="url"
+                aria-label="Optional public GitHub URL"
+                placeholder="Optional public GitHub URL"
+              /><button>Create private repo</button>
+            </form>
+            <form id="bundle-import">
+              <label
+                >Private full-history Git bundle<input
+                  name="bundle"
+                  type="file"
+                  accept=".bundle"
+                  required /></label
+              ><label
+                >Destination name<input
+                  name="name"
+                  required
+                  pattern="[A-Za-z0-9_-]+" /></label
+              ><button>Import private bundle</button>
+            </form>
+            <p>
+              Full Git history stays private. Upload an unrestricted bundle with
+              all branches and tags; source is retained for verification.
+            </p>
+          </details>
+          <form id="search">
+            <label
+              >Search repositories<input
+                id="query"
+                type="search"
+                placeholder="Search by name" /></label
+            ><button>Search</button>
           </form>
-          <p>
-            Full Git history stays private. Upload an unrestricted bundle with
-            all branches and tags; source is retained for verification.
+          <p class="migration-note">
+            GitHub imports copy Git history. LFS objects, submodules, and
+            platform metadata need separate migration.
           </p>
-        </details>
+          <div class="list-heading">
+            <span>REPOSITORY</span><span>VISIBILITY / STATE</span>
+          </div>
+          <div id="repos" aria-label="Repositories"></div>
+        </div>
         <p id="notice" role="status"></p>
         <article id="profile-view" hidden>
           <h2>Contribution history</h2>
@@ -150,23 +182,13 @@
           <label>Activity day (UTC)<select id="activity-day"></select></label>
           <div id="activity"></div>
         </article>
-        <form id="search">
-          <label
-            >Search repositories<input
-              id="query"
-              type="search"
-              placeholder="Search by name" /></label
-          ><button>Search</button>
-        </form>
-        <p>
-          GitHub imports copy Git history. LFS objects, submodules, and platform
-          metadata need separate migration.
-        </p>
-        <div id="repos"></div>
-        <article id="detail" hidden>
+        <article id="detail" data-mode="source" hidden>
+          <button id="back-repos" class="back-button">
+            ← All repositories
+          </button>
           <div id="repo-header"></div>
-          <div class="tools">
-            <button id="readme">README</button
+          <nav class="repo-tabs" aria-label="Repository sections">
+            <button id="readme" aria-current="page">README</button
             ><button id="history">History & files</button
             ><button id="issues">Issues</button
             ><button id="agents">Read-only review</button
@@ -174,18 +196,25 @@
             ><button id="access">Access</button
             ><button id="clone">Clone / push credential</button
             ><button id="reconcile">Reconcile operation</button>
-          </div>
+          </nav>
           <details class="panel">
             <summary>Collaboration & repository controls</summary>
+            <p class="eyebrow">TASK REPOSITORY</p>
             <form id="task">
-              <input name="name" required placeholder="New task name" /><button>
-                Fork task
-              </button>
+              <input
+                name="name"
+                required
+                aria-label="New task name"
+                placeholder="New task name"
+              /><button>Fork task</button>
             </form>
             <form id="grant">
-              <input name="user" required placeholder="WorkOS user ID" /><select
-                name="role"
-              >
+              <input
+                name="user"
+                required
+                aria-label="WorkOS user ID"
+                placeholder="WorkOS user ID"
+              /><select aria-label="Access role" name="role">
                 <option>reader</option>
                 <option>contributor</option>
                 <option>writer</option>
@@ -199,7 +228,7 @@
                   name="email"
                   type="email"
                   required /></label
-              ><select name="role">
+              ><select name="role" aria-label="Invitation role">
                 <option>reader</option>
                 <option>contributor</option>
                 <option>writer</option>
@@ -207,7 +236,7 @@
               ><button>Create invitation link</button>
             </form>
             <form id="visibility">
-              <select name="visibility">
+              <select name="visibility" aria-label="Repository visibility">
                 <option>private</option>
                 <option>public</option></select
               ><label
@@ -301,7 +330,7 @@
             </article>
           </div>
           <div id="agents-view" hidden>
-            <p class="eyebrow">PI DURABLE / STATIC REVIEW</p>
+            <p class="eyebrow">SOURCE / STATIC REVIEW</p>
             <h2>A second set of eyes.</h2>
             <p>
               Read selected files at a fixed commit. Findings cite exact source
@@ -368,13 +397,21 @@
             <p id="git-help"></p>
           </div>
           <form id="proposal">
-            <input name="task" required placeholder="Task repo ID" /><input
+            <p class="eyebrow">PROPOSE A CHANGE</p>
+            <input
+              name="task"
+              required
+              aria-label="Task repo ID"
+              placeholder="Task repo ID"
+            /><input
               name="base"
               required
+              aria-label="Base commit SHA"
               placeholder="Base commit SHA (40 zeros for empty repo)"
             /><input
               name="candidate"
               required
+              aria-label="Candidate commit SHA"
               placeholder="Candidate commit SHA"
             /><button>Propose change</button>
           </form>
@@ -384,6 +421,12 @@
         </article>
       </section>
     </main>
-    <footer>Gitflare · A private home for shared work.</footer>
+    <footer>
+      <span>GITFLARE / A PRIVATE HOME FOR SHARED WORK</span
+      ><span
+        >CODE. CONTEXT. YOUR NEXT COMMIT.
+        <span aria-hidden="true">[ + ]</span></span
+      >
+    </footer>
   </body>
 </html>

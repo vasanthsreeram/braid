@@ -34,14 +34,85 @@ async function api(path, body, retry = true) {
   if (!r.ok) throw Error(v.message || v || "Request failed");
   return v;
 }
+let pendingActions = 0;
+function workspaceView(view) {
+  $("workspace").dataset.view = view;
+  $("detail").hidden = view !== "repository";
+  $("profile-view").hidden = view !== "profile";
+  $("view-kicker").textContent =
+    view === "repository"
+      ? "YOUR WORKSPACE / REPOSITORY"
+      : view === "profile"
+        ? "YOUR WORKSPACE / CONTRIBUTIONS"
+        : discoveryView
+          ? "YOUR WORKSPACE / DISCOVER"
+          : "YOUR WORKSPACE / OVERVIEW";
+  $("view-title").textContent =
+    view === "repository"
+      ? "Repository."
+      : view === "profile"
+        ? "Contribution history."
+        : discoveryView
+          ? "Discover."
+          : "Repositories.";
+  for (const id of ["mine", "discover", "profile"]) {
+    const active =
+      view === "profile"
+        ? id === "profile"
+        : discoveryView
+          ? id === "discover"
+          : id === "mine";
+    if (active) $(id).setAttribute("aria-current", "page");
+    else $(id).removeAttribute("aria-current");
+  }
+}
+function repositoryMode(mode, tab) {
+  $("detail").dataset.mode = mode;
+  for (const button of document.querySelectorAll(".repo-tabs button")) {
+    if (button.id === tab) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  }
+}
+$("back-repos").onclick = () => {
+  workspaceView("overview");
+  window.history.replaceState(null, "", location.pathname);
+  $("view-title").tabIndex = -1;
+  $("view-title").focus({ preventScroll: true });
+};
+const modes = {
+  readme: "source",
+  history: "source",
+  issues: "issues",
+  agents: "agents",
+  proposals: "proposals",
+  access: "access",
+  clone: "clone",
+  reconcile: "receipt",
+};
+document.querySelector(".repo-tabs").addEventListener(
+  "click",
+  (e) => {
+    const button = e.target.closest("button");
+    if (button && modes[button.id]) repositoryMode(modes[button.id], button.id);
+  },
+  true,
+);
 function action(fn) {
   return async (e) => {
     e?.preventDefault();
+    pendingActions++;
+    $("workspace").setAttribute("aria-busy", "true");
+    document.body.classList.add("busy");
     try {
       $("notice").textContent = "";
       await fn(e);
     } catch (err) {
       $("notice").textContent = err.message;
+    } finally {
+      if (!--pendingActions) {
+        $("workspace").removeAttribute("aria-busy");
+        document.body.classList.remove("busy");
+      }
     }
   };
 }
@@ -53,6 +124,7 @@ async function list(discovery = false) {
       encodeURIComponent($("query").value),
   );
   $("repos").replaceChildren();
+  $("repos").dataset.empty = String(!repos.length);
   for (const r of repos) {
     const row = document.createElement("div");
     row.className = "repo";
@@ -72,6 +144,8 @@ async function open(id) {
   selected = id;
   const r = await api("/api/repos/" + id);
   selectedRepo = r;
+  workspaceView("repository");
+  repositoryMode("source", "readme");
   detailEpoch++;
   $("issue-detail").hidden = true;
   activeJob = undefined;
@@ -87,7 +161,12 @@ async function open(id) {
   $("files").replaceChildren();
   $("commit-list").replaceChildren();
   $("detail").hidden = false;
-  $("repo-header").textContent = r.name + " · " + r.visibility + " · " + r.id;
+  const name = document.createElement("span"),
+    meta = document.createElement("small");
+  name.className = "repo-heading-name";
+  name.textContent = r.name;
+  meta.textContent = `${r.visibility} / ${r.role} / ${r.id}`;
+  $("repo-header").replaceChildren(name, meta);
   $("content").textContent = JSON.stringify(r.git, null, 2);
 
   $("proposal").hidden = !!r.parent;
@@ -102,6 +181,7 @@ $("connect").onclick = action(async () => {
   await list();
   await restoreRoute();
   await githubAccount();
+  $("credential").closest("details").open = false;
 });
 $("local").onclick = action(async () => {
   const r = await fetch("/__local_identity");
@@ -116,9 +196,20 @@ $("local").onclick = action(async () => {
   await list();
   await restoreRoute();
   await githubAccount();
+  $("local").closest("details").open = false;
 });
-$("mine").onclick = action(() => list());
-$("discover").onclick = action(() => list(true));
+$("mine").onclick = action(async () => {
+  discoveryView = false;
+  workspaceView("overview");
+  window.history.replaceState(null, "", location.pathname);
+  await list();
+});
+$("discover").onclick = action(async () => {
+  discoveryView = true;
+  workspaceView("overview");
+  window.history.replaceState(null, "", location.pathname);
+  await list(true);
+});
 $("create").onsubmit = action(async (e) => {
   const b = Object.fromEntries(new FormData(e.target));
   if (!b.url) delete b.url;
@@ -132,6 +223,7 @@ $("task").onsubmit = action(async (e) => {
     Object.fromEntries(new FormData(e.target)),
   );
   await list();
+  workspaceView("overview");
 });
 $("grant").onsubmit = action(async (e) => {
   const b = Object.fromEntries(new FormData(e.target));
@@ -179,7 +271,7 @@ $("history").onclick = action(async () => {
 });
 $("profile").onclick = action(async () => {
   const p = await api("/api/profile");
-  $("profile-view").hidden = false;
+  workspaceView("profile");
   $("profile-summary").textContent =
     `${p.user} · ${p.total} commits · ${p.start} to ${p.end} (UTC)${p.email ? " · " + p.email : " · Verify your account email to see attribution"}`;
   $("profile-definition").textContent = p.definition;

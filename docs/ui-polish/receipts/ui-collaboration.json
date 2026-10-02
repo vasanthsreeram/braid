@@ -1,0 +1,38 @@
+[
+  {
+    "width": 1440,
+    "checks": [
+      "owner creates verified email invitation",
+      "independent local credential accepts invite and browses",
+      "issue create and current collaborator assignment",
+      "reader append-only comment rendered as hostile plain text",
+      "stale save rejected without losing draft",
+      "issue detail no overflow",
+      "reader detail no overflow",
+      "local runtime honestly unavailable, no model fixture",
+      "review no overflow",
+      "revocation denies existing reader context"
+    ],
+    "errors": [],
+    "passed": true,
+    "identityBoundary": "Two independently authenticated loopback credentials; explicit test actors, not human WorkOS accounts"
+  },
+  {
+    "width": 390,
+    "checks": [
+      "owner creates verified email invitation",
+      "independent local credential accepts invite and browses",
+      "issue create and current collaborator assignment",
+      "reader append-only comment rendered as hostile plain text",
+      "stale save rejected without losing draft",
+      "issue detail no overflow",
+      "reader detail no overflow",
+      "local runtime honestly unavailable, no model fixture",
+      "review no overflow",
+      "revocation denies existing reader context"
+    ],
+    "errors": [],
+    "passed": true,
+    "identityBoundary": "Two independently authenticated loopback credentials; explicit test actors, not human WorkOS accounts"
+  }
+]
