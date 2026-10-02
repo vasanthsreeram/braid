@@ -180,7 +180,7 @@ async function transferHTTP(
   }
 }
 
-function validRef(ref: string) {
+export function validRef(ref: string) {
   return (
     /^refs\/(heads|tags)\/[A-Za-z0-9_][A-Za-z0-9_./-]{0,255}$/.test(ref) &&
     !ref.includes("..") &&

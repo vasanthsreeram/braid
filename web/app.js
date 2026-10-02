@@ -8,6 +8,7 @@ const $ = (id) => document.getElementById(id);
 $("local").hidden = !["127.0.0.1", "localhost"].includes(
   window.location.hostname,
 );
+if (!$("local").hidden) $("local").closest("details").open = true;
 async function api(path, body, retry = true) {
   const headers = {};
   if (credential) headers.Authorization = "Bearer " + credential;
@@ -71,6 +72,14 @@ async function open(id) {
   selected = id;
   const r = await api("/api/repos/" + id);
   selectedRepo = r;
+  activeJob = undefined;
+  activeIssue = undefined;
+  $("issues-view").hidden = true;
+  $("agents-view").hidden = true;
+  for (const id of ["grant", "invite", "visibility", "reconcile", "access"])
+    $(id).hidden = r.role !== "admin";
+  $("task").hidden =
+    !!r.parent || !["contributor", "writer", "admin"].includes(r.role);
   $("git-credential").hidden = true;
   $("git-secret").value = "";
   $("files").replaceChildren();
@@ -78,7 +87,7 @@ async function open(id) {
   $("detail").hidden = false;
   $("repo-header").textContent = r.name + " · " + r.visibility + " · " + r.id;
   $("content").textContent = JSON.stringify(r.git, null, 2);
-  $("task").hidden = !!r.parent;
+
   $("proposal").hidden = !!r.parent;
   $("reviews").replaceChildren();
 }
@@ -86,7 +95,8 @@ $("connect").onclick = action(async () => {
   credential = $("credential").value;
   $("credential").value = "";
   const p = await api("/api/me");
-  $("identity").textContent = p.id + " / " + p.tenant;
+  currentActor = p;
+  $("identity").textContent = p.name ?? p.id + " / " + p.tenant;
   await list();
   await restoreRoute();
   await githubAccount();
@@ -99,7 +109,8 @@ $("local").onclick = action(async () => {
   credential = v.credential;
   $("environment").textContent = "LOCAL: filesystem storage + bare Git";
   const p = await api("/api/me");
-  $("identity").textContent = p.id;
+  currentActor = p;
+  $("identity").textContent = p.name ?? p.id;
   await list();
   await restoreRoute();
   await githubAccount();
@@ -224,7 +235,9 @@ $("proposals").onclick = action(async () => {
   for (const p of ps) {
     const row = document.createElement("div");
     row.textContent = p.id + " · " + p.status + " · " + p.candidate;
-    for (const status of ["approved", "rejected"]) {
+    for (const status of selectedRepo.role === "admin"
+      ? ["approved", "rejected"]
+      : []) {
       const button = document.createElement("button");
       button.textContent = status;
       button.onclick = action(async () => {
@@ -245,7 +258,7 @@ $("proposals").onclick = action(async () => {
         .join("\n\n");
     });
     row.append(show);
-    if (p.status === "approved") {
+    if (p.status === "approved" && selectedRepo.role === "admin") {
       const merge = document.createElement("button");
       merge.textContent = "Merge approved candidate";
       merge.onclick = action(async () => {
@@ -254,6 +267,31 @@ $("proposals").onclick = action(async () => {
       });
       row.append(merge);
     }
+    const comments = document.createElement("div");
+    const render = async () =>
+      comments.replaceChildren(
+        ...(await api(repoAPI("discussion/" + p.id))).map((c) =>
+          paragraph(c.author + " · " + c.body),
+        ),
+      );
+    const form = document.createElement("form"),
+      label = document.createElement("label"),
+      field = document.createElement("textarea"),
+      submit = document.createElement("button");
+    label.textContent = "Review comment";
+    field.name = "body";
+    field.required = true;
+    field.maxLength = 8000;
+    label.append(field);
+    submit.textContent = "Comment on review";
+    form.append(label, submit);
+    form.onsubmit = action(async () => {
+      await api(repoAPI("discussion/" + p.id), { body: field.value });
+      form.reset();
+      await render();
+    });
+    row.append(comments, form);
+    await render();
     $("reviews").append(row);
   }
 });
@@ -262,11 +300,18 @@ async function restoreRoute() {
     id = u.searchParams.get("repo"),
     sha = u.searchParams.get("commit");
   if (id && sha) await showCommit(id, sha);
-  else if (id) await open(id);
+  else if (id) {
+    await open(id);
+    if (u.searchParams.get("issue")) {
+      await showIssues();
+      await showIssue(Number(u.searchParams.get("issue")));
+    }
+  }
 }
 api("/api/me")
   .then((p) => {
-    $("identity").textContent = p.id;
+    currentActor = p;
+    $("identity").textContent = p.name ?? p.id;
     return list().then(restoreRoute).then(githubAccount);
   })
   .catch(() => {});
@@ -282,7 +327,8 @@ $("organization").onsubmit = action(async (e) => {
     throw Error("Organization switch failed. Check active membership.");
   await list();
   const p = await api("/api/me");
-  $("identity").textContent = p.id + " / " + p.tenant;
+  currentActor = p;
+  $("identity").textContent = p.name ?? p.id + " / " + p.tenant;
 });
 $("accept-invite").onsubmit = action(async (e) => {
   const b = Object.fromEntries(new FormData(e.target));
@@ -291,7 +337,10 @@ $("accept-invite").onsubmit = action(async (e) => {
   await list();
 });
 const pendingInvite = new URL(location.href).searchParams.get("invite");
-if (pendingInvite) $("accept-invite").elements.invite.value = pendingInvite;
+if (pendingInvite) {
+  $("accept-invite").elements.invite.value = pendingInvite;
+  $("accept-invite").closest("details").open = true;
+}
 $("invite").onsubmit = action(async (e) => {
   const i = await api(
     "/api/repos/" + selected + "/invites",
@@ -312,6 +361,7 @@ $("visibility").onsubmit = action(async (e) => {
   await list(discoveryView);
 });
 $("access").onclick = action(async () => {
+  $("grant").closest("details").open = true;
   const grants = await api("/api/repos/" + selected + "/grants"),
     invites = await api("/api/repos/" + selected + "/invites");
   $("reviews").replaceChildren();
@@ -535,4 +585,241 @@ $("github-disconnect").onclick = action(async () => {
     link.textContent = " Open GitHub application settings";
     $("notice").append(link);
   }
+});
+
+let activeIssue,
+  collaborators = [],
+  activeJob,
+  lastReview;
+const repoAPI = (suffix) => `/api/repos/${selected}/${suffix}`;
+const canWrite = () => ["writer", "admin"].includes(selectedRepo?.role);
+function paragraph(text, className = "") {
+  const p = document.createElement("p");
+  p.textContent = text;
+  p.className = className;
+  return p;
+}
+function assignees(select, current = null) {
+  select.replaceChildren(
+    new Option("Unassigned", ""),
+    ...collaborators.map((c) => new Option(`${c.name} · ${c.role}`, c.user)),
+  );
+  if (current && !collaborators.some((c) => c.user === current))
+    select.add(new Option(`${current} (access unavailable)`, current));
+  select.value = current ?? "";
+}
+function issueForm(form) {
+  const b = Object.fromEntries(new FormData(form));
+  return {
+    ...b,
+    assignee: b.assignee || null,
+    labels: b.labels
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  };
+}
+async function showIssues() {
+  $("issues-view").hidden = false;
+  $("agents-view").hidden = true;
+  collaborators = await api(repoAPI("collaborators"));
+  $("issue-create-panel").hidden = !canWrite();
+  assignees($("issue-create").elements.assignee);
+  const search = new URLSearchParams(new FormData($("issue-search")));
+  const { issues } = await api(repoAPI("issues") + "?" + search);
+  $("issue-list").replaceChildren();
+  for (const i of issues) {
+    const row = document.createElement("div");
+    row.className = "repo";
+    const name = document.createElement("strong");
+    name.textContent = `#${i.number} ${i.title}`;
+    const state = document.createElement("span");
+    state.textContent =
+      i.state + (i.labels.length ? " · " + i.labels.join(", ") : "");
+    const button = document.createElement("button");
+    button.textContent = "View issue";
+    button.onclick = action(() => showIssue(i.number));
+    row.append(name, state, button);
+    $("issue-list").append(row);
+  }
+  if (!issues.length)
+    $("issue-list").append(paragraph("No issues in this view."));
+}
+async function showIssue(number) {
+  const { issue, comments, audit } = await api(repoAPI("issues/" + number));
+  activeIssue = issue;
+  $("issue-detail").hidden = false;
+  $("issue-heading").textContent = `#${issue.number} ${issue.title}`;
+  $("issue-meta").textContent =
+    `${issue.state} · by ${collaborators.find((c) => c.user === issue.author)?.name ?? issue.author} · version ${issue.version} · ${new Date(issue.updated).toLocaleString()}`;
+  $("issue-body").textContent = issue.body || "No description yet.";
+  const form = $("issue-edit");
+  form.hidden = !canWrite();
+  for (const k of ["title", "body", "state"]) form.elements[k].value = issue[k];
+  form.elements.labels.value = issue.labels.join(", ");
+  assignees(form.elements.assignee, issue.assignee);
+  $("issue-comments").replaceChildren(
+    ...comments.map((c) => {
+      const div = document.createElement("div");
+      div.className = "comment";
+      div.append(
+        paragraph(
+          `${collaborators.find((p) => p.user === c.author)?.name ?? c.author} · ${new Date(c.created).toLocaleString()}`,
+        ),
+        paragraph(c.body),
+      );
+      return div;
+    }),
+  );
+  $("issue-audit").replaceChildren(
+    ...audit.map((a) =>
+      paragraph(
+        `${a.event} · version ${a.version} · ${a.actor} · ${new Date(a.created).toLocaleString()}`,
+      ),
+    ),
+  );
+  window.history.replaceState(null, "", `?repo=${selected}&issue=${number}`);
+}
+$("issues").onclick = action(showIssues);
+$("issue-search").onsubmit = action(showIssues);
+$("issue-create").onsubmit = action(async (e) => {
+  const issue = await api(repoAPI("issues"), issueForm(e.target));
+  e.target.reset();
+  $("issue-create-panel").open = false;
+  await showIssues();
+  await showIssue(issue.number);
+  $("notice").textContent = "Issue created.";
+});
+$("issue-edit").onsubmit = action(async (e) => {
+  await api(repoAPI("issues/" + activeIssue.number), {
+    ...issueForm(e.target),
+    version: activeIssue.version,
+  });
+  await showIssues();
+  await showIssue(activeIssue.number);
+  $("notice").textContent = "Issue saved.";
+});
+$("issue-comment").onsubmit = action(async (e) => {
+  await api(repoAPI(`issues/${activeIssue.number}/comments`), {
+    body: e.target.elements.body.value,
+    version: activeIssue.version,
+  });
+  e.target.reset();
+  await showIssue(activeIssue.number);
+  $("notice").textContent = "Comment added.";
+});
+async function showAgents() {
+  $("agents-view").hidden = false;
+  $("issues-view").hidden = true;
+  $("agent-policy").hidden = selectedRepo.owner !== currentActor?.id;
+  $("agent-start").hidden = !canWrite();
+  const policy = await api(repoAPI("agents/policy"));
+  $("agent-policy").elements.publish.checked = policy.publish;
+  if (!activeJob) {
+    const jobs = await api(repoAPI("agents"));
+    if (jobs.length) {
+      lastReview = {
+        sha: jobs[0].scope.sha,
+        base: jobs[0].scope.base,
+        paths: jobs[0].scope.paths,
+      };
+      await renderJob(jobs[0]);
+    } else
+      $("agent-status").textContent =
+        "Select a commit and paths to begin. Reviews never execute source.";
+  }
+}
+let currentActor;
+$("agents").onclick = action(showAgents);
+$("agent-policy").onsubmit = action(async (e) => {
+  await api(repoAPI("agents/policy"), {
+    publish: e.target.elements.publish.checked,
+  });
+  $("notice").textContent = "Finding publication policy saved.";
+});
+async function renderJob(job) {
+  activeJob = job;
+  $("agent-status").textContent =
+    `${job.status} · ${job.progress}${job.error ? " · " + job.error : ""}`;
+  $("agent-cancel").disabled = !["queued", "running"].includes(job.status);
+  $("agent-retry").disabled = !["failed", "cancelled", "interrupted"].includes(
+    job.status,
+  );
+  $("agent-findings").replaceChildren();
+  for (const f of job.result?.findings ?? []) {
+    const row = document.createElement("div");
+    row.className = "finding";
+    const title = document.createElement("h3");
+    title.textContent = f.title;
+    const source = commitLink(
+      selected,
+      f.sha,
+      `${f.path}:${f.start}–${f.end} · ${f.sha.slice(0, 12)}`,
+    );
+    const evidence = document.createElement("pre");
+    evidence.textContent = f.evidence;
+    row.append(title, source, evidence, paragraph(f.explanation));
+    $("agent-findings").append(row);
+  }
+  if (job.status === "completed" && !job.result?.findings.length)
+    $("agent-findings").append(
+      paragraph(
+        "No actionable finding returned within this review scope. This is not a test result.",
+      ),
+    );
+  if (job.result)
+    $("agent-findings").append(
+      paragraph(
+        `Model: ${job.model}. ${job.result.requests} request(s), ${job.result.sourceBytes} source bytes. No tests run. Published issues: ${(job.published ?? []).join(", ") || "none"}.`,
+      ),
+    );
+}
+$("agent-start").onsubmit = action(async (e) => {
+  const b = Object.fromEntries(new FormData(e.target));
+  lastReview = {
+    sha: b.sha,
+    paths: b.paths
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean),
+    ...(b.base ? { base: b.base } : {}),
+  };
+  await renderJob(await api(repoAPI("agents"), lastReview));
+});
+$("agent-refresh").onclick = action(async () => {
+  if (activeJob) await renderJob(await api(repoAPI("agents/" + activeJob.id)));
+});
+$("agent-cancel").onclick = action(async () => {
+  if (activeJob)
+    await renderJob(await api(repoAPI(`agents/${activeJob.id}/cancel`), {}));
+});
+$("agent-retry").onclick = action(async () => {
+  if (lastReview)
+    await renderJob(
+      await api(repoAPI("agents"), { ...lastReview, retry: true }),
+    );
+});
+$("bundle-import").onsubmit = action(async (e) => {
+  const form = e.target,
+    file = form.elements.bundle.files[0];
+  if (!file) throw Error("Choose a full-history Git bundle.");
+  $("notice").textContent = "Uploading private Git history…";
+  const r = await fetch(
+    "/api/bundles?name=" + encodeURIComponent(form.elements.name.value),
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/x-git-bundle",
+        ...(credential ? { authorization: "Bearer " + credential } : {}),
+      },
+      body: file,
+    },
+  );
+  const value = await r.json();
+  if (!r.ok) throw Error(value.message || "Bundle import failed");
+  form.reset();
+  await list();
+  await open(value.id);
+  $("notice").textContent =
+    "Private bundle imported. Retain the source until destination objects and files are verified.";
 });

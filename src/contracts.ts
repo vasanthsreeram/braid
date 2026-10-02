@@ -6,6 +6,7 @@ export interface Principal {
   email?: string;
   emailVerified?: boolean;
   session?: string;
+  name?: string;
 }
 export interface Repo {
   id: string;
@@ -144,6 +145,13 @@ export interface GitPlane {
 }
 export interface Services {
   catalog: Catalog;
+  collaboration?: import("./issues.ts").Collaboration;
+  reviews?: {
+    list?(repo: Repo): Promise<any>;
+    request(repo: Repo, actor: Principal, body: any): Promise<any>;
+    get(repo: Repo, job: string): Promise<any>;
+    cancel(repo: Repo, job: string, actor?: Principal): Promise<any>;
+  };
   store: ObjectStore;
   git: GitPlane;
   authenticate(request: Request): Promise<Principal | null>;
@@ -157,6 +165,10 @@ export interface Services {
   };
   member?: (organization: string, user: string) => Promise<boolean>;
   localUpload?: boolean;
+  bundle?: (
+    repo: Repo,
+    bundle: Awaited<ReturnType<typeof import("./bundle.ts").openBundle>>,
+  ) => Promise<any>;
   presign?: (
     ticket: Ticket,
   ) => Promise<{ href: string; header: Record<string, string> }>;

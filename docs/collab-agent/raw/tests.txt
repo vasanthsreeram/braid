@@ -1,0 +1,64 @@
+
+> cf-native-forge@0.1.0 test
+> tsx --test test/*.test.ts
+
+✔ private default, missing identity, same-tenant stranger, other tenant, and discovery leak resistance (83.384583ms)
+✔ sharing grants immediate read, cannot write, and revoke removes access (64.053333ms)
+✔ LFS Batch/basic transfer, duplicate upload, missing OID, range rejection and per-repo ACL (127.127625ms)
+✔ invalid imports, unknown transfer/hash, invalid OID/size, methods and malformed JSON rejected (53.344583ms)
+✔ production entry denies accidental dev credentials and reports missing WorkOS setup (2.624834ms)
+✔ real local Git task fork, immutable proposal, stale-base refusal, excluded native check endpoint (645.110375ms)
+✔ direct-staging flow verifies whole bytes before manifest publication, hides ticket across tenants (38.030833ms)
+✔ GitHub picker routes preserve authentication, CSRF, private destinations and actual app ownership (provider contract double) (65.903792ms)
+✔ WorkOS verifier enforces signature/algorithm, expiry, issuer, audience, session claims and tenant (144.478833ms)
+✔ WorkOS callback without state fails locally without exchanging a fake code (4.212334ms)
+✔ canonical OAuth flow binds S256 PKCE and state, preserves invitation, and seals a host-only session (provider contract double) (41.16475ms)
+✔ presigned PUT is bounded in time, method, exact key and signed content length; never GET (3.516375ms)
+✔ provider-backed session lifecycle checks current session and org membership, rotates refresh, rejects CSRF and clears revoked sessions (9.23075ms)
+✔ AuthKit session token issuer is distinct from client OIDC discovery; bind signed client_id (51.696417ms)
+✔ new login pins GitHubOAuth, rejects callback from another authentication method (contract double) (4.786458ms)
+✔ callback diagnostics distinguish exchange, JWT verification and active-session lookup without credential output (contract double) (27.808292ms)
+✔ benchmark transport requires app-authorized task capabilities and rechecks revoked identity (754.831125ms)
+✔ authenticated private bundle route: all branch/tag objects, author dates and bytes preserved; damaged/prerequisite/header/unauthenticated rejected (891.116541ms)
+✔ issues: independent local principals create, assign, comment, CAS race, state/search/audit, revocation and tenant denials (103.294667ms)
+✔ verified invitations bind local actors; reader review discussion, current roles, private aggregates and publication policy (72.037667ms)
+✔ email-bound invitations: verified acceptance, wrong email/org denial, expiry/revoke, one-time grant and safe search (85.614ms)
+✔ personal sharing crosses personal identity, organization sharing cannot cross organizations (175.761834ms)
+✔ task -> immutable diff -> approval -> real controlled publication; empty seed, replay, concurrent stale-head safety (1044.58425ms)
+✔ uncertain publisher retains fence; confirmed push can recover; unchanged head never retries blindly (289.874625ms)
+✔ lifecycle reconciliation refuses fabricated readiness and incomplete source snapshots (47.205125ms)
+✔ native revocation covers tasks beyond listing pages and closes issuance after grant withdrawal (64.939416ms)
+✔ real Git RPC publisher verifies raw packs with and without native flush, preserves old-head CAS and rejects damaged packs (768.908958ms)
+✔ connected account binds verified WorkOS identity and encrypts tokens per user (contract double) (19.527708ms)
+✔ picker only returns public owned repos with bounded pagination and refuses private imports (contract double) (14.152792ms)
+✔ disconnect removes local authority even if remote revocation is unavailable (contract double) (4.282625ms)
+✔ a disconnected user can reconnect a newly verified GitHub identity (8.434416ms)
+✔ real Git contribution history: every merge parent, UTC author dates, original identities, fork dedupe and revoked visibility (1085.825917ms)
+✔ local Miniflare R2 binding: conditional publication, verified checksum, same-OID idempotency and corrupt-chunk abort (333.791042ms)
+✔ real Pi harness + durable journal: only read tools, source citations, model tool round, no execution/mutation (inference contract double) (482.046708ms)
+✔ read broker rejects cross-scope paths, symlinks, large blobs, revoked access, fabricated evidence and line ranges (252.77825ms)
+✔ Pi failure, cancellation and request budget do not run arbitrary tools or retry provider errors (299.186458ms)
+✔ journal recovers interrupted sidecar tail and preserves committed document after reopening (145.936ms)
+✔ CDC boundaries are deterministic across network segmentation, bounded, golden hash (447.037125ms)
+✔ verified ingest / exact streaming reconstruction / idempotent manifest and chunk dedupe (504.839792ms)
+✔ same tenant different repo cannot discover manifest; different tenant has separate chunks (350.450125ms)
+✔ failed SHA ingest never publishes (174.503916ms)
+✔ failed short ingest never publishes (0.364125ms)
+✔ failed long ingest never publishes (0.2675ms)
+✔ failed interrupted ingest never publishes (77.165292ms)
+✔ concurrent duplicate ingest has one immutable publication (380.961791ms)
+✔ download detects missing chunks or manifest (173.489875ms)
+✔ download detects corrupt chunks or manifest (175.798292ms)
+✔ download detects length chunks or manifest (175.467917ms)
+✔ download detects order chunks or manifest (237.546083ms)
+✔ manifest rejects traversal, unknown version, inconsistent bounds/length and excessive entries (0.149875ms)
+✔ zero-byte LFS object checks SHA and roundtrips (0.381958ms)
+✔ corrupt preexisting content-addressed chunk prevents publication (201.253042ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3901.474791

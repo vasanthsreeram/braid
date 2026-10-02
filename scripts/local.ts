@@ -20,6 +20,7 @@ import { SQLCatalog, type SQL, type Statement } from "../src/catalog.ts";
 import type { ObjectStore } from "../src/storage.ts";
 import { ID, check } from "../src/storage.ts";
 import type { GitPlane, Services, Principal } from "../src/contracts.ts";
+import { Collaboration } from "../src/issues.ts";
 import { application } from "../src/app.ts";
 const exec = promisify(execFile);
 export const cleanEnv = () => {
@@ -346,6 +347,7 @@ export async function localServices(
       "utf8",
     ).then((s) => s.replaceAll("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ")),
   );
+  db.exec(await readFile(new URL("../migrations/0005_collaboration.sql", import.meta.url), "utf8").then(s => s.replaceAll("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ").replaceAll("CREATE INDEX ", "CREATE INDEX IF NOT EXISTS ").replaceAll("CREATE TRIGGER ", "CREATE TRIGGER IF NOT EXISTS ")));
   const catalog = new SQLCatalog(sqlite(db)),
     store = new FileStore(join(directory, "objects")),
     plane = new LocalGit(join(directory, "git"));
@@ -354,6 +356,7 @@ export async function localServices(
   const credentials = new Map<string, Principal>([[token, principal]]);
   const s: Services = {
     catalog,
+    collaboration: new Collaboration(sqlite(db)),
     store,
     git: plane,
     origin,

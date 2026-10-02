@@ -97,7 +97,7 @@ try {
     checks.push({ path, method, status: r.status, body: value, passed: true });
   }
   await writeFile(
-    "docs/github-auth/raw/worker-auth-smoke.json",
+    "docs/collab-agent/raw/worker-auth-smoke.json",
     JSON.stringify(
       {
         version: 1,

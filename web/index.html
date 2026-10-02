@@ -10,44 +10,55 @@
   <body>
     <header>
       <a class="brand" href="/">GITFLARE</a
-      ><span class="badge">PRIVATE EVALUATION</span
+      ><span class="badge">PRIVATE WORKSPACE</span
       ><a href="/auth/login">Sign in with GitHub</a>
       <form method="post" action="/auth/logout"><button>Sign out</button></form>
     </header>
     <main>
+      <a class="skip" href="#workspace">Skip to workspace</a>
       <aside>
-        <h1>Build together.<br />Keep control.</h1>
-        <p>Repositories, independent tasks, and verified large objects.</p>
-        <label
-          >CLI bearer credential<input
-            id="credential"
-            type="password"
-            autocomplete="off"
-            placeholder="Stored only in page memory" /></label
-        ><button id="connect">Connect</button
-        ><button id="local">Use local test identity</button>
+        <p class="eyebrow">YOUR CODE. YOUR PEOPLE.</p>
+        <h1>Good work<br />starts here.</h1>
+        <p>A private place for code, conversations, and thoughtful reviews.</p>
+        <details>
+          <summary>Developer connection</summary>
+          <label
+            >CLI bearer credential<input
+              id="credential"
+              type="password"
+              autocomplete="off"
+              placeholder="Stored only in page memory" /></label
+          ><button id="connect">Connect</button
+          ><button id="local">Use local test identity</button>
+        </details>
         <nav>
           <button id="profile">My contribution profile</button
           ><button id="mine">My & shared repositories</button
           ><button id="discover">Discover</button>
         </nav>
         <p id="identity">Sign in to continue.</p>
-        <form id="organization">
-          <label
-            >Organization ID<input
-              name="organization"
-              required
-              placeholder="org_…" /></label
-          ><button>Switch organization</button>
-        </form>
-        <form id="accept-invite">
-          <label>Invitation ID<input name="invite" required /></label
-          ><button>Accept invitation</button>
-        </form>
+        <details>
+          <summary>Organization & invitations</summary>
+          <form id="organization">
+            <label
+              >Organization ID<input
+                name="organization"
+                required
+                placeholder="org_…" /></label
+            ><button>Switch organization</button>
+          </form>
+          <form id="accept-invite">
+            <label>Invitation ID<input name="invite" required /></label
+            ><button>Accept invitation</button>
+          </form>
+        </details>
       </aside>
-      <section>
+      <section id="workspace">
         <div class="section-title">
-          <h2>Repositories</h2>
+          <div>
+            <p class="eyebrow">WORKSPACE / OVERVIEW</p>
+            <h2>Repositories</h2>
+          </div>
           <span id="environment">Authenticated workspace</span>
         </div>
         <article id="github-view" aria-labelledby="github-title">
@@ -84,20 +95,41 @@
             </div>
           </div>
         </article>
-        <form id="create">
-          <input
-            name="name"
-            aria-label="Repository name"
-            placeholder="Repository name"
-            required
-            pattern="[A-Za-z0-9_-]+"
-          /><input
-            name="url"
-            type="url"
-            aria-label="Optional public GitHub URL"
-            placeholder="Optional public GitHub URL"
-          /><button>Create private repo</button>
-        </form>
+        <details class="panel">
+          <summary>Create or import a repository</summary>
+          <form id="create">
+            <input
+              name="name"
+              aria-label="Repository name"
+              placeholder="Repository name"
+              required
+              pattern="[A-Za-z0-9_-]+"
+            /><input
+              name="url"
+              type="url"
+              aria-label="Optional public GitHub URL"
+              placeholder="Optional public GitHub URL"
+            /><button>Create private repo</button>
+          </form>
+          <form id="bundle-import">
+            <label
+              >Private full-history Git bundle<input
+                name="bundle"
+                type="file"
+                accept=".bundle"
+                required /></label
+            ><label
+              >Destination name<input
+                name="name"
+                required
+                pattern="[A-Za-z0-9_-]+" /></label
+            ><button>Import private bundle</button>
+          </form>
+          <p>
+            Full Git history stays private. Upload an unrestricted bundle with
+            all branches and tags; source is retained for verification.
+          </p>
+        </details>
         <p id="notice" role="status"></p>
         <article id="profile-view" hidden>
           <h2>Contribution history</h2>
@@ -136,48 +168,178 @@
           <div class="tools">
             <button id="readme">README</button
             ><button id="history">History & files</button
+            ><button id="issues">Issues</button
+            ><button id="agents">Read-only review</button
             ><button id="proposals">Proposals</button
             ><button id="access">Access</button
             ><button id="clone">Clone / push credential</button
             ><button id="reconcile">Reconcile operation</button>
           </div>
-          <form id="task">
-            <input name="name" required placeholder="New task name" /><button>
-              Fork task
-            </button>
-          </form>
-          <form id="grant">
-            <input name="user" required placeholder="WorkOS user ID" /><select
-              name="role"
-            >
-              <option>reader</option>
-              <option>contributor</option>
-              <option>writer</option>
-              <option>admin</option>
-              <option value="">revoke</option></select
-            ><button>Update access</button>
-          </form>
-          <form id="invite">
-            <label
-              >Invite by verified email<input
-                name="email"
-                type="email"
-                required /></label
-            ><select name="role">
-              <option>reader</option>
-              <option>contributor</option>
-              <option>writer</option>
-              <option>admin</option></select
-            ><button>Create invitation link</button>
-          </form>
-          <form id="visibility">
-            <select name="visibility">
-              <option>private</option>
-              <option>public</option></select
-            ><label
-              >To publish, enter repository ID<input name="confirm" /></label
-            ><button>Set visibility</button>
-          </form>
+          <details class="panel">
+            <summary>Collaboration & repository controls</summary>
+            <form id="task">
+              <input name="name" required placeholder="New task name" /><button>
+                Fork task
+              </button>
+            </form>
+            <form id="grant">
+              <input name="user" required placeholder="WorkOS user ID" /><select
+                name="role"
+              >
+                <option>reader</option>
+                <option>contributor</option>
+                <option>writer</option>
+                <option>admin</option>
+                <option value="">revoke</option></select
+              ><button>Update access</button>
+            </form>
+            <form id="invite">
+              <label
+                >Invite by verified email<input
+                  name="email"
+                  type="email"
+                  required /></label
+              ><select name="role">
+                <option>reader</option>
+                <option>contributor</option>
+                <option>writer</option>
+                <option>admin</option></select
+              ><button>Create invitation link</button>
+            </form>
+            <form id="visibility">
+              <select name="visibility">
+                <option>private</option>
+                <option>public</option></select
+              ><label
+                >To publish, enter repository ID<input name="confirm" /></label
+              ><button>Set visibility</button>
+            </form>
+          </details>
+          <div id="issues-view" hidden>
+            <div class="section-title">
+              <h2>Issues</h2>
+              <span>Track the work. Keep the context.</span>
+            </div>
+            <form id="issue-search">
+              <label
+                >Search issues<input
+                  name="q"
+                  type="search"
+                  maxlength="100" /></label
+              ><label
+                >Issue state<select name="state">
+                  <option value="">All states</option>
+                  <option value="open">Open</option>
+                  <option value="closed">Closed</option>
+                </select></label
+              ><button>Search issues</button>
+            </form>
+            <details id="issue-create-panel" class="panel">
+              <summary>New issue</summary>
+              <form id="issue-create">
+                <label
+                  >Issue title<input
+                    name="title"
+                    maxlength="200"
+                    required /></label
+                ><label
+                  >Description<textarea
+                    name="body"
+                    maxlength="16000"
+                    rows="5"
+                  ></textarea></label
+                ><label>Assignee<select name="assignee"></select></label
+                ><label
+                  >Labels, comma separated<input
+                    name="labels"
+                    maxlength="330" /></label
+                ><button>Create issue</button>
+              </form>
+            </details>
+            <div id="issue-list"></div>
+            <article id="issue-detail" hidden>
+              <h3 id="issue-heading"></h3>
+              <p id="issue-meta"></p>
+              <div id="issue-body" class="prose"></div>
+              <form id="issue-edit">
+                <label
+                  >Update title<input
+                    name="title"
+                    maxlength="200"
+                    required /></label
+                ><label
+                  >Update description<textarea
+                    name="body"
+                    maxlength="16000"
+                    rows="5"
+                  ></textarea></label
+                ><label
+                  >Update state<select name="state">
+                    <option>open</option>
+                    <option>closed</option>
+                  </select></label
+                ><label>Update assignee<select name="assignee"></select></label
+                ><label>Update labels<input name="labels" /></label
+                ><button>Save issue</button>
+              </form>
+              <h3>Conversation</h3>
+              <div id="issue-comments"></div>
+              <form id="issue-comment">
+                <label
+                  >Your comment<textarea
+                    name="body"
+                    rows="3"
+                    maxlength="8000"
+                    required
+                  ></textarea></label
+                ><button>Comment on issue</button>
+              </form>
+              <details>
+                <summary>Issue activity</summary>
+                <div id="issue-audit"></div>
+              </details>
+            </article>
+          </div>
+          <div id="agents-view" hidden>
+            <p class="eyebrow">PI DURABLE / STATIC REVIEW</p>
+            <h2>A second set of eyes.</h2>
+            <p>
+              Read selected files at a fixed commit. Findings cite exact source
+              lines and evidence. No code execution or test results.
+            </p>
+            <form id="agent-start">
+              <label
+                >Source commit SHA<input
+                  name="sha"
+                  pattern="[a-f0-9]{40}"
+                  required /></label
+              ><label
+                >Base commit SHA (optional)<input
+                  name="base"
+                  pattern="[a-f0-9]{40}" /></label
+              ><label
+                >Selected paths, one per line<textarea
+                  name="paths"
+                  rows="4"
+                  required
+                  placeholder="src/app.ts"
+                ></textarea></label
+              ><button>Start static review</button>
+            </form>
+            <form id="agent-policy">
+              <label
+                ><input name="publish" type="checkbox" /> Publish validated
+                findings as issues</label
+              ><button>Save owner policy</button>
+            </form>
+            <p id="agent-status" role="status"></p>
+            <div class="tools">
+              <button id="agent-refresh">Refresh review</button
+              ><button id="agent-cancel">Cancel review</button
+              ><button id="agent-retry">Retry failed review</button>
+            </div>
+            <div id="agent-findings"></div>
+          </div>
           <form id="browse">
             <label
               >Branch, tag, or commit<input
@@ -222,8 +384,6 @@
         </article>
       </section>
     </main>
-    <footer>
-      Artifacts for Git · R2 for large objects · WorkOS for identity.
-    </footer>
+    <footer>Gitflare · A private home for shared work.</footer>
   </body>
 </html>

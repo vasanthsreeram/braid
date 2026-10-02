@@ -1,3 +1,5 @@
+import { openBundle } from "./bundle.ts";
+import { issueInput, issueNumber, version, commentBody } from "./issues.ts";
 import { reachable, contributions } from "./history.ts";
 import type {
   Services,
@@ -71,8 +73,8 @@ export function githubURL(raw: unknown): string {
   );
   return `https://github.com/${parts[0]}/${parts[1].replace(/\.git$/, "")}.git`;
 }
-async function authorize(
-  s: Services,
+export async function authorize(
+  s: Pick<Services, "catalog" | "allowPublic">,
   p: Principal | null,
   id: string,
   needed: Role,
@@ -238,7 +240,64 @@ export function application(s: Services) {
           "Origin required",
         );
       let result: Response;
-      if (path[0] === "api" && path[1] === "github") {
+      if (
+        path[0] === "api" &&
+        path[1] === "bundles" &&
+        path.length === 2 &&
+        request.method === "POST"
+      ) {
+        check(p, 401, "Authentication required");
+        check(s.bundle, 503, "Private bundle import unavailable");
+        const name = url.searchParams.get("name");
+        check(name && ID.test(name), 422, "Invalid destination name");
+        check(
+          request.headers.get("content-type") === "application/x-git-bundle" &&
+            request.body,
+          415,
+          "Expected Git bundle upload",
+        );
+        const bundle = await openBundle(request.body),
+          id = uuid(),
+          physical = `cf-native-forge-${id}`;
+        const repo: Repo = {
+          id,
+          physical,
+          tenant: p.tenant,
+          owner: p.id,
+          name,
+          visibility: "private",
+          state: "creating",
+          parent: null,
+        };
+        await s.catalog.create(repo);
+        await s.catalog.operation({
+          repo: id,
+          kind: "import",
+          source: null,
+          refs: JSON.stringify(bundle.refs),
+        });
+        try {
+          const receipt = await s.bundle(repo, bundle);
+          await s.catalog.state(id, "ready");
+          repo.state = "ready";
+          result = json(
+            {
+              ...repo,
+              receipt,
+              verification:
+                "Refs verified. Retain source until every object and checkout is compared.",
+            },
+            201,
+          );
+        } catch {
+          await bundle.reader.cancel().catch(() => {});
+          await s.catalog.state(id, "failed");
+          throw new Fault(
+            502,
+            "Private bundle validation/import failed; intent retained. Source was not changed.",
+          );
+        }
+      } else if (path[0] === "api" && path[1] === "github") {
         check(p, 401, "Authentication required");
         check(s.github, 503, "GitHub connection unavailable");
         if (path.length === 2 && request.method === "GET")
@@ -298,6 +357,7 @@ export function application(s: Services) {
         request.method === "GET"
       ) {
         check(p, 401, "Authentication required");
+        await s.collaboration?.profile(p);
         result = json(p);
       } else if (
         path[0] === "api" &&
@@ -431,9 +491,144 @@ export function application(s: Services) {
                 "reconcile",
               ].includes(action)),
         );
-        if (!action && request.method === "GET")
-          result = json({ ...r, git: await s.git.info(r.physical) });
-        else if (action === "grants" && request.method === "GET")
+        if (
+          ["issues", "collaborators", "discussion", "agents"].includes(action)
+        ) {
+          check(p && s.collaboration, 404, "Not found");
+          // These private aggregates never inherit public-read access. Reader comments are
+          // append-only on existing issues/proposals; only writers change issue metadata.
+          await authorize(s, p, id, "reader");
+          const c = s.collaboration;
+          await c.profile(p);
+          if (action === "collaborators" && request.method === "GET") {
+            const users = [
+              { user: r.owner, role: "admin" },
+              ...(await s.catalog.grants(id)),
+            ];
+            const members = [];
+            for (const u of users) {
+              if (
+                s.member &&
+                r.tenant !== r.owner &&
+                !(await s.member(r.tenant, u.user))
+              )
+                continue;
+              const profile = await c.person(u.user);
+              members.push({
+                user: u.user,
+                role: u.role,
+                name: profile?.name ?? u.user,
+              });
+            }
+            result = json(members);
+          } else if (action === "issues") {
+            if (
+              request.method === "POST" &&
+              (!path[4] || path[5] !== "comments")
+            )
+              await authorize(s, p, id, "writer");
+            const assign = async (user: string | null) => {
+              if (!user) return;
+              await authorize(s, { id: user, tenant: p.tenant }, id, "reader");
+              check(
+                await c.person(user),
+                422,
+                "Assignee must sign in and be a current collaborator",
+              );
+              if (s.member && r.tenant !== r.owner)
+                check(
+                  await s.member(r.tenant, user),
+                  422,
+                  "Assignee membership inactive",
+                );
+            };
+            if (!path[4] && request.method === "GET") {
+              const state = url.searchParams.get("state") ?? "";
+              check(
+                ["", "open", "closed"].includes(state),
+                400,
+                "Invalid state",
+              );
+              result = json({
+                issues: await c.list(id, query(url), state),
+                limit: 100,
+              });
+            } else if (!path[4] && request.method === "POST") {
+              const b = issueInput({
+                ...(await bodyJSON(request)),
+                state: "open",
+              });
+              await assign(b.assignee);
+              result = json(await c.create(id, p, b), 201);
+            } else if (path[4]) {
+              const number = issueNumber(path[4]);
+              if (path[5] === "comments" && request.method === "POST")
+                result = json(
+                  await c.comment(id, number, p, await bodyJSON(request)),
+                  201,
+                );
+              else if (!path[5] && request.method === "GET")
+                result = json(await c.detail(id, number));
+              else if (!path[5] && request.method === "POST") {
+                const raw = await bodyJSON(request);
+                const b = { ...issueInput(raw), version: version(raw.version) };
+                await assign(b.assignee);
+                result = json(await c.update(id, number, p, b));
+              } else throw new Fault(404, "Not found");
+            } else throw new Fault(405, "Method unsupported");
+          } else if (action === "discussion" && path[4]) {
+            result = json(
+              await c.review(
+                id,
+                path[4],
+                request.method === "POST" ? p : undefined,
+                request.method === "POST"
+                  ? commentBody((await bodyJSON(request)).body)
+                  : undefined,
+              ),
+            );
+          } else if (action === "agents") {
+            check(s.reviews, 503, "Read-only review runtime unavailable");
+            if (path[4] === "policy") {
+              if (request.method === "POST") {
+                check(p.id === r.owner, 404, "Not found");
+                const b = await bodyJSON(request);
+                check(
+                  typeof b.publish === "boolean",
+                  422,
+                  "Expected publication flag",
+                );
+                await c.setPolicy(id, p.id, b.publish);
+              }
+              result = json({ publish: await c.policy(id) });
+            } else if (!path[4] && request.method === "GET") {
+              result = json((await s.reviews.list?.(r)) ?? []);
+            } else if (!path[4] && request.method === "POST") {
+              await authorize(s, p, id, "writer");
+              result = json(
+                await s.reviews.request(r, p, await bodyJSON(request)),
+                202,
+              );
+            } else if (path[4] && request.method === "GET")
+              result = json(await s.reviews.get(r, path[4]));
+            else if (
+              path[4] &&
+              path[5] === "cancel" &&
+              request.method === "POST"
+            ) {
+              await authorize(s, p, id, "writer");
+              result = json(await s.reviews.cancel(r, path[4], p));
+            } else throw new Fault(404, "Not found");
+          } else throw new Fault(404, "Not found");
+        } else if (!action && request.method === "GET") {
+          const role =
+            p?.id === r.owner
+              ? "admin"
+              : p
+                ? await s.catalog.role(id, p.id)
+                : "reader";
+          result = json({ ...r, role, git: await s.git.info(r.physical) });
+        } else if (action === "grants" && request.method === "GET")
           result = json(await s.catalog.grants(id));
         else if (action === "invites" && request.method === "GET")
           result = json(await s.catalog.invitations(id));

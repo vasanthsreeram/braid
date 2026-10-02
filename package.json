@@ -23,6 +23,9 @@
     "test:deployed:browser": "tsx scripts/deployed-browser-smoke.ts"
   },
   "dependencies": {
+    "@earendil-works/chord": "1.0.0",
+    "@earendil-works/pi-ai": "1.0.0",
+    "@earendil-works/pi-durable": "1.0.0",
     "@noble/hashes": "2.4.0",
     "aws4fetch": "1.0.20",
     "jose": "6.2.12"
@@ -35,6 +38,7 @@
     "prettier": "3.6.2",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
+    "vitest": "4.1.11",
     "wrangler": "4.146.0"
   }
 }

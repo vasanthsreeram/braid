@@ -1,0 +1,20 @@
+
+> cf-native-forge@0.1.0 test:ui:core
+> tsx scripts/ui-core.ts
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: 'Use local test identity' })[22m
+
+    at <anonymous> (/Users/admin/projects/cf-native-forge/scripts/ui-core.ts:89:71) {
+  log: [
+    "  - waiting for getByRole('button', { name: 'Use local test identity' })"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v26.5.0

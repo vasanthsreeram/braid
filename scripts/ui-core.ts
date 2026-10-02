@@ -89,6 +89,7 @@ try {
   await page.getByRole("button", { name: "Use local test identity" }).click();
   await page.getByText("core-ui-private", { exact: true }).waitFor();
   checks.push("local identity and private list");
+  await page.getByText("Create or import a repository", { exact: true }).click();
   await page
     .getByRole("textbox", { name: "Optional public GitHub URL" })
     .fill("https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated");
@@ -151,6 +152,7 @@ try {
   await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
   checks.push("immutable commit history and detail navigation");
   await layout("commit details");
+  await page.getByText("Collaboration & repository controls", { exact: true }).click();
   await page
     .getByRole("textbox", { name: "Invite by verified email" })
     .fill("guest@example.invalid");
@@ -205,11 +207,11 @@ try {
     throw Error("Missing real daily counts");
   await layout("contribution profile");
   await page.screenshot({
-    path: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile.png`,
+    path: `docs/collab-agent/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile.png`,
     fullPage: true,
   });
   await page.screenshot({
-    path: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile-viewport.png`,
+    path: `docs/collab-agent/ui-${process.env.FORGE_UI_WIDTH ?? 1440}-profile-viewport.png`,
     fullPage: false,
   });
   await page.locator("#activity a").first().click();
@@ -234,11 +236,11 @@ try {
   if (unexpectedConsole.length) throw Error(unexpectedConsole.join("; "));
   if (errors.length) throw Error(errors.join("; "));
   await page.screenshot({
-    path: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
+    path: `docs/collab-agent/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
     fullPage: true,
   });
   await writeFile(
-    `docs/github-auth/raw/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.json`,
+    `docs/collab-agent/raw/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.json`,
     JSON.stringify(
       {
         boundary:
@@ -251,7 +253,7 @@ try {
         network,
         consoleErrors,
         viewport: page.viewportSize(),
-        screenshot: `docs/github-auth/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
+        screenshot: `docs/collab-agent/ui-${process.env.FORGE_UI_WIDTH ?? 1440}.png`,
       },
       null,
       2,

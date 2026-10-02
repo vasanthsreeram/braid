@@ -178,6 +178,7 @@ export async function livePrincipal(
     session: sid,
     email: typeof user.email === "string" ? user.email : undefined,
     emailVerified: user.email_verified === true,
+    name: [user.first_name,user.last_name].filter(v=>typeof v==="string").join(" ") || p.id,
   };
 }
 export async function readSession(c: AuthConfig, r: Request) {
