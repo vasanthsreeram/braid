@@ -182,7 +182,10 @@ export class ReviewCoordinator {
     );
   }
   async alarm() {
-    if (this.running) return;
+    if (this.running) {
+      await this.ctx.storage.setAlarm(Date.now() + 5000);
+      return;
+    }
     // A process crash consumes its reserved request. Never replay an uncertain paid
     // model call automatically. Pi transcript remains durable; explicit bounded retry
     // gets a new job, with source/finding deduplication in the trusted broker.
@@ -259,6 +262,7 @@ export class ReviewCoordinator {
           "Membership inactive",
         );
       }
+      check(!this.controller?.signal.aborted, 409, "Review cancelled");
     };
     try {
       await access();
@@ -372,7 +376,9 @@ export class ReviewCoordinator {
       });
       this.running = false;
       this.controller = undefined;
-      await this.ctx.storage.deleteAlarm();
+      if (this.rows("SELECT id FROM jobs WHERE status='queued' LIMIT 1").length)
+        await this.ctx.storage.setAlarm(Date.now() + 100);
+      else await this.ctx.storage.deleteAlarm();
     }
   }
 }

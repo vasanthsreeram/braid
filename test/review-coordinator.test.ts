@@ -211,6 +211,27 @@ test("coordinator provider contract doubles: queue/dedupe, owner-opted publicati
     });
     const running = coordinator.alarm();
     await started;
+    await coordinator.alarm();
+    assert.ok(
+      alarm > Date.now() && alarm < Date.now() + 6000,
+      "Busy watchdog remains scheduled",
+    );
+    // Storage fault injection represents a queued retry admitted while the cancelled
+    // prior provider call is settling. Its alarm must survive the old job finally.
+    const next = {
+      ...cancelJob,
+      id: crypto.randomUUID(),
+      status: "queued",
+      created: Date.now(),
+    };
+    sql.exec(
+      "INSERT INTO jobs VALUES (?,?,?,?,?)",
+      next.id,
+      next.fingerprint,
+      "queued",
+      JSON.stringify(next),
+      next.created,
+    );
     const cancel = await coordinator.fetch(
       new Request("https://internal/cancel", {
         method: "POST",
@@ -225,6 +246,16 @@ test("coordinator provider contract doubles: queue/dedupe, owner-opted publicati
       "cancelled",
     );
     assert.equal((await l.s.collaboration!.list(repo.id, "", "")).length, 1);
+    assert.ok(
+      alarm > 0,
+      "Queued retry keeps an alarm after prior cancellation",
+    );
+    mode = "success";
+    await coordinator.alarm();
+    assert.equal(
+      ((await (await read(next.id)).json()) as any).status,
+      "completed",
+    );
     // External WorkOS revocation while inference runs prevents publication.
     sql.exec("UPDATE jobs SET status=? WHERE id=?", "failed", retry.id);
     mode = "remote-revoke";

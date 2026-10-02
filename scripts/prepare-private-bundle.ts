@@ -112,7 +112,8 @@ const receipt = {
 };
 await writeFile(resolve(".tmp/private-source-objects.txt"), metadata);
 await writeFile(
-  "docs/collab-agent/raw/private-bundle-preflight.json",
+  process.env.GITFLARE_PREFLIGHT_RECEIPT ??
+    "docs/collab-agent/raw/private-bundle-preflight.json",
   JSON.stringify(receipt, null, 2) + "\n",
 );
 console.log(JSON.stringify(receipt, null, 2));
