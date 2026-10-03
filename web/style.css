@@ -879,6 +879,61 @@ footer span span {
   border: 1px dashed var(--line);
   color: var(--muted);
 }
+
+/* Shared workspace heading route mark. */
+.workspace-context {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 260px;
+}
+.workspace-route {
+  width: 210px;
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, #fff6ea, #fffdf8);
+  padding: 10px 12px 8px;
+  overflow: hidden;
+}
+.workspace-route .route-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.workspace-route .route-halo,
+.workspace-route .route-guide,
+.workspace-route .route-cross,
+.workspace-route .route-signals {
+  display: none;
+}
+.workspace-route .route-lines path {
+  stroke: #d8b495;
+  stroke-width: 1.2;
+}
+.workspace-route .route-nodes rect {
+  fill: var(--orange);
+  opacity: 0.32;
+}
+.workspace-route .route-nodes rect:first-child {
+  opacity: 0.95;
+}
+.workspace-route .route-terminal {
+  fill: var(--orange);
+}
+main:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 159px,
+    #efe7db28 159px 160px
+  );
+  pointer-events: none;
+}
+main {
+  position: relative;
+}
 @media (max-width: 1100px) {
   .header-context {
     display: none;
@@ -985,6 +1040,13 @@ footer span span {
   }
   .workspace-heading .eyebrow {
     font-size: 8px;
+  }
+  .workspace-context {
+    align-items: flex-start;
+    max-width: 100%;
+  }
+  .workspace-route {
+    display: none;
   }
   #environment {
     font-size: 8px;
