@@ -40,6 +40,8 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
       "/public/welcome.css",
       "/public/blocks.js",
       "/public/blocks-engine.js",
+      "/public/route.js",
+      "/public/route-engine.js",
     ]) {
       const r = await fetch(local.url + path);
       assert.equal(r.status, 200, path);

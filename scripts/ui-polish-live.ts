@@ -34,6 +34,8 @@ for (const path of [
   "/public/welcome.css",
   "/public/blocks.js",
   "/public/blocks-engine.js",
+  "/public/route.js",
+  "/public/route-engine.js",
 ]) {
   const response = await fetch(origin + path);
   assert.equal(response.status, 200);

@@ -890,35 +890,17 @@ footer span span {
 }
 .workspace-route {
   width: 210px;
-  border: 1px solid var(--line);
-  background: linear-gradient(160deg, #fff6ea, #fffdf8);
-  padding: 10px 12px 8px;
+  border: 1px solid #2c2723;
+  background: #1a1714;
+  padding: 8px;
   overflow: hidden;
 }
-.workspace-route .route-art {
+.workspace-route canvas {
   display: block;
   width: 100%;
   height: auto;
-}
-.workspace-route .route-halo,
-.workspace-route .route-guide,
-.workspace-route .route-cross,
-.workspace-route .route-signals {
-  display: none;
-}
-.workspace-route .route-lines path {
-  stroke: #d8b495;
-  stroke-width: 1.2;
-}
-.workspace-route .route-nodes rect {
-  fill: var(--orange);
-  opacity: 0.32;
-}
-.workspace-route .route-nodes rect:first-child {
-  opacity: 0.95;
-}
-.workspace-route .route-terminal {
-  fill: var(--orange);
+  aspect-ratio: 7/6;
+  background: #1a1714;
 }
 main:before {
   content: "";
