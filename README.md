@@ -1,6 +1,8 @@
-# Gitflare
+# Braid
 
-A private forge with a Workers API/UI, WorkOS AuthKit identity, Artifacts Git, explicit repository sharing, reviewed task publishing, and tenant-scoped R2 LFS deduplication.
+**Where parallel work comes together.** See the [vision](docs/vision.md).
+
+Braid is a private forge with a Workers API/UI, WorkOS AuthKit identity, Artifacts Git, explicit repository sharing, reviewed task publishing, and tenant-scoped R2 LFS deduplication.
 
 **Deployed at https://gitflare.lintlabs.org with GitHub-only sign-in and authentication enforced. The AuthKit session-token issuer/client contract and connected repository picker are implemented. Real account login and app imports remain blocked by human GitHub sign-in and dedicated token-returning OAuth app setup; deployed R2 LFS remains separately unverified.** The GitHub source and all remote evaluation destinations remain private. No native CI, Agents SDK, Sandbox, Containers, model features, or repository-code execution is part of this product.
 

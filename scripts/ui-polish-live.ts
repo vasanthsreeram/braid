@@ -32,10 +32,6 @@ checks.push({ path: "/", method: "GET", status: root.status, passed: true });
 const assets = [];
 for (const path of [
   "/public/welcome.css",
-  "/public/blocks.js",
-  "/public/blocks-engine.js",
-  "/public/route.js",
-  "/public/route-engine.js",
 ]) {
   const response = await fetch(origin + path);
   assert.equal(response.status, 200);
@@ -75,9 +71,10 @@ for (const path of [
   "/public/../app.js",
   "/public/%2e%2e/app.js",
   "/public/%2f..%2fapp.js",
-  "/public/blocks.js.map",
-  "/public/%62locks.js",
-  "/public/blocks.js/",
+  "/public/blocks.js",
+  "/public/welcome.css.map",
+  "/public/%77elcome.css",
+  "/public/welcome.css/",
   "/src/worker.ts",
   "/.git/config",
   "/__local_identity",

@@ -9,6 +9,7 @@ const dir = await mkdtemp(join(tmpdir(), "collab-ui-")),
 const browser = await chromium.launch({
   headless: true,
   executablePath:
+    process.env.FORGE_CHROME_PATH ??
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
 });
 const receipts: any[] = [];
@@ -57,14 +58,12 @@ try {
     await p.goto(local.url);
     await p.getByRole("button", { name: "Use local test identity" }).click();
     await p.locator("#repos .repo button").click();
-    await p.getByRole("button", { name: "Access", exact: true }).click();
-    await p
-      .getByLabel("Invite by verified email")
-      .fill("reader@example.invalid");
+    await p.getByRole("button", { name: "Settings", exact: true }).click();
+    await p.locator("#invite-email").fill("reader@example.invalid");
     await p.locator("#invite select").selectOption("reader");
-    await p.getByRole("button", { name: "Create invitation link" }).click();
+    await p.getByRole("button", { name: "Send invite", exact: true }).click();
     await p
-      .locator("#content")
+      .locator("#invite-result")
       .filter({ hasText: "reader@example.invalid" })
       .waitFor();
     const invites = await local.catalog.invitations(repo.id);
@@ -76,21 +75,21 @@ try {
     await r
       .getByRole("button", { name: "Accept invitation", exact: true })
       .click();
-    await r.getByText("Invitation accepted.", { exact: true }).waitFor();
+    await r.locator("#notice").filter({ hasText: "Invitation accepted." }).waitFor();
     await r.locator("#repos .repo button").click();
     checks.push("independent local credential accepts invite and browses");
     await p.getByRole("button", { name: "Issues", exact: true }).click();
-    await p.getByText("New issue", { exact: true }).click();
+    await p.locator("#issue-new").click();
     await p
-      .getByLabel("Issue title", { exact: true })
+      .locator("#issue-create-title")
       .fill("Review private bundle integrity " + width);
     await p
-      .getByLabel("Description", { exact: true })
+      .locator("#issue-create-body")
       .fill(
         "Verify refs, original authors, dates, and every source object before cutover.",
       );
     await p.locator("#issue-create select").selectOption("local-reader");
-    await p.getByLabel("Labels, comma separated").fill("migration, review");
+    await p.locator("#issue-create-labels").fill("migration, review");
     await p.getByRole("button", { name: "Create issue", exact: true }).click();
     await p.getByText("Issue created.", { exact: true }).waitFor();
     const issues = await ownerCall(prefix + "/issues");
@@ -98,38 +97,39 @@ try {
     checks.push("issue create and current collaborator assignment");
     await r.getByRole("button", { name: "Issues", exact: true }).click();
     await r
-      .locator("#issue-list .repo")
-      .filter({ hasText: issue.title })
-      .getByRole("button", { name: "View issue" })
+      .getByRole("button", { name: issue.title, exact: true })
       .click();
     assert.equal(await r.locator("#issue-edit").isVisible(), false);
     await r
-      .getByLabel("Your comment")
+      .locator("#issue-comment-body")
       .fill(
         "Reader evidence: preserve <script>text</script> without HTML execution.",
       );
-    await r.getByRole("button", { name: "Comment on issue" }).click();
+    await r.locator("#issue-comment button").click();
     await r.getByText("Comment added.", { exact: true }).waitFor();
     checks.push("reader append-only comment rendered as hostile plain text");
-    await p.getByLabel("Update title").fill("Stale draft kept " + width);
-    await p.getByRole("button", { name: "Save issue" }).click();
+    await p.locator("#issue-edit-toggle").click();
+    await p.locator("#issue-edit-title").fill("Stale draft kept " + width);
+    await p.getByRole("button", { name: "Save changes" }).click();
     await p
-      .getByText("Issue changed. Reload before saving.", { exact: true })
+      .getByText(
+        "Someone else updated this issue. Reopen it to see their changes, then save again.",
+        { exact: true },
+      )
       .waitFor();
     assert.equal(
-      await p.getByLabel("Update title").inputValue(),
+      await p.locator("#issue-edit-title").inputValue(),
       "Stale draft kept " + width,
     );
     checks.push("stale save rejected without losing draft");
     await p
-      .locator("#issue-list .repo")
-      .filter({ hasText: issue.title })
-      .getByRole("button", { name: "View issue" })
+      .getByRole("button", { name: issue.title, exact: true })
       .click();
-    await p.getByLabel("Update state").selectOption("closed");
-    await p.getByRole("button", { name: "Save issue" }).click();
+    await p.locator("#issue-edit-toggle").click();
+    await p.locator("#issue-edit-state").selectOption("closed");
+    await p.getByRole("button", { name: "Save changes" }).click();
     await p.getByText("Issue saved.", { exact: true }).waitFor();
-    await p.locator("#issue-meta").filter({ hasText: "closed" }).waitFor();
+    await p.locator("#issue-meta").filter({ hasText: "Closed" }).waitFor();
     assert.equal(
       (await ownerCall(prefix + "/issues/" + issue.number)).issue.state,
       "closed",
@@ -143,11 +143,11 @@ try {
     await p
       .locator("#issue-detail")
       .screenshot({ path: `docs/collab-agent/issue-detail-${width}.png` });
+    await p.getByRole("button", { name: "Reviews", exact: true }).click();
     await p
-      .getByRole("button", { name: "Read-only review", exact: true })
-      .click();
-    await p
-      .getByText("Read-only review runtime unavailable", { exact: true })
+      .getByText("Automated reviews aren't available on this server.", {
+        exact: true,
+      })
       .waitFor();
     checks.push("local runtime honestly unavailable, no model fixture");
     await layout(p, "review");
@@ -156,9 +156,12 @@ try {
       fullPage: true,
     });
     await ownerCall(prefix + "/grants", { user: "local-reader", role: null });
-    await r.getByLabel("Your comment").fill("Denied after revocation");
-    await r.getByRole("button", { name: "Comment on issue" }).click();
-    await r.locator("#notice").filter({ hasText: "Not found" }).waitFor();
+    await r.locator("#issue-comment-body").fill("Denied after revocation");
+    await r.locator("#issue-comment button").click();
+    await r
+      .locator("#notice")
+      .filter({ hasText: "you no longer have access" })
+      .waitFor();
     checks.push("revocation denies existing reader context");
     assert.deepEqual(errors, []);
     receipts.push({

@@ -3,431 +3,1107 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#faf8f3" />
-    <title>Gitflare · Workspace</title>
+    <meta name="theme-color" content="#faf7f2" />
+    <title>Braid</title>
     <link rel="stylesheet" href="/style.css" />
-    <script defer src="/app.js"></script><script type="module" src="/public/route.js"></script>
+    <link rel="stylesheet" href="/braid.css" />
+    <script defer src="/app.js"></script>
+    <script type="module" src="/braid.js"></script>
+    <link rel="stylesheet" href="/agents.css" />
+    <script type="module" src="/agents.js"></script>
   </head>
   <body>
-    <header>
-      <a class="brand" href="/" aria-label="Gitflare home"
-        ><span class="pixel-mark" aria-hidden="true"></span>gitflare</a
-      ><span class="badge">PRIVATE WORKSPACE</span
-      ><span class="header-context">CODE / CONTEXT / COLLABORATION</span>
-      <form method="post" action="/auth/logout"><button>Sign out</button></form>
-    </header>
-    <main>
-      <a class="skip" href="#workspace">Skip to workspace</a>
-      <aside class="workspace-sidebar">
-        <p class="eyebrow">WORKSPACE</p>
-        <h1>Your work.</h1>
-        <p class="sidebar-intro">One place. Shared context.</p>
-        <nav aria-label="Workspace navigation">
-          <button id="mine" aria-current="page">
-            <span aria-hidden="true">▦</span> My &amp; shared repositories
+    <a class="skip" href="#workspace">Skip to content</a>
+    <div class="progress" aria-hidden="true"></div>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/" aria-label="Braid home"
+          ><svg class="braid-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.0 12.0 L2.8 12.2 L3.7 12.7 L4.5 13.6 L5.3 14.6 L6.2 15.7 L7.0 16.6 L7.8 17.1 L8.7 17.1 L9.5 16.5 L10.3 15.4 L11.2 13.8 L12.0 12.0 L12.8 10.2 L13.7 8.6 L14.5 7.5 L15.3 6.9 L16.2 6.9 L17.0 7.4 L17.8 8.3 L18.7 9.4 L19.5 10.4 L20.3 11.3 L21.2 11.8 L22.0 12.0" /><path d="M2.0 12.0 L2.8 12.4 L3.7 12.7 L4.5 12.6 L5.3 12.0 L6.2 11.0 L7.0 9.7 L7.8 8.3 L8.7 6.9 L9.5 5.9 L10.3 5.3 L11.2 5.3 L12.0 5.9 L12.8 7.1 L13.7 8.6 L14.5 10.4 L15.3 12.0 L16.2 13.4 L17.0 14.3 L17.8 14.7 L18.7 14.6 L19.5 14.1 L20.3 13.4 L21.2 12.6 L22.0 12.0" /><path d="M2.0 12.0 L2.8 11.4 L3.7 10.6 L4.5 9.9 L5.3 9.4 L6.2 9.3 L7.0 9.7 L7.8 10.6 L8.7 12.0 L9.5 13.6 L10.3 15.4 L11.2 16.9 L12.0 18.1 L12.8 18.7 L13.7 18.7 L14.5 18.1 L15.3 17.1 L16.2 15.7 L17.0 14.3 L17.8 13.0 L18.7 12.0 L19.5 11.4 L20.3 11.3 L21.2 11.6 L22.0 12.0" /></svg><span class="brand-name">Braid</span></a
+        >
+        <nav class="primary-nav" aria-label="Main">
+          <button id="mine" type="button" aria-current="page">
+            Repositories
           </button>
-          <button id="discover">
-            <span aria-hidden="true">⌕</span> Discover
-          </button>
-          <button id="profile">
-            <span aria-hidden="true">▥</span> My contribution profile
-          </button>
+          <button id="discover" type="button">Explore</button>
+          <button id="profile" type="button">Activity</button>
         </nav>
-        <p class="eyebrow sidebar-account">ACCOUNT &amp; CONNECTIONS</p>
-        <p id="identity">Sign in to continue.</p>
-        <details>
-          <summary>Developer connection</summary>
-          <label
-            >CLI bearer credential<input
+        <form id="search" class="global-search" role="search">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="7" cy="7" r="4.5" />
+            <path d="M10.5 10.5 14 14" />
+          </svg>
+          <label class="sr-only" for="query">Search repositories</label>
+          <input
+            id="query"
+            type="search"
+            placeholder="Search repositories"
+            autocomplete="off"
+          />
+        </form>
+        <div class="topbar-actions">
+          <div class="menu-wrap">
+            <button
+              id="new-button"
+              class="btn btn-secondary btn-new"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="new-menu"
+            >
+              <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg>
+              <span>New</span>
+            </button>
+            <div id="new-menu" class="menu" hidden>
+              <button type="button" data-go="new">
+                <strong>New repository</strong>
+                <span>Start a private repository</span>
+              </button>
+              <button type="button" data-go="github">
+                <strong>Import from GitHub</strong>
+                <span>Bring over your public repositories</span>
+              </button>
+              <button type="button" data-go="bundle">
+                <strong>Upload a Git bundle</strong>
+                <span>Import full history from a file</span>
+              </button>
+            </div>
+          </div>
+          <div class="menu-wrap">
+            <button
+              id="account-button"
+              class="avatar-button"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="account-menu"
+              aria-label="Account menu"
+            >
+              <span id="avatar" class="avatar" aria-hidden="true">?</span>
+            </button>
+            <div id="account-menu" class="menu menu-right" hidden>
+              <div class="menu-identity">
+                <strong id="identity">Not signed in</strong>
+                <span id="identity-sub"></span>
+              </div>
+              <button type="button" data-go="profile">Your activity</button>
+              <button type="button" data-go="account">Account settings</button>
+              <button type="button" data-go="invite">Accept an invitation</button>
+              <form method="post" action="/auth/logout">
+                <button>Sign out</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="workspace" data-view="overview" tabindex="-1">
+      <div class="toast" role="region" aria-label="Messages">
+        <p id="notice" role="status" aria-live="polite"></p>
+        <button
+          id="notice-close"
+          class="btn btn-ghost btn-icon"
+          type="button"
+          aria-label="Dismiss message"
+        >
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M4 4l8 8M12 4l-8 8" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Sign in -->
+      <section id="signin-view" class="view narrow" hidden>
+        <div class="card signin-card">
+          <div class="signin-art" data-braid-art="320x120" aria-hidden="true"></div>
+          <h1>Welcome to Braid</h1>
+          <p class="muted">Where parallel work comes together. Sign in to see your repositories.</p>
+          <a class="btn btn-primary btn-block" href="/auth/login">Sign in</a>
+          <button
+            id="local"
+            class="btn btn-secondary btn-block"
+            type="button"
+            hidden
+          >
+            Use local test identity
+          </button>
+          <div class="divider"><span>or use an access token</span></div>
+          <label class="field"
+            ><span>Access token</span
+            ><input
               id="credential"
               type="password"
               autocomplete="off"
-              placeholder="Stored only in page memory" /></label
-          ><button id="connect">Connect</button
-          ><button id="local">Use local test identity</button>
-        </details>
-        <details>
-          <summary>Organization & invitations</summary>
-          <form id="organization">
-            <label
-              >Organization ID<input
-                name="organization"
-                required
-                placeholder="org_…" /></label
-            ><button>Switch organization</button>
-          </form>
-          <form id="accept-invite">
-            <label>Invitation ID<input name="invite" required /></label
-            ><button>Accept invitation</button>
-          </form>
-        </details>
-      </aside>
-      <section id="workspace" data-view="overview" aria-label="Workspace">
-        <div class="section-title workspace-heading">
+              placeholder="Paste a token"
+          /></label>
+          <p class="hint">Kept only while this tab is open.</p>
+          <button id="connect" class="btn btn-secondary btn-block" type="button">
+            Connect
+          </button>
+        </div>
+      </section>
+
+      <!-- Repository list -->
+      <section id="overview" class="view">
+        <div class="page-head">
           <div>
-            <p class="eyebrow" id="view-kicker">YOUR WORKSPACE / OVERVIEW</p>
-            <h2 id="view-title">
-              Repositories<span class="title-dot" aria-hidden="true">.</span>
-            </h2>
-          </div>
-          <div class="workspace-context"><div class="workspace-route"><canvas data-route width="210" height="180" aria-hidden="true"></canvas></div>
-          <span id="environment">Authenticated workspace</span></div>
-        </div>
-        <div class="overview">
-          <details id="github-view" aria-labelledby="github-title">
-            <summary>
-              <span id="github-title">Connected GitHub account</span
-              ><span class="summary-note">IMPORT YOUR HISTORY ↗</span>
-            </summary>
-            <p id="github-account">Checking GitHub connection…</p>
-            <p>
-              List your public repositories and import complete Git history into
-              a private Gitflare repository. Private GitHub access requires
-              separate repository authorization.
+            <h1 id="view-title">Repositories</h1>
+            <p id="view-subtitle" class="muted">
+              Your private repositories and the ones shared with you.
             </p>
-            <div class="tools">
-              <a id="github-connect" href="/auth/login">Connect GitHub</a>
-              <button id="github-disconnect" hidden>Disconnect GitHub</button>
-            </div>
-            <div id="github-picker" hidden>
-              <form id="github-search">
-                <label
-                  >Search your public GitHub repositories<input
-                    id="github-query"
-                    type="search"
-                    maxlength="100"
-                    placeholder="Repository name"
-                /></label>
-                <button>Search GitHub</button>
-              </form>
-              <p id="github-status" role="status"></p>
-              <div id="github-repos"></div>
-              <div class="tools">
-                <button id="github-previous" disabled>
-                  Previous GitHub page
-                </button>
-                <span id="github-page"></span>
-                <button id="github-next" disabled>Next GitHub page</button>
-              </div>
-            </div>
-          </details>
-          <details class="panel" id="create-panel">
-            <summary>Create or import a repository</summary>
-            <form id="create">
-              <input
+          </div>
+          <div class="page-actions" id="overview-actions">
+            <button type="button" class="btn btn-secondary" data-go="github">
+              <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  class="fill"
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                />
+              </svg>
+              Import from GitHub
+            </button>
+            <button type="button" class="btn btn-primary" data-go="new">
+              New repository
+            </button>
+          </div>
+        </div>
+        <form id="accept-invite" class="banner" hidden>
+          <div>
+            <strong>You have an invitation</strong>
+            <p class="muted">
+              Accept it to get access to the repository it was sent for.
+            </p>
+          </div>
+          <label class="field compact"
+            ><span>Invitation code</span
+            ><input name="invite" required autocomplete="off"
+          /></label>
+          <div class="banner-actions">
+            <button class="btn btn-primary">Accept invitation</button>
+            <button
+              id="invite-dismiss"
+              type="button"
+              class="btn btn-ghost"
+            >
+              Not now
+            </button>
+          </div>
+        </form>
+        <div id="repos" class="list" aria-label="Repositories"></div>
+        <div id="repos-empty" class="empty" hidden>
+          <div class="empty-art" data-braid-art="360x140" aria-hidden="true"></div>
+          <h2 id="repos-empty-title">No repositories yet</h2>
+          <p id="repos-empty-text" class="muted">
+            Bring your projects over from GitHub, or start something new.
+          </p>
+          <div id="repos-empty-actions" class="empty-actions">
+            <button type="button" class="btn btn-secondary" data-go="github">
+              Import from GitHub
+            </button>
+            <button type="button" class="btn btn-primary" data-go="new">
+              New repository
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- New repository -->
+      <section id="new-view" class="view narrow" hidden>
+        <div class="page-head">
+          <div>
+            <h1>New repository</h1>
+            <p class="muted">
+              Repositories start private. You can share them later from
+              Settings.
+            </p>
+          </div>
+        </div>
+        <form id="create" class="card form-card">
+          <label class="field"
+            ><span>Repository name</span
+            ><input
+              name="name"
+              required
+              pattern="[A-Za-z0-9_\-]+"
+              autocomplete="off"
+              placeholder="my-project"
+          /></label>
+          <p class="hint">Letters, numbers, dashes and underscores.</p>
+          <label class="field"
+            ><span>Copy history from a public Git URL <em>(optional)</em></span
+            ><input
+              name="url"
+              type="url"
+              placeholder="https://github.com/owner/project"
+          /></label>
+          <p class="hint">
+            We copy the full Git history. Large files (LFS), submodules,
+            issues and pull requests stay behind.
+          </p>
+          <div class="form-actions">
+            <button class="btn btn-primary">Create repository</button>
+            <button type="button" class="btn btn-ghost" data-go="overview">
+              Cancel
+            </button>
+          </div>
+        </form>
+        <button type="button" class="link-card" data-go="github">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path
+              class="fill"
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+            />
+          </svg>
+          <span
+            ><strong>Import from GitHub instead</strong
+            ><span class="muted">Pick from a list of your repositories.</span></span
+          >
+        </button>
+        <section id="bundle-section" class="card form-card">
+          <h2>Upload a Git bundle</h2>
+          <p class="muted">
+            Have a private project? Create a bundle with
+            <code>git bundle create repo.bundle --all</code> and upload it here.
+            Keep your original until you have checked the copy.
+          </p>
+          <form id="bundle-import">
+            <label class="field"
+              ><span>Bundle file</span
+              ><input name="bundle" type="file" accept=".bundle" required
+            /></label>
+            <label class="field"
+              ><span>Repository name</span
+              ><input
                 name="name"
-                aria-label="Repository name"
-                placeholder="Repository name"
                 required
-                pattern="[A-Za-z0-9_-]+"
-              /><input
-                name="url"
-                type="url"
-                aria-label="Optional public GitHub URL"
-                placeholder="Optional public GitHub URL"
-              /><button>Create private repo</button>
-            </form>
-            <form id="bundle-import">
-              <label
-                >Private full-history Git bundle<input
-                  name="bundle"
-                  type="file"
-                  accept=".bundle"
-                  required /></label
-              ><label
-                >Destination name<input
-                  name="name"
-                  required
-                  pattern="[A-Za-z0-9_-]+" /></label
-              ><button>Import private bundle</button>
-            </form>
-            <p>
-              Full Git history stays private. Upload an unrestricted bundle with
-              all branches and tags; source is retained for verification.
-            </p>
-          </details>
-          <form id="search">
-            <label
-              >Search repositories<input
-                id="query"
-                type="search"
-                placeholder="Search by name" /></label
-            ><button>Search</button>
+                pattern="[A-Za-z0-9_\-]+"
+                autocomplete="off"
+            /></label>
+            <div class="form-actions">
+              <button class="btn btn-secondary">Upload bundle</button>
+            </div>
           </form>
-          <p class="migration-note">
-            GitHub imports copy Git history. LFS objects, submodules, and
-            platform metadata need separate migration.
-          </p>
-          <div class="list-heading">
-            <span>REPOSITORY</span><span>VISIBILITY / STATE</span>
+        </section>
+      </section>
+
+      <!-- Import from GitHub -->
+      <section
+        id="github-view"
+        class="view"
+        aria-labelledby="github-title"
+        hidden
+      >
+        <div class="page-head">
+          <div>
+            <h1 id="github-title">Import from GitHub</h1>
+            <p class="muted">
+              Copy your public GitHub repositories into private Braid
+              repositories, with their full history.
+            </p>
           </div>
-          <div id="repos" aria-label="Repositories"></div>
         </div>
-        <p id="notice" role="status"></p>
-        <article id="profile-view" hidden>
-          <h2>Contribution history</h2>
-          <p id="profile-summary"></p>
-          <p id="profile-definition"></p>
-          <p id="profile-limits"></p>
-          <p>
-            Daily commits · UTC · older to newer. Scroll horizontally for more
-            dates; choose a day below for counts and commit links.
-          </p>
+        <div class="card github-account">
+          <div class="github-account-main">
+            <span class="github-mark" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 16 16">
+                <path
+                  class="fill"
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.130-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.070-.01 1.930-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                />
+              </svg>
+            </span>
+            <div>
+              <strong id="github-account">Checking your GitHub connection…</strong>
+              <p id="github-account-help" class="muted">
+                Only public repositories are listed. Everything you import
+                stays private here.
+              </p>
+            </div>
+          </div>
+          <div class="github-account-actions">
+            <a id="github-connect" class="btn btn-primary" href="/auth/github"
+              >Connect GitHub</a
+            >
+            <button
+              id="github-disconnect"
+              type="button"
+              class="btn btn-ghost"
+              hidden
+            >
+              Disconnect
+            </button>
+          </div>
+        </div>
+        <div id="github-picker" hidden>
+          <div class="toolbar">
+            <form id="github-search" class="search-field" role="search">
+              <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="7" cy="7" r="4.5" />
+                <path d="M10.5 10.5 14 14" />
+              </svg>
+              <label class="sr-only" for="github-query"
+                >Search your GitHub repositories</label
+              >
+              <input
+                id="github-query"
+                type="search"
+                maxlength="100"
+                placeholder="Find a repository"
+              />
+              <button class="btn btn-secondary">Search</button>
+            </form>
+            <button
+              id="github-import-all"
+              type="button"
+              class="btn btn-secondary"
+              hidden
+            >
+              Import all public repositories
+            </button>
+          </div>
+          <p id="github-status" class="status-line" role="status"></p>
+          <div id="github-repos" class="list"></div>
+          <div class="pager">
+            <button
+              id="github-previous"
+              type="button"
+              class="btn btn-secondary"
+              aria-label="Previous page"
+              disabled
+            >
+              ← Previous
+            </button>
+            <span id="github-page" class="muted"></span>
+            <button
+              id="github-next"
+              type="button"
+              class="btn btn-secondary"
+              aria-label="Next page"
+              disabled
+            >
+              Next →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity -->
+      <section id="profile-view" class="view" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Your activity</h1>
+            <p id="profile-summary" class="muted"></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="heatmap-head">
+            <h2>Commits in the last year</h2>
+            <div class="heat-legend" aria-hidden="true">
+              <span>Less</span><i data-level="0"></i><i data-level="1"></i
+              ><i data-level="2"></i><i data-level="3"></i><span>More</span>
+            </div>
+          </div>
           <div
             class="heatmap-scroll"
             tabindex="0"
-            aria-label="Contribution heatmap, scroll horizontally"
+            aria-label="Contribution calendar, scroll sideways for earlier dates"
           >
             <div id="heatmap" role="img" aria-label="Daily commit counts"></div>
           </div>
-          <label>Activity day (UTC)<select id="activity-day"></select></label>
-          <div id="activity"></div>
-        </article>
-        <article id="detail" data-mode="source" hidden>
-          <button id="back-repos" class="back-button">
-            ← All repositories
-          </button>
-          <div id="repo-header"></div>
-          <nav class="repo-tabs" aria-label="Repository sections">
-            <button id="readme" aria-current="page">README</button
-            ><button id="history">History & files</button
-            ><button id="issues">Issues</button
-            ><button id="agents">Read-only review</button
-            ><button id="proposals">Proposals</button
-            ><button id="access">Access</button
-            ><button id="clone">Clone / push credential</button
-            ><button id="reconcile">Reconcile operation</button>
-          </nav>
-          <details class="panel">
-            <summary>Collaboration & repository controls</summary>
-            <p class="eyebrow">TASK REPOSITORY</p>
-            <form id="task">
-              <input
-                name="name"
-                required
-                aria-label="New task name"
-                placeholder="New task name"
-              /><button>Fork task</button>
-            </form>
-            <form id="grant">
-              <input
-                name="user"
-                required
-                aria-label="WorkOS user ID"
-                placeholder="WorkOS user ID"
-              /><select aria-label="Access role" name="role">
-                <option>reader</option>
-                <option>contributor</option>
-                <option>writer</option>
-                <option>admin</option>
-                <option value="">revoke</option></select
-              ><button>Update access</button>
-            </form>
-            <form id="invite">
-              <label
-                >Invite by verified email<input
-                  name="email"
-                  type="email"
-                  required /></label
-              ><select name="role" aria-label="Invitation role">
-                <option>reader</option>
-                <option>contributor</option>
-                <option>writer</option>
-                <option>admin</option></select
-              ><button>Create invitation link</button>
-            </form>
-            <form id="visibility">
-              <select name="visibility" aria-label="Repository visibility">
-                <option>private</option>
-                <option>public</option></select
-              ><label
-                >To publish, enter repository ID<input name="confirm" /></label
-              ><button>Set visibility</button>
-            </form>
+          <details class="fine-print">
+            <summary>How this is counted</summary>
+            <p id="profile-definition"></p>
+            <p id="profile-limits"></p>
           </details>
-          <div id="issues-view" hidden>
-            <div class="section-title">
-              <h2>Issues</h2>
-              <span>Track the work. Keep the context.</span>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h2>Your thread, day by day</h2>
+            <label class="field inline"
+              ><span>Day</span><select id="activity-day"></select
+            ></label>
+          </div>
+          <div id="activity" class="list flush"></div>
+        </div>
+      </section>
+
+      <!-- Account -->
+      <section id="account-view" class="view narrow" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Account</h1>
+            <p class="muted">Your sign-in details and organization.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Profile</h2>
+          <dl id="account-details" class="details-list"></dl>
+        </div>
+        <div class="card">
+          <h2>Organization</h2>
+          <p class="muted">
+            Switch to another organization you belong to. You'll see that
+            organization's repositories.
+          </p>
+          <form id="organization" class="inline-form">
+            <label class="field"
+              ><span>Organization ID</span
+              ><input
+                name="organization"
+                required
+                autocomplete="off"
+                placeholder="org_…"
+            /></label>
+            <button class="btn btn-secondary">Switch organization</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>GitHub</h2>
+          <p class="muted">
+            Connect GitHub to import your public repositories.
+          </p>
+          <button type="button" class="btn btn-secondary" data-go="github">
+            Manage GitHub connection
+          </button>
+        </div>
+      </section>
+
+      <!-- Repository -->
+      <article id="detail" class="view" data-mode="code" hidden>
+        <div class="repo-head">
+          <div class="repo-title">
+            <svg class="braid-logo repo-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.0 12.0 L2.8 12.2 L3.7 12.7 L4.5 13.6 L5.3 14.6 L6.2 15.7 L7.0 16.6 L7.8 17.1 L8.7 17.1 L9.5 16.5 L10.3 15.4 L11.2 13.8 L12.0 12.0 L12.8 10.2 L13.7 8.6 L14.5 7.5 L15.3 6.9 L16.2 6.9 L17.0 7.4 L17.8 8.3 L18.7 9.4 L19.5 10.4 L20.3 11.3 L21.2 11.8 L22.0 12.0" /><path d="M2.0 12.0 L2.8 12.4 L3.7 12.7 L4.5 12.6 L5.3 12.0 L6.2 11.0 L7.0 9.7 L7.8 8.3 L8.7 6.9 L9.5 5.9 L10.3 5.3 L11.2 5.3 L12.0 5.9 L12.8 7.1 L13.7 8.6 L14.5 10.4 L15.3 12.0 L16.2 13.4 L17.0 14.3 L17.8 14.7 L18.7 14.6 L19.5 14.1 L20.3 13.4 L21.2 12.6 L22.0 12.0" /><path d="M2.0 12.0 L2.8 11.4 L3.7 10.6 L4.5 9.9 L5.3 9.4 L6.2 9.3 L7.0 9.7 L7.8 10.6 L8.7 12.0 L9.5 13.6 L10.3 15.4 L11.2 16.9 L12.0 18.1 L12.8 18.7 L13.7 18.7 L14.5 18.1 L15.3 17.1 L16.2 15.7 L17.0 14.3 L17.8 13.0 L18.7 12.0 L19.5 11.4 L20.3 11.3 L21.2 11.6 L22.0 12.0" /></svg>
+            <h1 id="repo-header"></h1>
+            <span id="repo-visibility" class="badge"></span>
+          </div>
+          <p id="repo-parent" class="muted" hidden></p>
+          <div class="repo-head-actions">
+            <div class="menu-wrap">
+              <button
+                id="clone"
+                type="button"
+                class="btn btn-secondary"
+                aria-expanded="false"
+                aria-controls="git-credential"
+              >
+                <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M5 4 1.5 8 5 12M11 4l3.5 4-3.5 4" />
+                </svg>
+                Clone
+              </button>
+              <div id="git-credential" class="menu menu-right popover" hidden>
+                <h2>Clone this repository</h2>
+                <label class="field"
+                  ><span>Git address</span
+                  ><span class="copy-row"
+                    ><input id="git-remote" readonly class="mono" /><button
+                      id="git-remote-copy"
+                      type="button"
+                      class="btn btn-secondary btn-icon"
+                      aria-label="Copy Git address"
+                    >
+                      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                        <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+                        <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2" />
+                      </svg></button></span
+                ></label>
+                <p class="hint">
+                  Git will ask for a password. Generate one below; it works for
+                  60 seconds, and any username is fine.
+                </p>
+                <label class="field"
+                  ><span>Access</span
+                  ><select id="git-scope">
+                    <option value="read">Read only (clone and pull)</option>
+                    <option value="write">Read and write (push)</option>
+                  </select></label
+                >
+                <button id="git-mint" type="button" class="btn btn-secondary btn-block">
+                  Generate password
+                </button>
+                <label class="field"
+                  ><span>Password</span
+                  ><span class="copy-row"
+                    ><input
+                      id="git-secret"
+                      type="password"
+                      readonly
+                      class="mono"
+                      placeholder="Not generated yet" /><button
+                      id="git-copy"
+                      type="button"
+                      class="btn btn-secondary btn-icon"
+                      aria-label="Copy password"
+                    >
+                      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                        <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+                        <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2" />
+                      </svg></button></span
+                ></label>
+                <p id="git-help" class="hint"></p>
+              </div>
             </div>
-            <form id="issue-search">
-              <label
-                >Search issues<input
+          </div>
+        </div>
+        <!-- Strand map (rendered by braid.js) -->
+        <section id="strand-map" class="strand-map" aria-label="Strand map" hidden></section>
+        <nav class="repo-tabs" aria-label="Repository">
+          <button id="tab-code" type="button" aria-current="page">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M5 4 1.5 8 5 12M11 4l3.5 4-3.5 4" /></svg
+            >Code</button
+          ><button id="issues" type="button">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="8" cy="8" r="5.5" />
+              <circle cx="8" cy="8" r="1" class="fill" /></svg
+            >Issues</button
+          ><button id="proposals" type="button">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M1.5 10h13" />
+              <path d="M3 10c2.5 0 2.5-5 5-5h6.5" /></svg
+            >Strands</button
+          ><button id="agents" type="button">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M1.5 8s2.5-4.5 6.5-4.5S14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />
+              <circle cx="8" cy="8" r="2" /></svg
+            >Reviews</button
+          ><button id="tab-agents" type="button">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <rect x="3" y="5" width="10" height="8" rx="2" />
+              <path d="M8 2.5V5M6 9h.01M10 9h.01" /></svg
+            >Agents</button
+          ><button id="tab-settings" type="button">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="8" cy="8" r="2" />
+              <path
+                d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"
+              /></svg
+            >Settings
+          </button>
+        </nav>
+
+        <!-- Code -->
+        <section id="code-view" class="tab-panel">
+          <div class="code-toolbar">
+            <form id="browse" class="ref-form">
+              <label class="ref-picker"
+                ><svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="4.5" cy="3.5" r="1.5" />
+                  <circle cx="4.5" cy="12.5" r="1.5" />
+                  <circle cx="11.5" cy="5" r="1.5" />
+                  <path d="M4.5 5v6M11.5 6.5c0 3-7 2-7 4.5" /></svg
+                ><span class="sr-only">Branch, tag or commit</span
+                ><input
+                  id="ref-input"
+                  name="ref"
+                  value="HEAD"
+                  required
+                  list="ref-options"
+                  autocomplete="off"
+                  spellcheck="false"
+              /></label>
+              <datalist id="ref-options"></datalist>
+              <button class="btn btn-secondary">Go</button>
+            </form>
+            <nav id="breadcrumbs" class="breadcrumbs" aria-label="Path"></nav>
+            <button id="history" type="button" class="btn btn-ghost">
+              <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="8" cy="8" r="6" />
+                <path d="M8 4.5V8l2.5 1.5" />
+              </svg>
+              History
+            </button>
+          </div>
+
+          <div id="commit-view" class="card commit-card" hidden>
+            <h2 id="commit-title"></h2>
+            <pre id="commit-body" class="commit-body" hidden></pre>
+            <dl id="commit-meta" class="details-list"></dl>
+            <p class="hint">
+              Names and emails on commits come from Git and aren't verified.
+            </p>
+          </div>
+
+          <div id="code-browser" class="code-box">
+            <div id="latest-commit" class="latest-commit" hidden></div>
+            <div id="files" class="file-table"></div>
+          </div>
+
+          <div id="empty-repo" class="card empty-repo" hidden>
+            <h2>This repository is empty</h2>
+            <p class="muted" id="empty-repo-text"></p>
+            <ol class="steps">
+              <li>
+                Open <strong>Strands</strong> and choose
+                <strong>New strand</strong> to get a private fork pinned to
+                this repository.
+              </li>
+              <li>
+                Use <strong>Clone</strong> on the strand to get its address and a
+                password, then push your commits.
+              </li>
+              <li>
+                Back here, choose <strong>Propose changes</strong>. Once it's
+                approved, an admin braids it in.
+              </li>
+            </ol>
+          </div>
+
+          <div id="file-view" class="code-box" hidden>
+            <div class="code-box-head">
+              <span id="file-path" class="mono"></span>
+              <span id="file-meta" class="muted"></span>
+            </div>
+            <pre id="content" class="code"></pre>
+          </div>
+
+          <div id="readme-view" class="code-box" hidden>
+            <div class="code-box-head">
+              <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M2 3.5h4a2 2 0 0 1 2 2v8a1.5 1.5 0 0 0-1.5-1.5H2zM14 3.5h-4a2 2 0 0 0-2 2v8a1.5 1.5 0 0 1 1.5-1.5H14z" />
+              </svg>
+              <span>README</span>
+            </div>
+            <div id="readme-body" class="prose"></div>
+          </div>
+
+          <div id="commits-view" class="code-box" hidden>
+            <div class="code-box-head">
+              <span>Commit history</span>
+              <span class="muted" id="commits-note"></span>
+            </div>
+            <div id="commit-list" class="list flush"></div>
+          </div>
+
+        </section>
+
+        <!-- Issues -->
+        <section id="issues-view" class="tab-panel" hidden>
+          <div class="toolbar">
+            <form id="issue-search" class="filter-form" role="search">
+              <label class="field compact grow"
+                ><span class="sr-only">Search issues</span
+                ><input
                   name="q"
                   type="search"
-                  maxlength="100" /></label
-              ><label
-                >Issue state<select name="state">
-                  <option value="">All states</option>
+                  maxlength="100"
+                  placeholder="Search issues"
+              /></label>
+              <label class="field compact"
+                ><span class="sr-only">Status</span
+                ><select name="state">
+                  <option value="">All</option>
                   <option value="open">Open</option>
                   <option value="closed">Closed</option>
                 </select></label
-              ><button>Search issues</button>
+              >
+              <button class="btn btn-secondary">Filter</button>
             </form>
-            <details id="issue-create-panel" class="panel">
-              <summary>New issue</summary>
-              <form id="issue-create">
-                <label
-                  >Issue title<input
-                    name="title"
-                    maxlength="200"
-                    required /></label
-                ><label
-                  >Description<textarea
-                    name="body"
-                    maxlength="16000"
-                    rows="5"
-                  ></textarea></label
-                ><label>Assignee<select name="assignee"></select></label
-                ><label
-                  >Labels, comma separated<input
+            <button id="issue-new" type="button" class="btn btn-primary">
+              New issue
+            </button>
+          </div>
+          <div id="issue-create-panel" class="card form-card" hidden>
+            <h2>New issue</h2>
+            <form id="issue-create">
+              <label class="field"
+                ><span>Title</span
+                ><input
+                  id="issue-create-title"
+                  name="title"
+                  maxlength="200"
+                  required
+              /></label>
+              <label class="field"
+                ><span>Description</span
+                ><textarea
+                  id="issue-create-body"
+                  name="body"
+                  maxlength="16000"
+                  rows="5"
+                ></textarea>
+              </label>
+              <div class="field-row">
+                <label class="field"
+                  ><span>Assignee</span><select name="assignee"></select
+                ></label>
+                <label class="field"
+                  ><span>Labels</span
+                  ><input
+                    id="issue-create-labels"
                     name="labels"
-                    maxlength="330" /></label
-                ><button>Create issue</button>
-              </form>
-            </details>
-            <div id="issue-list"></div>
-            <article id="issue-detail" hidden>
-              <h3 id="issue-heading"></h3>
-              <p id="issue-meta"></p>
-              <div id="issue-body" class="prose"></div>
-              <form id="issue-edit">
-                <label
-                  >Update title<input
-                    name="title"
-                    maxlength="200"
-                    required /></label
-                ><label
-                  >Update description<textarea
-                    name="body"
-                    maxlength="16000"
-                    rows="5"
-                  ></textarea></label
-                ><label
-                  >Update state<select name="state">
-                    <option>open</option>
-                    <option>closed</option>
+                    maxlength="330"
+                    placeholder="bug, docs"
+                /></label>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary">Create issue</button>
+                <button id="issue-cancel" type="button" class="btn btn-ghost">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+          <div id="issue-list" class="list"></div>
+          <article id="issue-detail" class="card issue-detail" hidden>
+            <div class="issue-detail-head">
+              <h2 id="issue-heading"></h2>
+              <button id="issue-edit-toggle" type="button" class="btn btn-secondary">
+                Edit
+              </button>
+            </div>
+            <p id="issue-meta" class="muted"></p>
+            <div id="issue-body" class="prose issue-body"></div>
+            <form id="issue-edit" class="edit-panel" hidden>
+              <label class="field"
+                ><span>Title</span
+                ><input
+                  id="issue-edit-title"
+                  name="title"
+                  maxlength="200"
+                  required
+              /></label>
+              <label class="field"
+                ><span>Description</span
+                ><textarea
+                  id="issue-edit-body"
+                  name="body"
+                  maxlength="16000"
+                  rows="5"
+                ></textarea>
+              </label>
+              <div class="field-row">
+                <label class="field"
+                  ><span>Status</span
+                  ><select id="issue-edit-state" name="state">
+                    <option value="open">Open</option>
+                    <option value="closed">Closed</option>
                   </select></label
-                ><label>Update assignee<select name="assignee"></select></label
-                ><label>Update labels<input name="labels" /></label
-                ><button>Save issue</button>
-              </form>
-              <h3>Conversation</h3>
-              <div id="issue-comments"></div>
-              <form id="issue-comment">
-                <label
-                  >Your comment<textarea
+                >
+                <label class="field"
+                  ><span>Assignee</span><select name="assignee"></select
+                ></label>
+                <label class="field"
+                  ><span>Labels</span><input id="issue-edit-labels" name="labels"
+                /></label>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary">Save changes</button>
+              </div>
+            </form>
+            <h3>Comments</h3>
+            <div id="issue-comments" class="comments"></div>
+            <form id="issue-comment">
+              <label class="field"
+                ><span>Add a comment</span
+                ><textarea
+                  id="issue-comment-body"
+                  name="body"
+                  rows="3"
+                  maxlength="8000"
+                  required
+                ></textarea>
+              </label>
+              <div class="form-actions">
+                <button class="btn btn-secondary">Comment</button>
+              </div>
+            </form>
+            <details class="fine-print">
+              <summary>Activity log</summary>
+              <div id="issue-audit"></div>
+            </details>
+          </article>
+        </section>
+
+        <!-- Strands -->
+        <section id="proposals-view" class="tab-panel" hidden>
+          <div class="toolbar">
+            <p class="muted toolbar-text">
+              Every change starts as a strand: a private fork pinned to a
+              commit. Proposals are reviewed, then braided in.
+            </p>
+            <div class="toolbar-actions">
+              <button id="new-task" type="button" class="btn btn-secondary">
+                New strand
+              </button>
+              <button id="new-proposal" type="button" class="btn btn-primary">
+                Propose changes
+              </button>
+            </div>
+          </div>
+          <form id="task" class="card form-card" hidden>
+            <h2>New strand</h2>
+            <p class="muted">
+              A strand is a private fork of this repository, pinned to its
+              latest commit. Push your commits to it, then propose them here.
+            </p>
+            <label class="field"
+              ><span>Strand name</span
+              ><input
+                name="name"
+                required
+                pattern="[A-Za-z0-9_\-]+"
+                autocomplete="off"
+                placeholder="fix-login-bug"
+            /></label>
+            <div class="form-actions">
+              <button class="btn btn-primary">Create strand</button>
+              <button type="button" class="btn btn-ghost" data-close="task">
+                Cancel
+              </button>
+            </div>
+          </form>
+          <form id="proposal" class="card form-card" hidden>
+            <h2>Propose changes</h2>
+            <label class="field"
+              ><span>From strand</span
+              ><select id="proposal-task" name="task" required></select
+            ></label>
+            <p id="proposal-summary" class="hint"></p>
+            <details class="fine-print">
+              <summary>Choose exact commits</summary>
+              <label class="field"
+                ><span>Commit to propose</span
+                ><input
+                  id="proposal-candidate"
+                  name="candidate"
+                  class="mono"
+                  required
+                  pattern="[a-f0-9]{40}"
+                  spellcheck="false"
+              /></label>
+              <label class="field"
+                ><span>Starting point in this repository</span
+                ><input
+                  id="proposal-base"
+                  name="base"
+                  class="mono"
+                  required
+                  pattern="[a-f0-9]{40}"
+                  spellcheck="false"
+              /></label>
+            </details>
+            <div class="form-actions">
+              <button class="btn btn-primary">Propose changes</button>
+              <button type="button" class="btn btn-ghost" data-close="proposal">
+                Cancel
+              </button>
+            </div>
+          </form>
+          <div class="split">
+            <div id="proposal-list" class="list"></div>
+            <article id="proposal-detail" class="proposal-detail" hidden>
+              <div class="proposal-head">
+                <div>
+                  <h2 id="proposal-title"></h2>
+                  <p id="proposal-meta" class="muted"></p>
+                </div>
+                <div id="proposal-actions" class="proposal-actions"></div>
+              </div>
+              <div id="diff" class="diff"></div>
+              <h3>Discussion</h3>
+              <div id="proposal-comments" class="comments"></div>
+              <form id="proposal-comment">
+                <label class="field"
+                  ><span>Add a comment</span
+                  ><textarea
                     name="body"
                     rows="3"
                     maxlength="8000"
                     required
-                  ></textarea></label
-                ><button>Comment on issue</button>
+                  ></textarea>
+                </label>
+                <div class="form-actions">
+                  <button class="btn btn-secondary">Comment</button>
+                </div>
               </form>
-              <details>
-                <summary>Issue activity</summary>
-                <div id="issue-audit"></div>
-              </details>
             </article>
+            <article id="strand-detail" class="proposal-detail strand-detail" hidden></article>
           </div>
-          <div id="agents-view" hidden>
-            <p class="eyebrow">SOURCE / STATIC REVIEW</p>
-            <h2>A second set of eyes.</h2>
-            <p>
-              Read selected files at a fixed commit. Findings cite exact source
-              lines and evidence. No code execution or test results.
+        </section>
+
+        <!-- Reviews -->
+        <section id="agents-view" class="tab-panel" hidden>
+          <div class="card form-card">
+            <h2>Ask for an automated review</h2>
+            <p class="muted">
+              An AI reviewer reads the files you pick at a given commit and
+              points to specific lines. It never runs your code, and its notes
+              aren't test results.
             </p>
             <form id="agent-start">
-              <label
-                >Source commit SHA<input
-                  name="sha"
-                  pattern="[a-f0-9]{40}"
-                  required /></label
-              ><label
-                >Base commit SHA (optional)<input
-                  name="base"
-                  pattern="[a-f0-9]{40}" /></label
-              ><label
-                >Selected paths, one per line<textarea
+              <div class="field-row">
+                <label class="field"
+                  ><span>Commit</span
+                  ><select id="agent-sha" name="sha" required></select
+                ></label>
+                <label class="field"
+                  ><span>Compare with <em>(optional)</em></span
+                  ><select id="agent-base" name="base"></select
+                ></label>
+              </div>
+              <label class="field"
+                ><span>Files to read, one per line</span
+                ><textarea
+                  id="agent-paths"
                   name="paths"
                   rows="4"
                   required
+                  class="mono"
                   placeholder="src/app.ts"
-                ></textarea></label
-              ><button>Start static review</button>
+                ></textarea>
+              </label>
+              <div class="form-actions">
+                <button class="btn btn-primary">Start review</button>
+              </div>
             </form>
-            <form id="agent-policy">
-              <label
-                ><input name="publish" type="checkbox" /> Publish validated
-                findings as issues</label
-              ><button>Save owner policy</button>
-            </form>
-            <p id="agent-status" role="status"></p>
-            <div class="tools">
-              <button id="agent-refresh">Refresh review</button
-              ><button id="agent-cancel">Cancel review</button
-              ><button id="agent-retry">Retry failed review</button>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h2>Latest review</h2>
+              <div class="tools">
+                <button id="agent-refresh" type="button" class="btn btn-secondary">
+                  Refresh
+                </button>
+                <button id="agent-cancel" type="button" class="btn btn-ghost">
+                  Cancel review
+                </button>
+                <button id="agent-retry" type="button" class="btn btn-ghost">
+                  Try again
+                </button>
+              </div>
             </div>
+            <p id="agent-status" role="status" class="muted"></p>
             <div id="agent-findings"></div>
           </div>
-          <form id="browse">
-            <label
-              >Branch, tag, or commit<input
-                name="ref"
-                value="HEAD"
-                required /></label
-            ><label
-              >File path<input name="path" placeholder="README.md" /></label
-            ><button>Browse</button>
+          <form id="agent-policy" class="card inline-form">
+            <label class="check"
+              ><input name="publish" type="checkbox" /> Turn confirmed
+              findings into issues automatically</label
+            >
+            <button class="btn btn-secondary">Save</button>
           </form>
-          <div id="files"></div>
-          <div id="git-credential" hidden>
-            <label>Native remote<input id="git-remote" readonly /></label
-            ><label
-              >Scope<select id="git-scope">
-                <option>read</option>
-                <option>write</option>
-              </select></label
-            ><button id="git-mint">Get 60-second credential</button
-            ><label
-              >Credential (page memory only)<input
-                id="git-secret"
-                type="password"
-                readonly /></label
-            ><button id="git-copy">Copy credential</button>
-            <p id="git-help"></p>
-          </div>
-          <form id="proposal">
-            <p class="eyebrow">PROPOSE A CHANGE</p>
-            <input
-              name="task"
-              required
-              aria-label="Task repo ID"
-              placeholder="Task repo ID"
-            /><input
-              name="base"
-              required
-              aria-label="Base commit SHA"
-              placeholder="Base commit SHA (40 zeros for empty repo)"
-            /><input
-              name="candidate"
-              required
-              aria-label="Candidate commit SHA"
-              placeholder="Candidate commit SHA"
-            /><button>Propose change</button>
-          </form>
-          <div id="commit-list"></div>
-          <pre id="content"></pre>
-          <div id="reviews"></div>
-        </article>
-      </section>
+        </section>
+
+        <!-- Agents (rendered by agents.js) -->
+        <section id="agent-runs-view" class="tab-panel" hidden></section>
+
+        <!-- Settings -->
+        <section id="settings-view" class="tab-panel settings" hidden>
+          <section class="card">
+            <h2>Visibility</h2>
+            <form id="visibility">
+              <label class="field"
+                ><span>Who can see this repository</span
+                ><select id="visibility-select" name="visibility">
+                  <option value="private">
+                    Private — only people you invite
+                  </option>
+                  <option value="public">Public — anyone signed in</option>
+                </select></label
+              >
+              <label id="visibility-confirm" class="field" hidden
+                ><span id="visibility-confirm-label"
+                  >Type the repository name to confirm</span
+                ><input name="confirm" autocomplete="off"
+              /></label>
+              <div class="form-actions">
+                <button class="btn btn-secondary">Save visibility</button>
+              </div>
+            </form>
+          </section>
+          <section class="card">
+            <div class="card-head">
+              <h2>People with access</h2>
+              <button id="access" type="button" class="btn btn-ghost">
+                Refresh
+              </button>
+            </div>
+            <div id="access-list" class="list flush"></div>
+            <h3>Invite someone</h3>
+            <form id="invite" class="inline-form">
+              <label class="field grow"
+                ><span>Email address</span
+                ><input
+                  id="invite-email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="name@company.com"
+              /></label>
+              <label class="field"
+                ><span>Role</span
+                ><select name="role" aria-label="Invitation role">
+                  <option value="reader">Read</option>
+                  <option value="contributor">Contribute</option>
+                  <option value="writer">Write</option>
+                  <option value="admin">Admin</option>
+                </select></label
+              >
+              <button class="btn btn-primary">Send invite</button>
+            </form>
+            <div id="invite-result" class="invite-result" hidden></div>
+            <details class="fine-print">
+              <summary>Add someone by account ID</summary>
+              <form id="grant" class="inline-form">
+                <label class="field grow"
+                  ><span>Account ID</span
+                  ><input name="user" required autocomplete="off"
+                /></label>
+                <label class="field"
+                  ><span>Role</span
+                  ><select name="role">
+                    <option value="reader">Read</option>
+                    <option value="contributor">Contribute</option>
+                    <option value="writer">Write</option>
+                    <option value="admin">Admin</option>
+                    <option value="">Remove access</option>
+                  </select></label
+                >
+                <button class="btn btn-secondary">Update access</button>
+              </form>
+            </details>
+          </section>
+          <section class="card">
+            <h2>Troubleshooting</h2>
+            <p class="muted">
+              If a merge or import seems stuck, run a check. It compares this
+              repository with its stored state and finishes anything that was
+              interrupted. It's safe to run any time.
+            </p>
+            <div class="form-actions">
+              <button id="reconcile" type="button" class="btn btn-secondary">
+                Check repository
+              </button>
+            </div>
+            <div id="reconcile-result" hidden>
+              <p id="reconcile-summary"></p>
+              <details class="fine-print">
+                <summary>Technical details</summary>
+                <pre id="reconcile-raw" class="code small"></pre>
+              </details>
+            </div>
+            <dl id="repo-technical" class="details-list small"></dl>
+          </section>
+          <section class="card danger-zone">
+            <h2>Delete repository</h2>
+            <p class="muted">
+              Permanently removes this repository from Braid, with its issues,
+              strands' proposals and history. Delete its strands first. The
+              original on GitHub is never touched.
+            </p>
+            <form id="delete-repo" class="form-actions">
+              <label
+                >Type <strong id="delete-repo-name"></strong> to confirm
+                <input id="delete-repo-confirm" autocomplete="off" required
+              /></label>
+              <button class="btn btn-danger">Delete repository</button>
+            </form>
+          </section>
+        </section>
+      </article>
     </main>
-    <footer>
-      <span>GITFLARE / A PRIVATE HOME FOR SHARED WORK</span
-      ><span
-        >CODE. CONTEXT. YOUR NEXT COMMIT.
-        <span aria-hidden="true">[ + ]</span></span
-      >
-    </footer>
   </body>
 </html>

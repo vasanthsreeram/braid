@@ -46,6 +46,11 @@ const layout = async (view: string) => {
     );
   if (small.length) throw Error(`Touch targets too small in ${view}: ${small}`);
   checks.push(view + " responsive layout and touch targets");
+  await mkdir("docs/ui-redesign", { recursive: true });
+  await page.screenshot({
+    path: `docs/ui-redesign/${process.env.FORGE_UI_WIDTH ?? 1440}-${view.replaceAll(" ", "-")}.png`,
+    fullPage: true,
+  });
 };
 const call = async (path: string, body?: any) => {
   const r = await fetch(local.url + path, {
@@ -87,37 +92,49 @@ try {
   });
   await page.goto(local.url);
   await page.getByRole("button", { name: "Use local test identity" }).click();
-  await page.getByText("core-ui-private", { exact: true }).waitFor();
-  checks.push("local identity and private list");
-  await page.getByText("Create or import a repository", { exact: true }).click();
   await page
-    .getByRole("textbox", { name: "Optional public GitHub URL" })
+    .getByRole("button", { name: "core-ui-private", exact: true })
+    .waitFor();
+  checks.push("local identity and private list");
+  await page
+    .locator("#overview-actions")
+    .getByRole("button", { name: "New repository", exact: true })
+    .click();
+  await page
+    .locator("#create input[name=url]")
     .fill("https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated");
   await layout("repository list and import form");
-  await page
-    .getByRole("textbox", { name: "Optional public GitHub URL" })
-    .fill("");
+  await page.locator("#create input[name=url]").fill("");
+  await page.locator("#mine").click();
   await page.locator("#query").fill("core-ui-private");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.locator("#query").press("Enter");
   await page
-    .getByText("core-ui-task", { exact: true })
+    .getByRole("button", { name: "core-ui-task", exact: true })
     .waitFor({ state: "hidden" });
-  if ((await page.locator(".repo").count()) !== 1)
+  if ((await page.locator("#repos .repo").count()) !== 1)
     throw Error("Search did not filter task");
   checks.push("own/shared name search");
-  await page.getByRole("button", { name: "Open", exact: true }).click();
-  await page.getByRole("button", { name: "Proposals", exact: true }).click();
-  await page.getByRole("button", { name: "View diff", exact: true }).click();
-  await page.getByText("Safe source text.", { exact: false }).waitFor();
+  await page
+    .getByRole("button", { name: "core-ui-private", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Strands", exact: true }).click();
+  await page
+    .locator("#proposal-list")
+    .getByRole("button", { name: "core-ui-task", exact: true })
+    .click();
+  await page.locator("#diff").getByText("Safe source text.").waitFor();
   checks.push("immutable added-file diff preview");
   await layout("review and merge forms");
-  await page.getByRole("button", { name: "approved", exact: true }).click();
-  await page.getByText("Decision recorded.", { exact: true }).waitFor();
-  await page.getByRole("button", { name: "Proposals", exact: true }).click();
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
   await page
-    .getByRole("button", { name: "Merge approved candidate", exact: true })
-    .click();
-  await page.getByText("Merged " + candidate, { exact: true }).waitFor();
+    .getByText("Approved. Ready to braid in.", { exact: true })
+    .waitFor();
+  await page.getByRole("button", { name: "Braid in", exact: true }).click();
+  await page
+    .getByText(`Braided in. core-ui-private now points to ${candidate.slice(0, 7)}.`, {
+      exact: true,
+    })
+    .waitFor();
   if (
     (await git([
       "--git-dir",
@@ -128,79 +145,77 @@ try {
   )
     throw Error("UI merge receipt disagrees with Git");
   checks.push("UI approve and actual controlled merge");
-  await page.getByRole("button", { name: "README", exact: true }).click();
+  await page.getByRole("button", { name: "Code", exact: true }).click();
   await page
-    .locator("#content")
-    .filter({ hasText: "# Reviewed fixture" })
+    .locator("#readme-body h1")
+    .filter({ hasText: "Reviewed fixture" })
     .waitFor();
-  checks.push("README text browsing");
-  await page.getByRole("button", { name: "Browse", exact: true }).click();
+  checks.push("README rendering");
   await page
-    .getByRole("button", { name: "Folder: folder", exact: true })
+    .getByRole("button", { name: "Folder folder", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "File: folder/nested.txt", exact: true })
+    .getByRole("button", { name: "File folder/nested.txt", exact: true })
     .click();
-  await page.getByText("Nested fixture content", { exact: true }).waitFor();
+  await page.locator("#content").filter({ hasText: "Nested fixture content" }).waitFor();
   checks.push("nested tree and file browse");
   await layout("nested file browsing");
+  await page.getByRole("button", { name: "History", exact: true }).click();
   await page
-    .getByRole("button", { name: "History & files", exact: true })
-    .click();
-  await page.locator("#commit-list").filter({ hasText: candidate }).waitFor();
+    .locator("#commit-list")
+    .filter({ hasText: "review fixture" })
+    .waitFor();
   await page.locator("#commit-list a").click();
-  await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
+  await page.locator("#commit-view").filter({ hasText: candidate }).waitFor();
+  await page.locator("#commit-meta").filter({ hasText: "Author" }).waitFor();
   checks.push("immutable commit history and detail navigation");
   await layout("commit details");
-  await page.getByText("Collaboration & repository controls", { exact: true }).click();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.locator("#invite-email").fill("guest@example.invalid");
+  await page.getByRole("button", { name: "Send invite", exact: true }).click();
   await page
-    .getByRole("textbox", { name: "Invite by verified email" })
-    .fill("guest@example.invalid");
-  await page
-    .getByRole("button", { name: "Create invitation link", exact: true })
-    .click();
-  await page
-    .locator("#content")
+    .locator("#invite-result")
     .filter({ hasText: "guest@example.invalid" })
     .waitFor();
   checks.push("email invitation link creation");
-  await page.getByRole("button", { name: "Access", exact: true }).click();
+  await layout("repository settings");
+  await page.getByRole("button", { name: "Revoke invite", exact: true }).click();
   await page
-    .getByRole("button", { name: "Revoke invitation", exact: true })
-    .click();
+    .getByText("Invitation for guest@example.invalid revoked.", { exact: true })
+    .waitFor();
   if ((await local.catalog.invitations(repo.id))[0].state !== "revoked")
     throw Error("Invitation revoke not persisted");
   checks.push("invitation listing and revocation");
-  await page
-    .getByRole("button", { name: "Clone / push credential", exact: true })
-    .click();
+  await page.locator("#clone").click();
   if (
     (await page.locator("#git-remote").inputValue()) !==
     local.plane.path(repo.physical)
   )
     throw Error("Clone remote mismatch");
+  await layout("clone panel");
+  await page.keyboard.press("Escape");
   checks.push(
     "clone credential panel (filesystem harness, no native credential claim)",
   );
   await page
-    .getByRole("button", { name: "Reconcile operation", exact: true })
+    .getByRole("button", { name: "Check repository", exact: true })
     .click();
   await page
-    .locator("#content")
-    .filter({ hasText: '"state": "merged"' })
+    .locator("#reconcile-summary")
+    .filter({ hasText: "The last merge completed successfully." })
     .waitFor();
+  if (!(await page.locator("#reconcile-raw").textContent())?.includes('"state": "merged"'))
+    throw Error("Reconcile receipt missing merged state");
   checks.push("merge receipt reconciliation");
-  await page.getByRole("button", { name: "Discover", exact: true }).click();
+  await page.locator("#discover").click();
   await page
-    .getByText("No repositories in this view.", { exact: true })
+    .getByText("Nothing to explore yet", { exact: true })
     .waitFor();
   checks.push("private evaluation discovery contains no publication");
-  await page
-    .getByRole("button", { name: "My contribution profile", exact: true })
-    .click();
+  await page.locator("#profile").click();
   await page
     .locator("#profile-summary")
-    .filter({ hasText: "1 commits" })
+    .filter({ hasText: "1 commit in the last year" })
     .waitFor();
   await page.locator("#activity a").first().waitFor();
   if ((await page.locator("#heatmap .day").count()) !== 365)
@@ -215,13 +230,13 @@ try {
     fullPage: false,
   });
   await page.locator("#activity a").first().click();
-  await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
+  await page.locator("#commit-meta").filter({ hasText: "Author" }).waitFor();
   await layout("profile to commit navigation");
   await page.reload();
   await page
     .getByRole("button", { name: "Use local test identity", exact: true })
     .click();
-  await page.locator("#content").filter({ hasText: "Author date:" }).waitFor();
+  await page.locator("#commit-meta").filter({ hasText: "Author" }).waitFor();
   checks.push(
     "commit deep link survives reload after local identity reconnect",
   );

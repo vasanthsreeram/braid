@@ -9,6 +9,7 @@ const local = await serveLocal(dir);
 const browser = await chromium.launch({
   headless: true,
   executablePath:
+    process.env.FORGE_CHROME_PATH ??
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
 });
 const checks: string[] = [],
@@ -52,38 +53,35 @@ try {
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(local.url);
     await page.getByRole("button", { name: "Use local test identity" }).click();
+    await page.locator("[data-go=github]:visible").first().click();
     await page
-      .getByText("Connected as fixture-owner · public repository access", {
-        exact: true,
-      })
+      .getByText("Connected as @fixture-owner", { exact: true })
       .waitFor();
     await page
       .getByText(`fixture-owner/example-${width}`, { exact: true })
       .waitFor();
-    await page.getByRole("button", { name: "Next GitHub page" }).click();
+    await page.getByRole("button", { name: "Next page" }).click();
     await page.getByText("Page 2", { exact: true }).waitFor();
     if (
       !(await page
-        .getByRole("button", { name: "Next GitHub page" })
+        .getByRole("button", { name: "Next page" })
         .isDisabled())
     )
       throw Error("Pagination boundary missing");
-    await page.getByRole("button", { name: "Previous GitHub page" }).click();
+    await page.getByRole("button", { name: "Previous page" }).click();
     await page.getByText("Page 1", { exact: true }).waitFor();
     await page.locator("#github-query").fill("example");
+    await page.locator("#github-search button").click();
     await page
-      .getByRole("button", { name: "Search GitHub", exact: true })
-      .click();
-    await page
-      .getByText("Public repositories · destinations stay private.", {
+      .getByText("Imported repositories are private until you choose to share them.", {
         exact: true,
       })
       .waitFor();
     await page
-      .getByRole("button", { name: "Import privately", exact: true })
+      .getByRole("button", { name: `Import fixture-owner/example-${width}`, exact: true })
       .click();
     await page
-      .getByRole("button", { name: "Open import", exact: true })
+      .getByRole("button", { name: `Open fixture-owner/example-${width}`, exact: true })
       .waitFor();
     const destinations = await local.catalog.list(local.principal, false);
     const r = destinations.find((r) => r.name === `example-${width}`);
@@ -112,10 +110,10 @@ try {
       `${width}px: connected fixture account, public badge, pagination/search, private import through app, ownership, import status, layout and touch targets`,
     );
     await page
-      .getByRole("button", { name: "Disconnect GitHub", exact: true })
+      .getByRole("button", { name: "Disconnect", exact: true })
       .click();
     await page
-      .getByText("Connect GitHub to see your public repositories.", {
+      .getByText("Connect your GitHub account", {
         exact: true,
       })
       .waitFor();

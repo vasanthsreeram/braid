@@ -38,10 +38,6 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
     assert.match(await gate.text(), /Sign-in is temporarily unavailable/);
     for (const path of [
       "/public/welcome.css",
-      "/public/blocks.js",
-      "/public/blocks-engine.js",
-      "/public/route.js",
-      "/public/route-engine.js",
     ]) {
       const r = await fetch(local.url + path);
       assert.equal(r.status, 200, path);
@@ -63,6 +59,8 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
     for (const path of [
       "/app.js",
       "/style.css",
+      "/braid.js",
+      "/braid.css",
       "/index.html",
       "/favicon.ico",
       "/public/",
@@ -70,10 +68,12 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
       "/public/../app.js",
       "/public/%2e%2e/app.js",
       "/public/%2f..%2fapp.js",
-      "/public/blocks.js/../app.js",
-      "/public/blocks.js.map",
-      "/public/%62locks.js",
-      "/public/blocks.js/",
+      "/public/blocks.js",
+      "/public/route.js",
+      "/public/welcome.css/../app.js",
+      "/public/welcome.css.map",
+      "/public/%77elcome.css",
+      "/public/welcome.css/",
       "/src/worker.ts",
       "/.git/config",
       "/__local_identity",

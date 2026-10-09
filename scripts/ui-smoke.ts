@@ -17,38 +17,38 @@ const errors: string[] = [];
 page.on("pageerror", (e) => errors.push(e.message));
 try {
   await page.goto(local.url);
-  await page
-    .getByRole("heading", { name: "Build together. Keep control." })
-    .waitFor();
+  await page.getByRole("heading", { name: "Welcome to Braid" }).waitFor();
   checks++;
   await page.getByRole("button", { name: "Use local test identity" }).click();
-  await page.getByText("LOCAL: filesystem storage + bare Git").waitFor();
+  await page.locator("#repos-empty").waitFor();
   const identity = await page.locator("#identity").innerText();
   if (identity !== "local-owner")
     throw Error("Local test identity did not connect");
   checks++;
   await page
-    .getByRole("textbox", { name: "Repository name", exact: true })
-    .fill("ui-synthetic-repo");
-  await page.getByRole("button", { name: "Create private repo" }).click();
-  await page.getByText("ui-synthetic-repo", { exact: true }).waitFor();
+    .locator("#repos-empty")
+    .getByRole("button", { name: "New repository" })
+    .click();
+  await page.locator("#create input[name=name]").fill("ui-synthetic-repo");
+  await page.getByRole("button", { name: "Create repository" }).click();
+  await page.locator("#repo-header").filter({ hasText: "ui-synthetic-repo" }).waitFor();
   checks++;
-  await page.getByRole("button", { name: "Open", exact: true }).click();
-  await page.locator("#detail").waitFor({ state: "visible" });
-  if (!(await page.locator("#repo-header").innerText()).includes("private"))
+  if ((await page.locator("#repo-visibility").innerText()) !== "Private")
     throw Error("Private default absent");
   checks++;
-  await page.getByPlaceholder("New task name", { exact: true }).fill("ui-task");
-  await page.getByRole("button", { name: "Fork task", exact: true }).click();
-  await page.getByText("ui-task", { exact: true }).waitFor();
+  await page.getByRole("button", { name: "Strands", exact: true }).click();
+  await page.getByRole("button", { name: "New strand", exact: true }).click();
+  await page.locator("#task input[name=name]").fill("ui-task");
+  await page.getByRole("button", { name: "Create strand", exact: true }).click();
+  await page.locator("#repo-header").filter({ hasText: "ui-task" }).waitFor();
   checks++;
   await mkdir("docs/github-auth", { recursive: true });
   await page.screenshot({
     path: "docs/github-auth/ui-basic.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Discover", exact: true }).click();
-  await page.getByText("No repositories in this view.").waitFor();
+  await page.locator("#discover").click();
+  await page.getByText("Nothing to explore yet", { exact: true }).waitFor();
   checks++;
   if (errors.length) throw Error("UI console errors: " + errors.join(";"));
   await writeFile(

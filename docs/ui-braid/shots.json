@@ -1,0 +1,40 @@
+{
+  "widths": [
+    1440,
+    390
+  ],
+  "schemes": [
+    "light",
+    "dark"
+  ],
+  "captured": [
+    "docs/ui-braid/1440-sign-in.png",
+    "docs/ui-braid/1440-empty-repositories.png",
+    "docs/ui-braid/390-sign-in.png",
+    "docs/ui-braid/390-empty-repositories.png",
+    "docs/ui-braid/1440-repo-list.png",
+    "docs/ui-braid/1440-repo-strand-map.png",
+    "docs/ui-braid/1440-strands-diff.png",
+    "docs/ui-braid/1440-strands-approved.png",
+    "docs/ui-braid/1440-strands-working.png",
+    "docs/ui-braid/1440-empty-repo.png",
+    "docs/ui-braid/1440-strands-empty.png",
+    "docs/ui-braid/1440-activity.png",
+    "docs/ui-braid/1440-repo-list-dark.png",
+    "docs/ui-braid/1440-repo-strand-map-dark.png",
+    "docs/ui-braid/1440-strands-diff-dark.png",
+    "docs/ui-braid/390-repo-list.png",
+    "docs/ui-braid/390-repo-strand-map.png",
+    "docs/ui-braid/390-strands-diff.png",
+    "docs/ui-braid/390-strands-approved.png",
+    "docs/ui-braid/390-strands-working.png",
+    "docs/ui-braid/390-empty-repo.png",
+    "docs/ui-braid/390-strands-empty.png",
+    "docs/ui-braid/390-activity.png",
+    "docs/ui-braid/390-repo-list-dark.png",
+    "docs/ui-braid/390-repo-strand-map-dark.png",
+    "docs/ui-braid/390-strands-diff-dark.png"
+  ],
+  "errors": [],
+  "passed": true
+}
