@@ -1,37 +1,59 @@
 # Braid
 
-**Where parallel work comes together.** See the [vision](docs/vision.md).
+**Where parallel work comes together.**
 
-Braid is a private forge with a Workers API/UI, WorkOS AuthKit identity, Artifacts Git, explicit repository sharing, reviewed task publishing, and tenant-scoped R2 LFS deduplication.
+Braid is a Git forge built for many agents and people changing the same codebase at once. Every task, and every agent, works on its own **strand**: a private fork pinned to an exact starting commit. Work comes back as an exact, reviewable proposal. Braid weaves those strands back into one clean history with a fenced merge that stays safe however many changes race at once. It runs entirely on Cloudflare: Workers, Artifacts, Durable Objects, Containers, D1, R2 and Workers AI.
 
-**Deployed at https://gitflare.lintlabs.org with GitHub-only sign-in and authentication enforced. The AuthKit session-token issuer/client contract and connected repository picker are implemented. Real account login and app imports remain blocked by human GitHub sign-in and dedicated token-returning OAuth app setup; deployed R2 LFS remains separately unverified.** The GitHub source and all remote evaluation destinations remain private. No native CI, Agents SDK, Sandbox, Containers, model features, or repository-code execution is part of this product.
+Live: **https://gitflare.lintlabs.org** (sign in with GitHub) · [Vision](docs/vision.md) · [Feature and verification matrix](docs/implementation.md) · [Security model](docs/security.md)
 
-Verified:
+![A repository's strand map: history as an ink line, strands branching off at their base commit and looping back in when braided](docs/ui-braid/1440-repo-strand-map.png)
 
-- Real Artifacts clone/fetch/push, full branch/tag fork, read-only credentials, revocation, checksum-verified streaming publisher, and a concurrent expected-head race with one accepted candidate.
-- Full private migration of [Maggie-s_Farm_consolidated](https://github.com/vasanthsreeram/Maggie-s_Farm_consolidated): original hash `45fb674a919bcbfcb521e9cea1bf1cffd1a8a397`, all 287 reachable objects, its one full-history commit, and all 289 checkout files match. Source refs remained unchanged. This was a **direct provider test**, separate from the WorkOS-gated app importer.
-- Local repository/file/README/history/search UI; verified-email invitation acceptance/revocation; explicit roles; private/public withdrawal; session refresh/logout/revocation contracts; immutable diffs; approved publishing; races and recovery fences. Provider identity tests use labeled test doubles, not fabricated WorkOS success.
-- Deployed private API denials, actual GitHub/PKCE redirect and GitHub login page. These are pre-login checks, not proof of a real account callback, connected repo listing or app imports.
+## What you can do
 
-[Latest GitHub auth, picker, live blockers and import preflight](docs/github-auth/result.md) · [Historical domain/contribution evidence](docs/auth/result.md) · [Core feature matrix](docs/implementation.md) · [deployment/migration evidence](docs/core/result.md) · [security model](docs/security.md). Prior [benchmark reports and raw receipts](docs/benchmarks/gitflare-comparison-v2.md) are retained unchanged; their local-only limitations still apply. Developer tests and benchmark shell scripts are not a product CI runner.
+- **Sign in with GitHub and bring your work.** Connect your account, then import one repository or all of your public repositories with full history, branches and tags. Imports are private until you share them.
+- **Branch into strands.** Each strand is a private fork of the repository, pinned to a base commit. People push to it with ordinary `git` and short-lived, strand-scoped credentials.
+- **Propose and review.** A proposal names an exact base and candidate commit. Reviewers see a readable diff, discuss it, and approve or reject it.
+- **Braid in safely.** Merging publishes the candidate only if the repository head is still the proposal's base. When changes race, exactly one lands and the rest are told to catch up, so nothing is silently overwritten.
+- **Hand a goal to an agent.** From a repository's **Agents** tab, describe a change. Braid creates a strand, starts an isolated Cloudflare Container, runs a durable [Pi](https://earendil.com/posts/pi-durable/) coding agent on Workers AI, and the agent commits, pushes and opens a proposal for your review. Git credentials never enter the container.
+- **Run a swarm.** Give one goal to 2–3 agents. A planner splits it into non-overlapping sub-tasks, and each agent works on its own strand in parallel. When one change is braided in, the others become stale; each stale agent **catches up** by rebasing its work onto the new history (resolving conflicts itself) and re-proposing, so every change still lands through the same fence.
+- **See the braid.** Every repository shows a live strand map: what is being worked on, what is proposed, and what has been braided in.
+- Issues, collaborators and email invitations, repository search and discovery, contribution activity, and Git LFS with content-defined chunk deduplication on R2.
+
+## How it is built
+
+| Concern | Cloudflare primitive |
+|---|---|
+| Git storage, forks (strands), clone/push | Artifacts |
+| API, UI, auth gate, Git credential issuing | Workers |
+| Agent runs, run registry, review jobs | Durable Objects (SQLite) |
+| Agent sandbox | Containers (`durable_object` scheduling, managed Debian image) |
+| Agent model | Workers AI (`@cf/openai/gpt-oss-120b`) via Pi Durable |
+| Catalog: repos, grants, proposals, issues | D1 |
+| LFS objects | R2 |
+| Identity | WorkOS AuthKit (GitHub sign-in) |
+
+Agent runs are journaled, so an interrupted run resumes without pushing twice or opening a duplicate proposal. Outbound HTTPS from the container to Artifacts is intercepted, and a fresh 60-second token scoped to that one strand is minted per request. Every agent step rechecks the user's session and write access.
+
+## Run it locally
+
+Node ≥ 22.15, Git, and a Chromium for the UI harnesses.
 
 ```sh
 npm ci
 npm run typecheck
-npm test
-npm run test:worker                # local workerd authentication denials
-npm run test:ui                    # system Chrome, local harness
-npm run test:ui:core               # 1440px: review/merge/files/profile UI
-npm run test:ui:mobile             # 390px: same real Git workflows
-npx tsx scripts/ui-github.ts       # 390/1440 connected picker, local provider fixtures
-npm run test:deployed:browser      # TLS, gate, GitHub routing and login blocker
-WRANGLER_SEND_METRICS=false npm run build  # Worker dry run
-npm run dev                       # loopback-only filesystem/bare-Git harness
-npm run test:deployed              # read-only deployed denial verification
+npm test                         # unit, contract and local-workerd tests
+npm run dev                      # loopback-only local harness with a test identity
+npm run test:ui:core             # 1440px browser journeys on real local Git
+npm run test:ui:mobile           # the same at 390px
+WRANGLER_SEND_METRICS=false npm run build   # Worker dry run
 ```
 
-Node ≥22.15, Git and installed Chrome are required; git-lfs is needed for the retained LFS benchmarks. The native importer has a measured **40 MB full-history import limit**. The app tries it first and can stream a complete ordinary-Git pack to an empty private destination (128 MiB pack bound, 512 branch/tag refs). It never substitutes a shallow import. Artifacts still enforces its 32 MB blob / 1 GB repository limits. MFweb-app and That_Aquarium_Webapp were rejected at preflight because each history contains an oversized blob.
+The local harness uses real bare Git repositories, SQLite and a filesystem object store, with an explicit local identity that the production bundle never accepts. Containers and Artifacts only run in a deployed Worker.
 
-CDC reduces stored LFS bytes, not standard LFS upload bandwidth. Live direct R2 staging needs bucket-scoped S3 signing credentials; no >100 MiB Cloudflare LFS success is claimed. Range/resume remains unsupported. No provider secrets are in source, configuration, reports, or Git URLs. Only the Gitflare subdomain was attached; sibling sites, existing WorkOS apps, subscriptions and source visibility were unchanged.
+## Limits worth knowing
 
-Contribution profiles count unique reachable commit IDs by author date in UTC, matching only the signed-in account’s current verified email. Git authorship is self-declared, so an email match does not prove account ownership. Reads recheck repository and inherited task grants; fork/import copies count once. The profile supports commits for a rolling 365 days, with explicit bounded-scan and backfill limitations. See [definition and limitations](docs/auth/result.md).
+- Imports follow Artifacts' limits: 32 MB per file and 1 GB per repository. Repositories over those limits are refused with nothing partially imported.
+- Agents run with no general Internet access inside the container, so goals that need package downloads or network calls will fail. Each run is bounded (15 model requests, 20 minutes, 120 seconds per command), with per-repository and daily caps.
+- Large-file LFS uploads to R2 need bucket-scoped signing credentials that are not configured on the live deployment.
+
+Detailed, dated verification evidence for each feature lives under [`docs/`](docs/implementation.md).

@@ -64,9 +64,10 @@ An agent works on its own strand: a private task fork of the canonical repositor
 
 API (all under `/api/repos/:id/agent-runs`; never public-read; the existing `/agents` path remains the read-only reviewer):
 
-- `POST {goal}` → `202 {runId,status:"queued"}`. Writer role, canonical repository, repository ready, goal 3–2000 characters without control characters. One active run per repository (409) and at most 10 runs per repository per day (429); at most 30 runs per day for the whole deployment (429).
+- `POST {goal}` → `202 {runId,status:"queued"}`. Writer role, canonical repository, repository ready, goal 3–2000 characters without control characters. At most 3 active runs per repository (409; enforced synchronously in the per-repository registry before any await, for a whole swarm at once), at most 20 runs per repository per day (429) and 60 per day for the whole deployment (429). Without a session every agent/swarm route answers 401 (not 404) before any repository lookup, so the app refreshes its session.
+- `POST /:runId/catch-up` (writer) → `202`. Only when the run is `proposed`, its proposal is not rejected, not braided, and its base is no longer the canonical head (otherwise 409 with a plain reason).
 - `GET` → `{runs:[…]}` (latest 20; reader). `GET /:runId` → status, strand, base, candidate, proposal, summary, request count and the last 50 progress events (reader). `POST /:runId/cancel` (writer).
-- Statuses: `queued`, `setting_up`, `working`, `pushing`, `proposed`, `failed`, `cancelled`. The stored principal (including its session id) is never returned.
+- Statuses: `queued`, `setting_up`, `working`, `pushing`, `catching_up`, `proposed`, `failed`, `cancelled`. The stored principal (including its session id) is never returned.
 
 Runtime (`src/agent-run.ts`, `src/agents.ts`, entry `src/main.ts`):
 
@@ -86,5 +87,20 @@ Runtime (`src/agent-run.ts`, `src/agents.ts`, entry `src/main.ts`):
 | Container start, apt via intercept, HTTPS intercept of the Artifacts host, clone/push through the gate | Deployed (bundle and container application accepted) | Not yet exercised: requires a signed-in writer to start a run |
 | End-to-end run on the live site | — | Pending a run triggered from a signed-in browser |
 
-Known limitations: no Internet in the container (package installs, tests needing downloads fail); one container per run, git installed per run (no snapshot reuse yet); no streaming of tool output; a model that ends without edits fails the run rather than asking for clarification; no automatic rebase when the canonical head moves.
+### Swarms and catching up
+
+- `POST /api/repos/:id/swarms {goal, agents: 2..3}` (writer) → `202 {swarmId, swarm}`. One Workers AI request (`src/swarm.ts` `planSwarm`, same model as the agents) gets the goal and up to 200 repository paths and must answer `{"tasks":[{title, goal, files}]}`. Validation is strict and has no fallback: exactly `agents` sub-tasks, titles 3–80 characters and unique, goals 10–1500 characters, safe relative paths only (no `..`, absolute paths or `.git`), at most 12 files each, and no file (or directory prefix) declared by two sub-tasks. Anything else is a 502 with the reason; no runs start. Free slots are prechecked before the planner call and re-checked atomically when the runs are created.
+- Each sub-task becomes an ordinary agent run on its own strand named `swarm-<sid8>-<n>-<slug>`. Its goal is the sub-task goal plus the overall goal as context and the files it owns. The deployment budget reserves all of a swarm's runs in one step.
+- `GET /api/repos/:id/swarms` (latest 10) and `GET …/swarms/:sid` (reader) → plan plus per-sub-task status: `working`, `catching_up`, `proposed`, `approved`, `braided`, `rejected`, `failed`, `cancelled`.
+- **Catching up** (`catchUpOnce` in `src/agents.ts`). A proposal is stale once anything else is braided in, because proposals require base = canonical head. The agent run is resumed with a 12-minute budget: new container, clone the strand, fetch the candidate's branch, fetch the canonical head through `AgentGitGate` (which now also lets the run *read*, never write, the canonical repository), then `git rebase --onto <new head> <old base>`. On conflicts the Pi loop gets only the conflicted files (at most 6 extra model requests in total, at most 3 rebase rounds); remaining conflict markers fail the catch-up. Sanity checks: the result descends from the new head, `git diff --check` reports no conflict marker, and it is not empty. The rebased commit is pushed to a new strand branch `braid/attempt-<n>` (no force-push; the strand's default branch keeps the original), a fresh proposal is opened with base = new head, and the old proposal is retired as `rejected` (the D1 table's CHECK has no other terminal state) with a review comment saying it was superseded, by which proposal, and whether the agent resolved conflicts. A person still approves and braids it in. At most 4 catch-ups per run.
+- The same catch-up runs in place, reusing the container, when a run's own proposal is refused as stale because something was braided in while it worked (previously the run failed).
+- UI: Agents tab has **Start a swarm** (goal, 2 or 3 agents, Plan and start), a list of swarm sub-tasks with live status (polled every 4 seconds while any is busy), and a **Catch up** button on a proposed run. A stale braid attempt in Changes points to it.
+
+| Swarms / catch-up | Verified | Not yet verified |
+|---|---|---|
+| Concurrency (3 per repo, whole swarm atomically), planner validation, swarm view, ACL and 401 | `test/swarm.test.ts` | — |
+| Catch-up: clean rebase, conflict resolved by the resolver, leftover markers, in-place catch-up, new proposal on the new head, superseded old proposal, strand default branch untouched, re-approved proposal braids in | `test/swarm.test.ts` with real local Git (bare repositories, real rebase/push) behind a container-exec double and a resolver double | Real `gpt-oss-120b` conflict-resolution quality |
+| Planner JSON quality, three containers at once, catch-up through the gate on Artifacts | Deployed | Pending a swarm triggered from a signed-in browser |
+
+Known limitations: no Internet in the container (package installs, tests needing downloads fail); one container per run, git installed per run (no snapshot reuse yet); no streaming of tool output; a model that ends without edits fails the run rather than asking for clarification; catching up is started by a person (Catch up), not automatically when another proposal is braided in; a catch-up container is not counted against the 3-run limit; no automatic braid queue.
 

@@ -44,7 +44,7 @@ const FRIENDLY = {
   "Not found": "That isn't available. It may have been removed, or you no longer have access.",
   "Authentication required": "Please sign in again.",
   "Canonical head moved; new proposal required":
-    "This repository changed after these changes were proposed. Propose them again from the latest version.",
+    "This repository changed after these changes were proposed. Propose them again from the latest version. If an agent made them, open its run in Agents and choose Catch up.",
   "An approved proposal is required": "Approve these changes before braiding them in.",
   "Publication uncertain; reconcile retained intent before retrying":
     "We couldn't confirm the braid finished. Run Check repository in Settings, then try again.",

@@ -8,6 +8,7 @@ import { SQLCatalog } from "./catalog.ts";
 import { Collaboration } from "./issues.ts";
 import { NativeGit, R2Store } from "./cloudflare.ts";
 import { authorize, createTask, head, openProposal } from "./app.ts";
+import { subGoal, swarmStrandName, type SubTask, type SwarmRecord } from "./swarm.ts";
 import { workos } from "./auth.ts";
 import { check, Fault } from "./storage.ts";
 import { journalFiles } from "./pi-storage.ts";
@@ -19,8 +20,11 @@ import {
   CA_FILE,
   TERMINAL,
   WORKDIR,
+  activeRun,
   admitRun,
   agentLoop,
+  resolveGoal,
+  startCatchUp,
   containerExec,
   publicRun,
   record,
@@ -41,9 +45,15 @@ const terminal = (s: string) => (TERMINAL as string[]).includes(s);
  * strand only. Reads (upload-pack) are always allowed; writes (receive-pack) only while
  * the run is in its push step.
  */
-export class AgentGitGate extends WorkerEntrypoint<Env, { physical: string; write: boolean }> {
+type GateProps = {
+  physical: string;
+  write: boolean;
+  /** The canonical repository, readable (never writable) so a run can catch up. */
+  canonical?: { physical: string; path: string };
+};
+export class AgentGitGate extends WorkerEntrypoint<Env, GateProps> {
   async fetch(request: Request): Promise<Response> {
-    const props = (this.ctx as any).props as { physical: string; write: boolean };
+    const props = (this.ctx as any).props as GateProps;
     try {
       const u = new URL(request.url);
       const service =
@@ -53,14 +63,22 @@ export class AgentGitGate extends WorkerEntrypoint<Env, { physical: string; writ
           : u.pathname.endsWith("/git-receive-pack")
             ? "git-receive-pack"
             : "");
+      const canon = props.canonical;
+      const target =
+        canon &&
+        service === "git-upload-pack" &&
+        (u.pathname === canon.path + "/info/refs" || u.pathname === canon.path + "/git-upload-pack")
+          ? canon.physical
+          : props.physical;
       check(
-        service === "git-upload-pack" || (service === "git-receive-pack" && props.write),
+        service === "git-upload-pack" ||
+          (service === "git-receive-pack" && props.write && target === props.physical),
         403,
         "Strand access denied",
       );
       const git = new NativeGit(this.env.ARTIFACTS);
-      const token = await git.token(props.physical, service === "git-receive-pack" ? "write" : "read");
-      const revoke = () => git.revoke(props.physical, token.id).catch(() => {});
+      const token = await git.token(target, service === "git-receive-pack" ? "write" : "read");
+      const revoke = () => git.revoke(target, token.id).catch(() => {});
       try {
         const remote = new URL(token.remote);
         const base = remote.pathname.replace(/\/$/, "");
@@ -116,6 +134,7 @@ export class AgentAptGate extends WorkerEntrypoint<Env, { open: boolean }> {
   }
 }
 
+
 export class AgentRun {
   private live?: RunRecord;
   private controller?: AbortController;
@@ -131,6 +150,7 @@ export class AgentRun {
     );
     sql.exec("CREATE TABLE IF NOT EXISTS state (k TEXT PRIMARY KEY, v TEXT NOT NULL)");
     sql.exec("CREATE TABLE IF NOT EXISTS budget (day TEXT PRIMARY KEY, n INTEGER NOT NULL)");
+    sql.exec("CREATE TABLE IF NOT EXISTS swarms (id TEXT PRIMARY KEY, created INTEGER NOT NULL, data TEXT NOT NULL)");
   }
   private rows(q: string, ...args: any[]): any[] {
     return this.ctx.storage.sql.exec(q, ...args).toArray();
@@ -147,6 +167,73 @@ export class AgentRun {
     check(r.ok, r.status, v?.message ?? "Agent runtime unavailable");
     return v;
   }
+  private services(): Services {
+    const env = this.env;
+    return {
+      catalog: new SQLCatalog(env.DB as any),
+      git: new NativeGit(env.ARTIFACTS),
+      store: new R2Store(env.BUCKET),
+      collaboration: new Collaboration(env.DB as any),
+      allowPublic: false,
+      origin: env.ORIGIN,
+      authenticate: async () => null,
+    } as unknown as Services;
+  }
+  /** Live recheck of a stored principal: local revocation, WorkOS session, org membership, role. */
+  private async liveAccess(s: Services, p: Principal, repo: string, role: "writer" | "admin") {
+    const env = this.env;
+    check(
+      p.session &&
+        !(await env.DB.prepare("SELECT id FROM revoked_sessions WHERE id=?").bind(p.session).first()),
+      401,
+      "Your session ended; the run stopped",
+    );
+    await authorize(s, p, repo, role);
+    const sessions = await workos(env, `/user_management/users/${p.id}/sessions?limit=100`);
+    check(
+      sessions.data?.some(
+        (x: any) =>
+          x.id === p.session &&
+          x.status === "active" &&
+          x.user_id === p.id &&
+          (!x.expires_at || Date.parse(x.expires_at) > Date.now()) &&
+          (x.organization_id ?? p.id) === p.tenant,
+      ),
+      401,
+      "Your session ended; the run stopped",
+    );
+    if (p.tenant !== p.id) {
+      const memberships = await workos(
+        env,
+        `/user_management/organization_memberships?user_id=${p.id}&organization_id=${p.tenant}&limit=100`,
+      );
+      check(
+        memberships.data?.some(
+          (m: any) => m.user_id === p.id && m.organization_id === p.tenant && m.status === "active",
+        ),
+        401,
+        "Organization membership inactive",
+      );
+    }
+  }
+
+  /* ---------------- registry helpers ---------------- */
+
+  private summaries(): any[] {
+    return this.rows("SELECT data FROM runs ORDER BY created DESC").map((r) => JSON.parse(r.data));
+  }
+  private summary(id: string): any {
+    const row = this.rows("SELECT data FROM runs WHERE id=?", id)[0];
+    return row ? JSON.parse(row.data) : undefined;
+  }
+  private admission() {
+    return this.rows("SELECT status, created, data FROM runs").map((r) => ({
+      status: r.status as string,
+      created: r.created as number,
+      updated: JSON.parse(r.data).updated as number | undefined,
+    }));
+  }
+
   async fetch(request: Request) {
     try {
       const path = new URL(request.url).pathname.slice(1);
@@ -155,9 +242,14 @@ export class AgentRun {
         /* ---- deployment-wide budget ---- */
         case "reserve": {
           const day = new Date().toISOString().slice(0, 10);
+          const n = Number.isInteger(b.n) && b.n > 0 && b.n <= 8 ? b.n : 1;
+          check(n <= AGENT_LIMITS.deploymentDaily, 429, "Daily agent run budget for this server is used up");
           const row = this.rows(
-            "INSERT INTO budget VALUES (?,1) ON CONFLICT(day) DO UPDATE SET n=n+1 WHERE n<? RETURNING n",
+            "INSERT INTO budget VALUES (?,?) ON CONFLICT(day) DO UPDATE SET n=n+? WHERE n+?<=? RETURNING n",
             day,
+            n,
+            n,
+            n,
             AGENT_LIMITS.deploymentDaily,
           )[0];
           check(row, 429, "Daily agent run budget for this server is used up");
@@ -166,10 +258,7 @@ export class AgentRun {
         /* ---- per-repository registry ---- */
         case "start": {
           const now = Date.now();
-          admitRun(
-            this.rows("SELECT status, created FROM runs WHERE created>?", now - 86_400_000),
-            now,
-          );
+          admitRun(this.admission(), now);
           const id = crypto.randomUUID();
           const summary = {
             id,
@@ -183,28 +272,115 @@ export class AgentRun {
           // Row first (synchronous) so concurrent starts see it before any await.
           this.rows("INSERT INTO runs VALUES (?,?,?,?)", id, "queued", now, JSON.stringify(summary));
           try {
-            await this.call("deployment-agent-budget", "reserve", {});
+            await this.call("deployment-agent-budget", "reserve", { n: 1 });
             await this.call("run:" + id, "init", { id, repo: b.repo, actor: b.actor, goal: b.goal, model: b.model });
           } catch (e) {
             this.rows("DELETE FROM runs WHERE id=?", id);
             throw e;
           }
-          for (const stale of this.rows("SELECT id FROM runs ORDER BY created DESC LIMIT -1 OFFSET 50"))
-            this.rows("DELETE FROM runs WHERE id=?", stale.id);
+          this.prune();
           return Response.json({ runId: id, status: "queued" }, { status: 202 });
         }
+        case "capacity": {
+          const now = Date.now();
+          return Response.json({
+            active: this.admission().filter((r) => activeRun(r, now)).length,
+            limit: AGENT_LIMITS.perRepoConcurrent,
+          });
+        }
+        case "swarm": {
+          const tasks = b.tasks as SubTask[];
+          check(Array.isArray(tasks) && tasks.length >= 2 && tasks.length <= 4, 422, "Invalid plan");
+          const now = Date.now();
+          // Atomic: admission and every row are written before the first await.
+          admitRun(this.admission(), now, tasks.length);
+          const sid = crypto.randomUUID();
+          const planned = tasks.map((t, i) => ({
+            ...t,
+            n: i + 1,
+            run: crypto.randomUUID(),
+            strand: swarmStrandName(sid, i + 1, t.title),
+          }));
+          const swarm: SwarmRecord = {
+            id: sid,
+            goal: b.goal,
+            actor: b.actor.id,
+            created: now,
+            model: b.model,
+            tasks: planned,
+          };
+          for (const t of planned)
+            this.rows(
+              "INSERT INTO runs VALUES (?,?,?,?)",
+              t.run,
+              "queued",
+              now,
+              JSON.stringify({
+                id: t.run,
+                goal: t.title,
+                status: "queued",
+                created: now,
+                updated: now,
+                actor: b.actor.id,
+                model: b.model,
+                swarm: sid,
+                n: t.n,
+                title: t.title,
+              }),
+            );
+          this.rows("INSERT INTO swarms VALUES (?,?,?)", sid, now, JSON.stringify(swarm));
+          try {
+            await this.call("deployment-agent-budget", "reserve", { n: planned.length });
+          } catch (e) {
+            for (const t of planned) this.rows("DELETE FROM runs WHERE id=?", t.run);
+            this.rows("DELETE FROM swarms WHERE id=?", sid);
+            throw e;
+          }
+          for (const t of planned) {
+            try {
+              await this.call("run:" + t.run, "init", {
+                id: t.run,
+                repo: b.repo,
+                actor: b.actor,
+                goal: subGoal(b.goal, t, t.n, planned.length),
+                model: b.model,
+                strandName: t.strand,
+                swarm: { id: sid, n: t.n, title: t.title, files: t.files },
+              });
+            } catch (e: any) {
+              const data = { ...this.summary(t.run), status: "failed", error: e?.message ?? "Could not start" };
+              this.rows("UPDATE runs SET status=?, data=? WHERE id=?", "failed", JSON.stringify(data), t.run);
+            }
+          }
+          this.prune();
+          for (const old of this.rows("SELECT id FROM swarms ORDER BY created DESC LIMIT -1 OFFSET 10"))
+            this.rows("DELETE FROM swarms WHERE id=?", old.id);
+          return Response.json({ swarmId: sid, runs: planned.map((t) => t.run) }, { status: 202 });
+        }
+        case "swarms": {
+          const list = (
+            b.id
+              ? this.rows("SELECT data FROM swarms WHERE id=?", b.id)
+              : this.rows("SELECT data FROM swarms ORDER BY created DESC LIMIT 10")
+          ).map((r) => JSON.parse(r.data) as SwarmRecord);
+          const ids = new Set(list.flatMap((sw) => sw.tasks.map((t) => t.run)));
+          return Response.json({
+            swarms: list,
+            runs: this.summaries().filter((r) => ids.has(r.id)),
+          });
+        }
         case "list":
-          return Response.json(
-            this.rows("SELECT data FROM runs ORDER BY created DESC LIMIT 20").map((r) =>
-              JSON.parse(r.data),
-            ),
-          );
+          return Response.json(this.summaries().slice(0, 20));
         case "update": {
           const row = this.rows("SELECT data FROM runs WHERE id=?", b.id)[0];
           check(row, 404, "Not found");
           const data = { ...JSON.parse(row.data), ...b.summary };
           this.rows("UPDATE runs SET status=?, data=? WHERE id=?", data.status, JSON.stringify(data), b.id);
           return Response.json({ ok: true });
+        }
+        case "catch-up-run": {
+          check(typeof b.run === "string" && this.rows("SELECT id FROM runs WHERE id=?", b.run).length, 404, "Not found");
+          return Response.json(await this.call("run:" + b.run, "catch-up", { proposal: b.proposal }));
         }
         case "get":
         case "cancel": {
@@ -228,12 +404,32 @@ export class AgentRun {
             requests: 0,
             attempts: 0,
             events: [],
+            ...(b.strandName ? { strandName: b.strandName } : {}),
+            ...(b.swarm ? { swarm: b.swarm } : {}),
           };
-          record(r, "Queued");
+          record(r, b.swarm ? `Queued as part ${b.swarm.n} of a swarm: ${b.swarm.title}` : "Queued");
           this.store(r);
           await this.audit(r, "agent_run_queued");
           await this.ctx.storage.setAlarm(now + 50);
           return Response.json({ ok: true });
+        }
+        case "catch-up": {
+          const r = this.live ?? this.load();
+          check(r, 404, "Not found");
+          check(!this.work, 409, "This agent is busy");
+          check(
+            r.status === "proposed" && r.proposal && r.proposal === b.proposal,
+            409,
+            "This agent is not waiting on that proposal",
+          );
+          startCatchUp(r, "Another change was braided in first", r.proposal);
+          r.deadline = Date.now() + AGENT_LIMITS.catchUpWallMs;
+          r.attempts = 0;
+          r.kicked = true;
+          r.finished = undefined;
+          this.store(r);
+          await this.ctx.storage.setAlarm(Date.now() + 50);
+          return Response.json(publicRun(r));
         }
         case "run-get": {
           const r = this.live ?? this.load();
@@ -264,6 +460,10 @@ export class AgentRun {
       );
     }
   }
+  private prune() {
+    for (const stale of this.rows("SELECT id FROM runs ORDER BY created DESC LIMIT -1 OFFSET 50"))
+      this.rows("DELETE FROM runs WHERE id=?", stale.id);
+  }
   private load(): RunRecord | undefined {
     const row = this.rows("SELECT v FROM state WHERE k='run'")[0];
     return row ? JSON.parse(row.v) : undefined;
@@ -284,6 +484,11 @@ export class AgentRun {
           status: r.status,
           updated: r.updated,
           proposal: r.proposal ?? null,
+          task: r.task?.id ?? null,
+          base: r.base ?? null,
+          candidate: r.candidate ?? null,
+          conflicts: r.catchups?.at(-1)?.conflicts ?? false,
+          catchups: r.catchups?.length ?? 0,
           error: r.error ?? null,
           last: r.events.at(-1)?.text ?? null,
         },
@@ -298,6 +503,8 @@ export class AgentRun {
         requests: r.requests,
         proposal: r.proposal ?? null,
         candidate: r.candidate ?? null,
+        swarm: r.swarm?.id ?? null,
+        catchups: r.catchups?.length ?? 0,
       });
     } catch {}
   }
@@ -314,8 +521,11 @@ export class AgentRun {
     }
     if (Date.now() > r.deadline) {
       this.controller?.abort();
+      r.error =
+        r.status === "catching_up"
+          ? "Couldn't catch up: time limit reached"
+          : "Time limit reached (20 minutes)";
       r.status = "failed";
-      r.error = "Time limit reached (20 minutes)";
       r.finished = Date.now();
       record(r, r.error);
       await this.save(r);
@@ -326,7 +536,7 @@ export class AgentRun {
     // Heartbeat: keeps the object (and its container) active and detects interruptions.
     await this.ctx.storage.setAlarm(Date.now() + 30_000);
     if (this.work) return;
-    if (r.status !== "queued") {
+    if (r.status !== "queued" && !r.kicked) {
       r.attempts++;
       if (r.attempts > AGENT_LIMITS.attempts) {
         r.status = "failed";
@@ -340,6 +550,7 @@ export class AgentRun {
       }
       record(r, "Resuming after an interruption");
     }
+    r.kicked = false;
     this.live = r;
     this.controller = new AbortController();
     this.work = this.execute(r, this.controller.signal).finally(() => {
@@ -360,51 +571,11 @@ export class AgentRun {
   }
   private async execute(r: RunRecord, signal: AbortSignal) {
     const env = this.env;
-    const s = {
-      catalog: new SQLCatalog(env.DB as any),
-      git: new NativeGit(env.ARTIFACTS),
-      store: new R2Store(env.BUCKET),
-      collaboration: new Collaboration(env.DB as any),
-      allowPublic: false,
-      origin: env.ORIGIN,
-      authenticate: async () => null,
-    } as unknown as Services;
+    const s = this.services();
     const p: Principal = r.actor;
     const access = async () => {
       check(!signal.aborted, 409, "Agent stopped");
-      check(
-        p.session &&
-          !(await env.DB.prepare("SELECT id FROM revoked_sessions WHERE id=?").bind(p.session).first()),
-        401,
-        "Your session ended; the run stopped",
-      );
-      await authorize(s, p, r.repo.id, "writer");
-      const sessions = await workos(env, `/user_management/users/${p.id}/sessions?limit=100`);
-      check(
-        sessions.data?.some(
-          (x: any) =>
-            x.id === p.session &&
-            x.status === "active" &&
-            x.user_id === p.id &&
-            (!x.expires_at || Date.parse(x.expires_at) > Date.now()) &&
-            (x.organization_id ?? p.id) === p.tenant,
-        ),
-        401,
-        "Your session ended; the run stopped",
-      );
-      if (p.tenant !== p.id) {
-        const memberships = await workos(
-          env,
-          `/user_management/organization_memberships?user_id=${p.id}&organization_id=${p.tenant}&limit=100`,
-        );
-        check(
-          memberships.data?.some(
-            (m: any) => m.user_id === p.id && m.organization_id === p.tenant && m.status === "active",
-          ),
-          401,
-          "Organization membership inactive",
-        );
-      }
+      await this.liveAccess(s, p, r.repo.id, "writer");
       check(!signal.aborted, 409, "Agent stopped");
     };
     const remoteOf = async (physical: string) => {
@@ -414,7 +585,15 @@ export class AgentRun {
     let strandPhysical = r.task?.physical ?? "";
     const container = this.ctx.container;
     const exportsAny = (this.ctx as any).exports;
-    const gitGate = (write: boolean) => exportsAny.AgentGitGate({ props: { physical: strandPhysical, write } });
+    // The gate also lets this run read (never write) the canonical repository, so a
+    // stale proposal can be rebased onto the latest commit.
+    const canonicalInfo = (await s.git.info(r.repo.physical)) as { remote: string; defaultBranch: string };
+    const canonical = {
+      physical: r.repo.physical,
+      path: new URL(canonicalInfo.remote).pathname.replace(/\/$/, ""),
+    };
+    const gitGate = (write: boolean) =>
+      exportsAny.AgentGitGate({ props: { physical: strandPhysical, write, canonical } });
     let host = "";
     const workspace: Workspace = {
       prepare: async (remote, branch) => {
@@ -494,6 +673,44 @@ export class AgentRun {
       },
       destroy: () => this.destroyContainer(),
     };
+    const piLoop = async (
+      execEnv: any,
+      dir: string,
+      goal: string,
+      turns: number,
+      count: () => void,
+    ) => {
+      const storage = await JsonlStorage.open(dir, journalFiles(this.ctx.storage.sql, dir), BACKGROUND_CONTEXT, {
+        fsync: true,
+      });
+      const work = AbortSignal.any([
+        signal,
+        AbortSignal.timeout(Math.max(0, Math.min(AGENT_LIMITS.workMs, r.deadline - Date.now() - 3 * 60_000))),
+      ]);
+      return agentLoop({
+        storage,
+        env: execEnv,
+        goal,
+        model: r.model,
+        signal: work,
+        turns,
+        log: (t) => record(r, t),
+        before: async () => {
+          await access();
+          count();
+          await this.save(r);
+        },
+        infer: async (input, sig) => {
+          check(!sig.aborted, 409, "Agent stopped");
+          return Promise.race([
+            env.AI.run(r.model as any, input),
+            new Promise((_, reject) =>
+              sig.addEventListener("abort", () => reject(Error("Agent stopped")), { once: true }),
+            ),
+          ]);
+        },
+      });
+    };
     try {
       await runAgent(r, {
         signal,
@@ -501,7 +718,7 @@ export class AgentRun {
         save: () => this.save(r),
         strand: async () => {
           const canonical = await authorize(s, p, r.repo.id, "writer");
-          const task = await createTask(s, p, canonical, { name: "agent-" + r.id.slice(0, 8) });
+          const task = await createTask(s, p, canonical, { name: r.strandName ?? "agent-" + r.id.slice(0, 8) });
           check(task.state === "ready", 409, "The strand is still being created; start a new run shortly");
           strandPhysical = task.physical;
           const { remote, branch } = await remoteOf(task.physical);
@@ -512,42 +729,28 @@ export class AgentRun {
           return remoteOf(t.physical);
         },
         workspace,
-        loop: async (execEnv) => {
-          const dir = `/${r.id}/a${r.attempts}`;
-          const storage = await JsonlStorage.open(
-            dir,
-            journalFiles(this.ctx.storage.sql, dir),
-            BACKGROUND_CONTEXT,
-            { fsync: true },
-          );
-          const work = AbortSignal.any([
-            signal,
-            AbortSignal.timeout(Math.max(0, Math.min(AGENT_LIMITS.workMs, r.deadline - Date.now() - 3 * 60_000))),
-          ]);
-          return agentLoop({
-            storage,
-            env: execEnv,
-            goal: r.goal,
-            model: r.model,
-            signal: work,
-            log: (t) => record(r, t),
-            before: async () => {
-              await access();
-              check(r.requests < AGENT_LIMITS.requests, 429, `Model request budget reached (${AGENT_LIMITS.requests})`);
-              r.requests++;
-              record(r, `Thinking (model request ${r.requests} of ${AGENT_LIMITS.requests})`);
-              await this.save(r);
-            },
-            infer: async (input, sig) => {
-              check(!sig.aborted, 409, "Agent stopped");
-              return Promise.race([
-                env.AI.run(r.model as any, input),
-                new Promise((_, reject) =>
-                  sig.addEventListener("abort", () => reject(Error("Agent stopped")), { once: true }),
-                ),
-              ]);
-            },
+        loop: (execEnv) => piLoop(execEnv, `/${r.id}/a${r.attempts}`, r.goal, AGENT_LIMITS.requests, () => {
+          check(r.requests < AGENT_LIMITS.requests, 429, `Model request budget reached (${AGENT_LIMITS.requests})`);
+          r.requests++;
+          record(r, `Thinking (model request ${r.requests} of ${AGENT_LIMITS.requests})`);
+        }),
+        canonical: async () => ({ remote: canonicalInfo.remote, branch: canonicalInfo.defaultBranch }),
+        resolve: (execEnv, files, round) => {
+          const c = r.catchup!;
+          return piLoop(execEnv, `/${r.id}/c${c.n}r${round}`, resolveGoal(r, files), AGENT_LIMITS.resolveRequests, () => {
+            check(
+              c.requests < AGENT_LIMITS.resolveRequests,
+              429,
+              `Conflict resolution budget reached (${AGENT_LIMITS.resolveRequests} model requests)`,
+            );
+            c.requests++;
+            r.requests++;
+            record(r, `Resolving conflicts (model request ${c.requests} of ${AGENT_LIMITS.resolveRequests})`);
           });
+        },
+        supersede: async (from, to, note) => {
+          await s.catalog.supersede(r.repo.id, from);
+          await s.collaboration!.review(r.repo.id, from, p, `${note} New proposal: ${to}.`);
         },
         propose: async (task, base, candidate) => {
           const canonical = await s.catalog.get(r.repo.id);

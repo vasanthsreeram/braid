@@ -156,7 +156,7 @@ export default {
       collaboration: new Collaboration(env.DB as any),
       reviews: reviewClient(env),
       runs: env.AGENTS
-        ? runsClient(env.AGENTS as any, env.AGENT_MODEL)
+        ? runsClient(env.AGENTS as any, env.AGENT_MODEL, env.AI as any)
         : undefined,
       bundle: async (repo, bundle) => {
         const git = new NativeGit(env.ARTIFACTS);

@@ -285,6 +285,15 @@ export class SQLCatalog implements Catalog {
         .all<Proposal>()
     ).results;
   }
+  async supersede(repo: string, id: string) {
+    const r = await this.db
+      .prepare(
+        "UPDATE proposals SET status='rejected' WHERE id=? AND repo=? AND status IN ('open','approved')",
+      )
+      .bind(id, repo)
+      .run();
+    return !!(r.meta?.changes ?? r.changes);
+  }
   async review(repo: string, id: string, status: "approved" | "rejected") {
     const r = await this.db
       .prepare(

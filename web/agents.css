@@ -1,14 +1,32 @@
 /* Agents tab. Scoped to #agent-runs-view; uses the shared tokens from style.css. */
-#agent-runs-view .agent-start textarea {
+#agent-runs-view .agent-start textarea,
+#agent-runs-view .agent-swarm textarea {
   width: 100%;
   resize: vertical;
 }
-#agent-runs-view .agent-start .form-actions {
+#agent-runs-view .agent-start .form-actions,
+#agent-runs-view .agent-swarm .form-actions {
   align-items: center;
   gap: 12px;
 }
-#agent-runs-view .agent-start .hint {
+#agent-runs-view .agent-start .hint,
+#agent-runs-view .agent-swarm .hint {
   margin: 0 auto 0 0;
+}
+#agent-runs-view .agent-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+#agent-runs-view .agent-swarm-goal {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#agent-runs-view .agent-subtasks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 #agent-runs-view .agent-goal {
   display: block;
@@ -28,17 +46,34 @@
 #agent-runs-view .agent-status-queued,
 #agent-runs-view .agent-status-setting_up,
 #agent-runs-view .agent-status-working,
-#agent-runs-view .agent-status-pushing {
+#agent-runs-view .agent-status-pushing,
+#agent-runs-view .agent-status-planning {
   color: #8a5a00;
   border-color: #ecd7a6;
   background: #fdf5e1;
+}
+#agent-runs-view .agent-status-catching_up {
+  color: var(--t1);
+  border-color: color-mix(in srgb, var(--s1) 45%, transparent);
+  background: color-mix(in srgb, var(--s1) 10%, var(--surface));
+}
+#agent-runs-view .agent-status-approved {
+  color: var(--blue);
+  border-color: var(--line-strong);
+  background: var(--blue-soft);
+}
+#agent-runs-view .agent-status-braided {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--surface);
 }
 #agent-runs-view .agent-status-proposed {
   color: var(--green);
   border-color: #bfe0c8;
   background: var(--green-soft);
 }
-#agent-runs-view .agent-status-failed {
+#agent-runs-view .agent-status-failed,
+#agent-runs-view .agent-status-rejected {
   color: var(--red);
   border-color: #f0c2bd;
   background: var(--red-soft);
@@ -81,6 +116,7 @@
   color: var(--muted);
 }
 @media (max-width: 640px) {
+  #agent-runs-view .agent-swarm .form-actions,
   #agent-runs-view .agent-start .form-actions {
     flex-direction: column;
     align-items: stretch;

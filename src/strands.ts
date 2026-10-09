@@ -83,6 +83,14 @@ export async function strands(
           // fork === 0: the tip is already on the canonical line (fresh, or braided by
           // fast-forward). The latest proposal base, when there is one, is the real fork point.
           else if (fork === 0) strand.base = strand.proposals.at(-1)?.base ?? log[0].sha;
+          // A caught-up strand keeps its first candidate on the default branch and pushes
+          // the rebased one to braid/attempt-<n>; once that is braided, nothing is pending.
+          if (
+            fork > 0 &&
+            strand.proposals.some((p) => p.braided) &&
+            strand.proposals.some((p) => p.candidate === log[0].sha)
+          )
+            strand.ahead = 0;
         } else {
           strand.ahead = 0;
           if (!order.length) strand.base = ZERO;

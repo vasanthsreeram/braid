@@ -100,13 +100,14 @@ test("agent runs API: ACL per role, validation, strands excluded, runtime absent
     assert.equal((await h.call("outsider", h.prefix)).status, 404);
     h.s.runs = h.runs;
     for (const actor of [null, "outsider", "other"] as const) {
-      assert.equal((await h.call(actor, h.prefix)).status, 404, String(actor));
-      // Anonymous writes stop at the Origin gate (403); signed-in strangers see 404.
-      const denied = actor ? [404] : [403, 404];
+      // No session: 401 so the app refreshes it; signed-in strangers see 404.
+      assert.equal((await h.call(actor, h.prefix)).status, actor ? 404 : 401, String(actor));
+      // Anonymous writes stop at the Origin gate (403) or the session check (401).
+      const denied = actor ? [404] : [401, 403];
       assert.ok(
         denied.includes((await h.call(actor, h.prefix, { goal: "Fix the README" })).status),
       );
-      assert.equal((await h.call(actor, h.prefix + "/run-1")).status, 404);
+      assert.equal((await h.call(actor, h.prefix + "/run-1")).status, actor ? 404 : 401);
       assert.ok(
         denied.includes((await h.call(actor, h.prefix + "/run-1/cancel", {})).status),
       );
@@ -159,23 +160,27 @@ test("agent runs API: ACL per role, validation, strands excluded, runtime absent
     // Public visibility never exposes runs anonymously.
     h.s.allowPublic = true;
     await h.catalog.visibility(h.repo.id, "public");
-    assert.equal((await h.call(null, h.prefix)).status, 404);
-    assert.equal((await h.call(null, h.prefix + "/run-1")).status, 404);
+    assert.equal((await h.call(null, h.prefix)).status, 401);
+    assert.equal((await h.call(null, h.prefix + "/run-1")).status, 401);
   } finally {
     await h.close();
   }
 });
 
-test("agent run admission: one active run per repository and a daily cap", () => {
+test("agent run admission: concurrent runs per repository and a daily cap", () => {
   const now = Date.now();
   admitRun([], now);
   const fault = (fn: () => void, status: number) =>
     assert.throws(fn, (e: any) => e instanceof Fault && e.status === status);
-  for (const status of ["queued", "setting_up", "working", "pushing"])
-    fault(() => admitRun([{ status, created: now - 1000 }], now), 409);
+  const busy = (status: string) =>
+    Array.from({ length: AGENT_LIMITS.perRepoConcurrent }, () => ({ status, created: now - 1000 }));
+  for (const status of ["queued", "setting_up", "working", "pushing", "catching_up"]) {
+    admitRun(busy(status).slice(1), now);
+    fault(() => admitRun(busy(status), now), 409);
+  }
   // A run that outlived the wall budget plus slack no longer blocks (crashed object).
-  admitRun([{ status: "working", created: now - AGENT_LIMITS.wallMs - 6 * 60_000 }], now);
-  admitRun([{ status: "proposed", created: now - 1000 }], now);
+  admitRun(busy("working").map((r) => ({ ...r, created: now - AGENT_LIMITS.wallMs - 6 * 60_000 })), now);
+  admitRun(busy("proposed"), now);
   const day = Array.from({ length: AGENT_LIMITS.perRepoDaily }, (_, i) => ({
     status: "failed",
     created: now - 1000 * (i + 1),

@@ -109,6 +109,8 @@ export interface Catalog {
     id: string,
     status: "approved" | "rejected",
   ): Promise<boolean>;
+  /** Retire a proposal replaced by a caught-up one. Stored as "rejected" (the table has no other terminal state); a review comment says why. */
+  supersede(repo: string, id: string): Promise<boolean>;
 }
 export interface GitPlane {
   create(name: string): Promise<void>;
@@ -160,6 +162,17 @@ export interface Services {
     list(repo: Repo): Promise<any[]>;
     get(repo: Repo, run: string): Promise<any>;
     cancel(repo: Repo, run: string, actor: Principal): Promise<any>;
+    /** Resume a proposed run to rebase its stale proposal onto the new head. */
+    catchUp?(repo: Repo, run: string, proposal: string): Promise<any>;
+    capacity?(repo: Repo): Promise<{ active: number; limit: number }>;
+    /** Swarm planner: one model request, validated (swarm.ts). */
+    plan?(repo: Repo, goal: string, agents: number, paths: string[]): Promise<import("./swarm.ts").SubTask[]>;
+    swarm?(
+      repo: Repo,
+      actor: Principal,
+      body: { goal: string; tasks: import("./swarm.ts").SubTask[] },
+    ): Promise<{ swarmId: string; runs: string[] }>;
+    swarms?(repo: Repo, id?: string): Promise<{ swarms: any[]; runs: any[] }>;
   };
   store: ObjectStore;
   git: GitPlane;

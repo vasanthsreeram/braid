@@ -26,6 +26,7 @@ import {
 } from "./storage.ts";
 import { ZERO, SHA, branchRef, descendant, diff } from "./review.ts";
 import { agentGoal } from "./agents.ts";
+import { SWARM, swarmRequest, swarmView } from "./swarm.ts";
 import { strands } from "./strands.ts";
 const LFS = "application/vnd.git-lfs+json";
 const rank: Record<Role, number> = {
@@ -288,6 +289,26 @@ export async function openProposal(
   await s.catalog.propose(proposal);
   return proposal;
 }
+/** Up to SWARM.listing file paths at the canonical head, for the swarm planner. */
+export async function repoPaths(s: Pick<Services, "git">, r: Repo) {
+  const tip = (await s.git.log(r.physical, "HEAD").catch(() => []))[0]?.sha;
+  const commit = tip ? await s.git.commit(r.physical, tip) : null;
+  if (!commit) return [];
+  const out: string[] = [];
+  const queue: [string, string, number][] = [[commit.tree, "", 0]];
+  for (let reads = 0; queue.length && out.length < SWARM.listing && reads < 40; reads++) {
+    const [sha, prefix, depth] = queue.shift()!;
+    const tree = (await s.git.tree(r.physical, sha).catch(() => null)) as any[] | null;
+    for (const e of tree ?? []) {
+      if (out.length >= SWARM.listing) break;
+      if (e.type === "tree") {
+        out.push(prefix + e.name + "/");
+        if (depth < 4) queue.push([e.hash, prefix + e.name + "/", depth + 1]);
+      } else out.push(prefix + e.name);
+    }
+  }
+  return out;
+}
 export function application(s: Services) {
   return async (request: Request): Promise<Response> => {
     try {
@@ -538,6 +559,10 @@ export function application(s: Services) {
             : action === "review"
               ? "admin"
               : "reader";
+        // Agent and swarm routes answer 401 (not 404) without a session so the app
+        // refreshes an expired token; it is returned before any repository lookup.
+        if (action === "agent-runs" || action === "swarms")
+          check(p, 401, "Authentication required");
         const r = await authorize(
           s,
           p,
@@ -556,6 +581,7 @@ export function application(s: Services) {
                 "merge",
                 "reconcile",
                 "agent-runs",
+                "swarms",
               ].includes(action)),
         );
         if (action === "agent-runs") {
@@ -581,6 +607,64 @@ export function application(s: Services) {
           else if (run && path[5] === "cancel" && !path[6] && request.method === "POST") {
             await authorize(s, p, id, "writer");
             result = json(await s.runs.cancel(r, run, p));
+          } else if (run && path[5] === "catch-up" && !path[6] && request.method === "POST") {
+            // The canonical head moved past this run's proposal: resume the agent to rebase
+            // onto the new head (resolving conflicts if needed) and propose again.
+            await authorize(s, p, id, "writer");
+            check(s.runs.catchUp, 503, "Agent runtime unavailable");
+            const info = await s.runs.get(r, run);
+            check(info.status === "proposed" && info.proposal, 409, "This agent has no proposal to catch up");
+            const proposal = (await s.catalog.proposals(id)).find((x) => x.id === info.proposal);
+            check(proposal && proposal.status !== "rejected", 409, "This proposal was rejected or replaced");
+            const current = await head(s, r);
+            check(current.sha !== proposal.base, 409, "This proposal is already on the latest commit");
+            check(
+              !(await s.git.log(r.physical, "HEAD")).some((c: any) => c.sha === proposal.candidate),
+              409,
+              "This proposal is already braided in",
+            );
+            result = json(await s.runs.catchUp(r, run, proposal.id), 202);
+          } else throw new Fault(404, "Not found");
+        } else if (action === "swarms") {
+          // Swarms: one goal split by a planner into 2–3 sub-tasks, each an agent run on
+          // its own strand. Never public-read; starting needs writer.
+          await authorize(s, p!, id, "reader");
+          check(s.runs?.swarm && s.runs.swarms && s.runs.plan, 503, "Agent runtime unavailable");
+          check(!r.parent, 400, "Agents run on the original repository");
+          const sid = path[4];
+          check(!sid || ID.test(sid), 404, "Not found");
+          const views = async (only?: string) => {
+            const data = await s.runs!.swarms!(r, only);
+            const proposals = new Map((await s.catalog.proposals(id)).map((x) => [x.id, x]));
+            const line = new Set(
+              (await s.git.log(r.physical, "HEAD").catch(() => [])).map((c: any) => c.sha as string),
+            );
+            const runs = new Map(data.runs.map((x: any) => [x.id, x]));
+            return data.swarms.map((sw: any) => swarmView(sw, runs, proposals, (x) => line.has(x.candidate)));
+          };
+          if (!sid && request.method === "GET") result = json({ swarms: await views() });
+          else if (!sid && request.method === "POST") {
+            await authorize(s, p!, id, "writer");
+            check(r.state === "ready", 409, "Repository is not ready");
+            const b = await bodyJSON(request);
+            const goal = agentGoal(b);
+            const { agents } = swarmRequest(b);
+            const room = await s.runs.capacity?.(r);
+            if (room)
+              check(
+                room.limit - room.active >= agents,
+                409,
+                room.limit - room.active <= 0
+                  ? `${room.limit} agents are already working on this repository. Wait for one to finish.`
+                  : `Only ${room.limit - room.active} of ${room.limit} agent slots are free right now. Choose fewer agents or wait.`,
+              );
+            const tasks = await s.runs.plan(r, goal, agents, await repoPaths(s, r));
+            const started = await s.runs.swarm(r, p!, { goal, tasks });
+            result = json({ swarmId: started.swarmId, swarm: (await views(started.swarmId))[0] ?? null }, 202);
+          } else if (sid && !path[5] && request.method === "GET") {
+            const view = (await views(sid))[0];
+            check(view, 404, "Not found");
+            result = json(view);
           } else throw new Fault(404, "Not found");
         } else if (
           ["issues", "collaborators", "discussion", "agents"].includes(action)
