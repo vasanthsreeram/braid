@@ -32,7 +32,7 @@ async function transferHTTP(
   const call = async (c: GitCredential, service: string, body: BodyInit) => {
     const r = await request(c.remote + "/" + service, {
       method: "POST",
-      redirect: "error",
+      redirect: "manual",
       signal,
       headers: {
         ...(c.plaintext ? { authorization: "Bearer " + c.plaintext } : {}),
@@ -196,7 +196,7 @@ export async function advertisedRefs(
   service = "git-upload-pack",
 ) {
   const r = await request(c.remote + "/info/refs?service=" + service, {
-    redirect: "error",
+    redirect: "manual",
     signal: AbortSignal.timeout(15000),
     headers: c.plaintext ? { authorization: "Bearer " + c.plaintext } : {},
   });
@@ -302,4 +302,37 @@ export async function importHTTP(
     "Imported branch/tag tips disagree",
   );
   return { ...result, ...before, gitOnly: true };
+}
+
+// Copies source branch/tag tips that the destination lacks or disagrees on.
+// Used after the native importer, which brings over only part of the refs.
+export async function completeRefsHTTP(
+  source: GitCredential,
+  target: GitCredential,
+  request = fetch,
+) {
+  const want = await advertisedRefs(source, request),
+    have = await advertisedRefs(target, request);
+  const current = new Map(have.refs.map((r) => [r.ref, r.sha]));
+  const updates = want.refs
+    .filter((r) => current.get(r.ref) !== r.sha)
+    .map((r) => ({ ref: r.ref, base: current.get(r.ref) ?? ZERO, candidate: r.sha }));
+  // Advertise one tip the destination already has so the pack omits shared history.
+  const known = have.refs.find((r) => want.refs.some((w) => w.sha === r.sha));
+  if (updates.length)
+    await transferHTTP(
+      source,
+      target,
+      updates,
+      known?.sha ?? ZERO,
+      128 * 1024 * 1024,
+      request,
+    );
+  const destination = await advertisedRefs(target, request);
+  check(
+    JSON.stringify(want.refs) === JSON.stringify(destination.refs),
+    502,
+    "Imported branch/tag tips disagree",
+  );
+  return updates.length;
 }

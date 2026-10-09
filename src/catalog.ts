@@ -21,6 +21,26 @@ export interface SQL {
 }
 export class SQLCatalog implements Catalog {
   constructor(private db: SQL) {}
+  // Removes a repository and every row that references it, children first.
+  async remove(id: string) {
+    for (const sql of [
+      "DELETE FROM review_comments WHERE repo=?1 OR proposal IN (SELECT id FROM proposals WHERE task=?1)",
+      "DELETE FROM issue_comments WHERE repo=?",
+      "DELETE FROM issue_audit WHERE repo=?",
+      "DELETE FROM issues WHERE repo=?",
+      "DELETE FROM review_policy WHERE repo=?",
+      "DELETE FROM agent_audit WHERE repo=?",
+      "DELETE FROM proposals WHERE repo=?1 OR task=?1",
+      "DELETE FROM merges WHERE repo=?",
+      "DELETE FROM operations WHERE repo=?",
+      "DELETE FROM native_tokens WHERE repo=?",
+      "DELETE FROM invites WHERE repo=?",
+      "DELETE FROM grants WHERE repo=?",
+      "DELETE FROM tickets WHERE repo=?",
+      "DELETE FROM repos WHERE id=?",
+    ])
+      await this.db.prepare(sql).bind(id).run();
+  }
   async children(parent: string) {
     return (
       await this.db

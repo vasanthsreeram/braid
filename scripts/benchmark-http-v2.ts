@@ -31,6 +31,7 @@ export async function serveBenchmark(directory: string) {
   // the native missing-transport probe. The real app authorizes token issuance.
   local.s.git = {
     refs: (n) => local.plane.refs(n),
+    remove: (n) => local.plane.remove(n),
     source: (u) => local.plane.source(),
     seal: (n) => local.plane.seal(),
     revoke: (n, t) => local.plane.revoke(),

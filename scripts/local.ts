@@ -7,6 +7,7 @@ import {
   unlink,
   stat,
   readdir,
+  rm,
 } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
@@ -255,6 +256,9 @@ export class LocalGit implements GitPlane {
     }
   }
   async revoke() {}
+  async remove(name: string) {
+    await rm(this.path(name), { recursive: true, force: true });
+  }
   async commit(name: string, sha: string) {
     try {
       const parts = (
@@ -411,11 +415,11 @@ export async function serveLocal(directory: string, port = 0) {
           "/": "index.html",
           "/app.js": "app.js",
           "/style.css": "style.css",
+          "/braid.js": "braid.js",
+          "/agents.js": "agents.js",
+          "/agents.css": "agents.css",
+          "/braid.css": "braid.css",
           // Public allowlist mirrors the Worker's; other paths stay private.
-          "/public/blocks-engine.js": "public/blocks-engine.js",
-          "/public/blocks.js": "public/blocks.js",
-          "/public/route-engine.js": "public/route-engine.js",
-          "/public/route.js": "public/route.js",
           "/public/welcome.css": "public/welcome.css",
         };
         if (u.pathname === "/auth/login") {

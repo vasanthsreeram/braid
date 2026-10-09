@@ -163,7 +163,7 @@ export async function pushBundle(
         accept: "application/x-git-receive-pack-result",
       },
       body: stream,
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(120000),
       duplex: "half",
     } as RequestInit);

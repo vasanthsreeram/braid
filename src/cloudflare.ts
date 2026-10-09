@@ -1,6 +1,11 @@
 import type { Artifacts, R2Bucket } from "@cloudflare/workers-types";
 import { AwsClient } from "aws4fetch";
-import { publishHTTP, importHTTP, advertisedRefs } from "./git-http.ts";
+import {
+  publishHTTP,
+  importHTTP,
+  advertisedRefs,
+  completeRefsHTTP,
+} from "./git-http.ts";
 import type { GitPlane, Ticket } from "./contracts.ts";
 import type { ObjectStore } from "./storage.ts";
 import { check, digest, root, ID } from "./storage.ts";
@@ -64,6 +69,12 @@ export class NativeGit implements GitPlane {
     await this.discard(name, r.token);
   }
   async import(name: string, url: string) {
+    // An empty source (no commits) has no default branch for the native importer;
+    // it imports as an empty repository with matching (empty) refs.
+    if ((await advertisedRefs({ remote: url })).refs.length === 0) {
+      await this.create(name);
+      return;
+    }
     // Native importer first. Its full-history limit is smaller than Git repo storage.
     // Fallback streams a complete ordinary-Git pack; no shallow/history rewrite or filesystem.
     let result;
@@ -79,32 +90,49 @@ export class NativeGit implements GitPlane {
         !String(e.message).includes("40MB import limit")
       )
         throw e;
-      // The physical name is a fresh app-reserved UUID. Do not replace any existing repo.
-      result = await this.artifacts.create(name, {
-        setDefaultBranch: (await advertisedRefs({ remote: url })).defaultBranch,
-      });
+      // The physical name is a fresh app-reserved UUID, so an existing repo
+      // here can only be the native importer's own partial attempt.
+      // Artifacts may still be tearing down its failed native attempt, so a
+      // create can see "already exists" and the follow-up lookup "not found".
+      // Retry briefly until one of the two settles.
+      const defaultBranch = (await advertisedRefs({ remote: url })).defaultBranch;
+      let target: { remote: string; plaintext: string; id: string } | undefined;
+      for (let attempt = 0; !target; attempt++) {
+        try {
+          result = await this.artifacts.create(name, {
+            setDefaultBranch: defaultBranch,
+          });
+          target = { remote: result.remote, plaintext: result.token, id: result.token };
+        } catch (e: any) {
+          const message = String(e?.message);
+          if (!message.includes("already exists") || attempt >= 8) throw e;
+          try {
+            const t = await this.token(name, "write");
+            target = { remote: t.remote, plaintext: t.plaintext, id: t.id };
+          } catch (lookup: any) {
+            if (!String(lookup?.message).includes("not found")) throw lookup;
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+          }
+        }
+      }
       try {
-        await importHTTP(
-          { remote: url },
-          { remote: result.remote, plaintext: result.token },
-        );
+        if ((await advertisedRefs(target)).refs.length === 0)
+          await importHTTP({ remote: url }, target);
+        else await completeRefsHTTP({ remote: url }, target);
       } finally {
-        await this.discard(name, result.token);
+        await this.discard(name, target.id);
       }
       return;
     }
-    await this.discard(name, result.token);
-    const token = await this.token(name, "read");
+    // The native importer brings over the default branch only; stream the
+    // remaining branches/tags from the source and verify every tip matches.
     try {
-      const source = await advertisedRefs({ remote: url }),
-        dest = await advertisedRefs(token);
-      check(
-        JSON.stringify(source.refs) === JSON.stringify(dest.refs),
-        502,
-        "Native import branch/tag tips disagree; intent retained",
+      await completeRefsHTTP(
+        { remote: url },
+        { remote: result.remote, plaintext: result.token },
       );
     } finally {
-      await this.discard(name, token.id);
+      await this.discard(name, result.token);
     }
   }
   async fork(source: string, target: string) {
@@ -119,8 +147,16 @@ export class NativeGit implements GitPlane {
     using repo = await this.handle(name);
     return repo.info();
   }
+  // The Artifacts binding resolves short branch/tag names and SHAs only:
+  // "HEAD" and "refs/heads/x" silently return nothing.
+  private async ref(repo: { info(): Promise<any> }, ref: string) {
+    if (ref === "HEAD" || ref === "")
+      return ((await repo.info()) as { defaultBranch: string }).defaultBranch;
+    return ref.replace(/^refs\/(heads|tags)\//, "");
+  }
   async log(name: string, ref: string) {
     using repo = await this.handle(name);
+    ref = await this.ref(repo, ref);
     return (await repo.log({ ref, limit: 50 })).map((x) => ({
       ...x,
       sha: x.hash,
@@ -133,7 +169,11 @@ export class NativeGit implements GitPlane {
   }
   async file(name: string, ref: string, path: string) {
     using repo = await this.handle(name);
+    ref = await this.ref(repo, ref);
     return (await repo.readFile({ ref, path })) as unknown as Blob | null;
+  }
+  async remove(name: string) {
+    await this.artifacts.delete(name);
   }
   async revoke(name: string, token: string) {
     await this.discard(name, token);

@@ -63,6 +63,7 @@ export interface Operation {
   refs: string;
 }
 export interface Catalog {
+  remove(id: string): Promise<void>;
   children(parent: string): Promise<Repo[]>;
   create(repo: Repo): Promise<void>;
   operation(o: Operation): Promise<void>;
@@ -122,6 +123,7 @@ export interface GitPlane {
   file(name: string, ref: string, path: string): Promise<Blob | null>;
   token(name: string, scope: "read" | "write"): Promise<any>;
   revoke(name: string, token: string): Promise<void>;
+  remove(name: string): Promise<void>;
   commit(
     name: string,
     sha: string,
@@ -151,6 +153,13 @@ export interface Services {
     request(repo: Repo, actor: Principal, body: any): Promise<any>;
     get(repo: Repo, job: string): Promise<any>;
     cancel(repo: Repo, job: string, actor?: Principal): Promise<any>;
+  };
+  /** Coding agent runs (agent-run.ts). Callers have already rechecked ACL. */
+  runs?: {
+    start(repo: Repo, actor: Principal, goal: string): Promise<any>;
+    list(repo: Repo): Promise<any[]>;
+    get(repo: Repo, run: string): Promise<any>;
+    cancel(repo: Repo, run: string, actor: Principal): Promise<any>;
   };
   store: ObjectStore;
   git: GitPlane;
