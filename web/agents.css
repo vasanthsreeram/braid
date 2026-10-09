@@ -1,0 +1,92 @@
+/* Agents tab. Scoped to #agent-runs-view; uses the shared tokens from style.css. */
+#agent-runs-view .agent-start textarea {
+  width: 100%;
+  resize: vertical;
+}
+#agent-runs-view .agent-start .form-actions {
+  align-items: center;
+  gap: 12px;
+}
+#agent-runs-view .agent-start .hint {
+  margin: 0 auto 0 0;
+}
+#agent-runs-view .agent-goal {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+#agent-runs-view .agent-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#agent-runs-view .agent-status-queued,
+#agent-runs-view .agent-status-setting_up,
+#agent-runs-view .agent-status-working,
+#agent-runs-view .agent-status-pushing {
+  color: #8a5a00;
+  border-color: #ecd7a6;
+  background: #fdf5e1;
+}
+#agent-runs-view .agent-status-proposed {
+  color: var(--green);
+  border-color: #bfe0c8;
+  background: var(--green-soft);
+}
+#agent-runs-view .agent-status-failed {
+  color: var(--red);
+  border-color: #f0c2bd;
+  background: var(--red-soft);
+}
+#agent-runs-view .agent-error {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  color: var(--red);
+  background: var(--red-soft);
+}
+#agent-runs-view .agent-summary {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#agent-runs-view .agent-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 360px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+#agent-runs-view .agent-log li {
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+#agent-runs-view .agent-log li:first-child {
+  border-top: 0;
+}
+#agent-runs-view .agent-log time {
+  flex: none;
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  #agent-runs-view .agent-start .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #agent-runs-view .agent-log li {
+    flex-direction: column;
+    gap: 2px;
+  }
+}

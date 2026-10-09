@@ -300,213 +300,22 @@ export async function piReview(
     const { text, ...numbered } = file;
     source.files.push(numbered);
   }
-  const stream = (
-    model: Model<string>,
-    context: TranscriptContext,
-    options?: SimpleStreamOptions,
-  ) => {
-    const events = createAssistantMessageEventStream();
-    const message: AssistantMessage = {
-      role: "assistant",
-      api: "workers-ai-binding",
-      provider: "workers-ai",
-      model: model.id,
-      content: [],
-      usage: {
-        input: 0,
-        output: 0,
-        cacheRead: 0,
-        cacheWrite: 0,
-        totalTokens: 0,
-        cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-      },
-      stopReason: "stop",
-      timestamp: Date.now(),
-    };
-    void (async () => {
-      try {
-        check(
-          !signal.aborted && !options?.signal?.aborted,
-          409,
-          "Review cancelled",
-        );
-        check(
-          ++requests <= LIMITS.requests,
-          429,
-          "Model request budget reached",
-        );
-        await reserve();
-        const normalized = collapseSystemMessages(context);
-        const system = normalized.messages.find((m) => m.role === "system");
-        const tools =
-          system?.role === "system"
-            ? (system.toolsAdded ?? []).map((t) => ({
-                type: "function",
-                function: {
-                  name: t.name,
-                  description: t.description,
-                  parameters: t.parameters,
-                },
-              }))
-            : [];
-        const messages = normalized.messages.map((m: any) => {
-          if (m.role === "system")
-            return {
-              role: "system",
-              content:
-                (typeof m.content === "string"
-                  ? m.content
-                  : JSON.stringify(m.content)) +
-                "\n" +
-                Object.values(m.sections ?? {}).join("\n"),
-            };
-          if (m.role === "toolResult")
-            return {
-              role: "tool",
-              tool_call_id: m.toolCallId,
-              content: JSON.stringify(m.content),
-            };
-          if (m.role === "assistant")
-            return {
-              role: "assistant",
-              content: m.content
-                .filter((c: any) => c.type === "text")
-                .map((c: any) => c.text)
-                .join("\n"),
-              ...(m.content.some((c: any) => c.type === "toolCall")
-                ? {
-                    tool_calls: m.content
-                      .filter((c: any) => c.type === "toolCall")
-                      .map((c: any) => ({
-                        id: c.id,
-                        type: "function",
-                        function: {
-                          name: c.name,
-                          arguments: JSON.stringify(c.arguments),
-                        },
-                      })),
-                  }
-                : {}),
-            };
-          return {
-            role: "user",
-            content:
-              typeof m.content === "string"
-                ? m.content
-                : JSON.stringify(m.content),
-          };
-        });
-        const input = {
-          messages,
-          tools,
-          max_tokens: LIMITS.outputTokens,
-          temperature: 0.1,
-          reasoning_effort: "low",
-          stream: false,
-        };
-        check(
-          new TextEncoder().encode(JSON.stringify(input)).length <=
-            LIMITS.requestBytes,
-          413,
-          "Model input budget reached",
-        );
-        events.push({ type: "start", partial: message });
-        const response = await infer(input, signal);
-        check(!signal.aborted, 409, "Review cancelled");
-        const output = response.choices?.[0]?.message ?? {
-          content: response.response,
-          tool_calls: response.tool_calls,
-        };
-        check(
-          (output && typeof output.content === "string") ||
-            Array.isArray(output?.tool_calls),
-          502,
-          "Empty provider response",
-        );
-        if (output.content)
-          message.content.push({ type: "text", text: output.content });
-        for (const call of output.tool_calls ?? []) {
-          let args = call.function?.arguments ?? call.arguments;
-          if (typeof args === "string") args = JSON.parse(args);
-          message.content.push({
-            type: "toolCall",
-            id: call.id ?? crypto.randomUUID(),
-            name: call.function?.name ?? call.name,
-            arguments: args,
-          });
-        }
-        if (message.content.some((c) => c.type === "toolCall"))
-          message.stopReason = "toolUse";
-        const usage = response.usage;
-        message.usage = {
-          ...message.usage,
-          input: usage?.prompt_tokens ?? 0,
-          output: usage?.completion_tokens ?? 0,
-          totalTokens: usage?.total_tokens ?? 0,
-        };
-        const inputCost = (message.usage.input * 0.35) / 1e6,
-          outputCost = (message.usage.output * 0.75) / 1e6;
-        message.usage.cost = {
-          input: inputCost,
-          output: outputCost,
-          cacheRead: 0,
-          cacheWrite: 0,
-          total: inputCost + outputCost,
-        };
-        records.push({
-          model: model.id,
-          usage: message.usage,
-          costIsEstimate: true,
-          providerNeurons: response.usage?.neurons ?? null,
-        });
-        events.push({
-          type: "done",
-          reason: message.stopReason as "stop" | "toolUse",
-          message,
-        });
-        events.end(message);
-      } catch {
-        message.stopReason = signal.aborted ? "aborted" : "error";
-        message.errorMessage = signal.aborted
-          ? "Review cancelled"
-          : "Provider failed or review budget reached";
-        events.push({
-          type: "error",
-          reason: message.stopReason,
-          error: message,
-        });
-        events.end(message);
-      }
-    })();
-    return events;
-  };
-  const models = createModels();
-  models.setProvider(
-    createProvider({
-      id: "workers-ai",
-      auth: {
-        apiKey: {
-          name: "Workers AI binding",
-          resolve: async () => ({ auth: { apiKey: "ambient-binding" } }),
-        },
-      },
-      models: [
-        {
-          id: REVIEW_MODEL,
-          name: "Qwen3 read review",
-          api: "workers-ai-binding",
-          provider: "workers-ai",
-          baseUrl: "https://api.cloudflare.com",
-          reasoning: false,
-          input: ["text"],
-          cost: { input: 0.35, output: 0.75, cacheRead: 0, cacheWrite: 0 },
-          contextWindow: 128000,
-          maxTokens: LIMITS.outputTokens,
-        },
-      ],
-      api: { stream, streamSimple: stream },
-    }),
-  );
+  const models = workersAIModels({
+    modelId: REVIEW_MODEL,
+    name: "Qwen3 read review",
+    maxTokens: LIMITS.outputTokens,
+    requestBytes: LIMITS.requestBytes,
+    infer,
+    signal,
+    cancelled: "Review cancelled",
+    failure: "Provider failed or review budget reached",
+    budget: "Model input budget reached",
+    before: async () => {
+      check(++requests <= LIMITS.requests, 429, "Model request budget reached");
+      await reserve();
+    },
+    record: (r) => records.push(r),
+  });
   const text = (v: any) => ({
     content: [{ type: "text" as const, text: JSON.stringify(v) }],
   });
@@ -632,4 +441,225 @@ export async function piReview(
     signal.removeEventListener("abort", abort);
     await harness.close(BACKGROUND_CONTEXT);
   }
+}
+export interface WorkersAIOptions {
+  modelId: string;
+  name: string;
+  maxTokens: number;
+  requestBytes: number;
+  infer: Inference;
+  signal: AbortSignal;
+  /** Runs before every request: budget accounting and reservations. Throwing ends the request. */
+  before: () => Promise<void>;
+  record?: (r: any) => void;
+  cancelled: string;
+  failure: string;
+  budget: string;
+  reasoningEffort?: "low" | "medium" | "high";
+}
+// Pi provider over the Workers AI binding (chat-completions shape with tools).
+// Shared by the read-only reviewer and the coding agent; budgets stay with the caller.
+export function workersAIModels(o: WorkersAIOptions) {
+  const { signal } = o;
+  const stream = (
+    model: Model<string>,
+    context: TranscriptContext,
+    options?: SimpleStreamOptions,
+  ) => {
+    const events = createAssistantMessageEventStream();
+    const message: AssistantMessage = {
+      role: "assistant",
+      api: "workers-ai-binding",
+      provider: "workers-ai",
+      model: model.id,
+      content: [],
+      usage: {
+        input: 0,
+        output: 0,
+        cacheRead: 0,
+        cacheWrite: 0,
+        totalTokens: 0,
+        cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+      },
+      stopReason: "stop",
+      timestamp: Date.now(),
+    };
+    void (async () => {
+      try {
+        check(
+          !signal.aborted && !options?.signal?.aborted,
+          409,
+          o.cancelled,
+        );
+        await o.before();
+        const normalized = collapseSystemMessages(context);
+        const system = normalized.messages.find((m) => m.role === "system");
+        const tools =
+          system?.role === "system"
+            ? (system.toolsAdded ?? []).map((t) => ({
+                type: "function",
+                function: {
+                  name: t.name,
+                  description: t.description,
+                  parameters: t.parameters,
+                },
+              }))
+            : [];
+        const messages = normalized.messages.map((m: any) => {
+          if (m.role === "system")
+            return {
+              role: "system",
+              content:
+                (typeof m.content === "string"
+                  ? m.content
+                  : JSON.stringify(m.content)) +
+                "\n" +
+                Object.values(m.sections ?? {}).join("\n"),
+            };
+          if (m.role === "toolResult")
+            return {
+              role: "tool",
+              tool_call_id: m.toolCallId,
+              content: JSON.stringify(m.content),
+            };
+          if (m.role === "assistant")
+            return {
+              role: "assistant",
+              content: m.content
+                .filter((c: any) => c.type === "text")
+                .map((c: any) => c.text)
+                .join("\n"),
+              ...(m.content.some((c: any) => c.type === "toolCall")
+                ? {
+                    tool_calls: m.content
+                      .filter((c: any) => c.type === "toolCall")
+                      .map((c: any) => ({
+                        id: c.id,
+                        type: "function",
+                        function: {
+                          name: c.name,
+                          arguments: JSON.stringify(c.arguments),
+                        },
+                      })),
+                  }
+                : {}),
+            };
+          return {
+            role: "user",
+            content:
+              typeof m.content === "string"
+                ? m.content
+                : JSON.stringify(m.content),
+          };
+        });
+        const input = {
+          messages,
+          tools,
+          max_tokens: o.maxTokens,
+          temperature: 0.1,
+          reasoning_effort: o.reasoningEffort ?? "low",
+          stream: false,
+        };
+        check(
+          new TextEncoder().encode(JSON.stringify(input)).length <=
+            o.requestBytes,
+          413,
+          o.budget,
+        );
+        events.push({ type: "start", partial: message });
+        const response = await o.infer(input, signal);
+        check(!signal.aborted, 409, o.cancelled);
+        const output = response.choices?.[0]?.message ?? {
+          content: response.response,
+          tool_calls: response.tool_calls,
+        };
+        check(
+          (output && typeof output.content === "string") ||
+            Array.isArray(output?.tool_calls),
+          502,
+          "Empty provider response",
+        );
+        if (output.content)
+          message.content.push({ type: "text", text: output.content });
+        for (const call of output.tool_calls ?? []) {
+          let args = call.function?.arguments ?? call.arguments;
+          if (typeof args === "string") args = JSON.parse(args);
+          message.content.push({
+            type: "toolCall",
+            id: call.id ?? crypto.randomUUID(),
+            name: call.function?.name ?? call.name,
+            arguments: args,
+          });
+        }
+        if (message.content.some((c) => c.type === "toolCall"))
+          message.stopReason = "toolUse";
+        const usage = response.usage;
+        message.usage = {
+          ...message.usage,
+          input: usage?.prompt_tokens ?? 0,
+          output: usage?.completion_tokens ?? 0,
+          totalTokens: usage?.total_tokens ?? 0,
+        };
+        const inputCost = (message.usage.input * 0.35) / 1e6,
+          outputCost = (message.usage.output * 0.75) / 1e6;
+        message.usage.cost = {
+          input: inputCost,
+          output: outputCost,
+          cacheRead: 0,
+          cacheWrite: 0,
+          total: inputCost + outputCost,
+        };
+        o.record?.({
+          model: model.id,
+          usage: message.usage,
+          costIsEstimate: true,
+          providerNeurons: response.usage?.neurons ?? null,
+        });
+        events.push({
+          type: "done",
+          reason: message.stopReason as "stop" | "toolUse",
+          message,
+        });
+        events.end(message);
+      } catch {
+        message.stopReason = signal.aborted ? "aborted" : "error";
+        message.errorMessage = signal.aborted ? o.cancelled : o.failure;
+        events.push({
+          type: "error",
+          reason: message.stopReason,
+          error: message,
+        });
+        events.end(message);
+      }
+    })();
+    return events;
+  };
+  const models = createModels();
+  models.setProvider(
+    createProvider({
+      id: "workers-ai",
+      auth: {
+        apiKey: {
+          name: "Workers AI binding",
+          resolve: async () => ({ auth: { apiKey: "ambient-binding" } }),
+        },
+      },
+      models: [
+        {
+          id: o.modelId,
+          name: o.name,
+          api: "workers-ai-binding",
+          provider: "workers-ai",
+          baseUrl: "https://api.cloudflare.com",
+          reasoning: false,
+          input: ["text"],
+          cost: { input: 0.35, output: 0.75, cacheRead: 0, cacheWrite: 0 },
+          contextWindow: 128000,
+          maxTokens: o.maxTokens,
+        },
+      ],
+      api: { stream, streamSimple: stream },
+    }),
+  );
+  return models;
 }

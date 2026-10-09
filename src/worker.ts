@@ -8,6 +8,7 @@ import type {
 } from "@cloudflare/workers-types";
 import { pushBundle } from "./bundle.ts";
 import { reviewClient } from "./review-coordinator.ts";
+import { runsClient } from "./agents.ts";
 export { ReviewCoordinator } from "./review-coordinator.ts";
 import { application } from "./app.ts";
 import { welcome, publicWelcomeAssets, welcomeCSP } from "./welcome.ts";
@@ -27,11 +28,14 @@ import {
   workos,
   type AuthConfig,
 } from "./auth.ts";
-import { GitHubAccounts, type GitHubConfig } from "./github.ts";
+import { GitHubAccounts, githubRoute, type GitHubConfig } from "./github.ts";
 export interface Env extends GitHubConfig, SigningConfig {
   DB: D1Database;
   AI: Ai;
   REVIEWS: DurableObjectNamespace;
+  /** Coding agent runs (AgentRun); absent in local/test configurations. */
+  AGENTS?: DurableObjectNamespace;
+  AGENT_MODEL?: string;
   BUCKET: R2Bucket;
   ARTIFACTS: Artifacts;
   ASSETS: Fetcher;
@@ -84,6 +88,13 @@ export default {
         }
       },
     };
+    const connect = await githubRoute(
+      env,
+      request,
+      (r) => authenticate(env, r, authIO),
+      github,
+    );
+    if (connect) return connect;
     const auth = await authRoute(env, request, authIO);
     if (auth) return auth;
     const path = new URL(request.url).pathname;
@@ -130,9 +141,9 @@ export default {
             },
           },
         );
-      const response = (await env.ASSETS.fetch(
-        request as any,
-      )) as unknown as Response;
+      // Asset responses have immutable headers; copy before adding policy headers.
+      const asset = (await env.ASSETS.fetch(request as any)) as unknown as Response;
+      const response = new Response(asset.body, asset);
       response.headers.set("cache-control", "no-store, no-transform");
       response.headers.set(
         "content-security-policy",
@@ -144,6 +155,9 @@ export default {
       catalog,
       collaboration: new Collaboration(env.DB as any),
       reviews: reviewClient(env),
+      runs: env.AGENTS
+        ? runsClient(env.AGENTS as any, env.AGENT_MODEL)
+        : undefined,
       bundle: async (repo, bundle) => {
         const git = new NativeGit(env.ARTIFACTS);
         await git.create(repo.physical);

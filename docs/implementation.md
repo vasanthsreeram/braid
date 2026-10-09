@@ -16,7 +16,7 @@ Updated 2026-10-02 Singapore. Source, migrated destination and evaluation resour
 | Proposals/review/publish | Immutable base/candidate, ancestry/diff, explicit approval, trusted expected-ref publisher, fenced intent/recovery | Local UI/API and actual native atomic ref race verified; deployed authenticated end-to-end flow blocked |
 | R2 LFS/dedupe | Standard Batch/basic/verify/download, checksum-verified CDC manifests/chunks, isolation, fork inheritance; local >100 MiB benchmarks retained | Real R2 direct staging credentials absent; no >100 MiB Cloudflare claim |
 | Remote deployment | Correct account, dedicated Worker/D1/R2/Artifacts; 13 unauthenticated denial checks pass; bucket public access disabled | Authentication gate only until WorkOS configured |
-| CI/Agents/Sandbox/Containers | Excluded; native check API removed; no supported product UI | Not an MVP dependency |
+| CI/Agents/Sandbox/Containers | Coding agent runs (first slice, see [Agents](#agents)): one agent per run on its own strand in a Cloudflare Container, Pi Durable loop on Workers AI, proposal into Changes. CI/check API still absent | Container start, git install and a real end-to-end run not yet verified live |
 
 Run with Node ≥22.15, Git, npm and installed Chrome. git-lfs is required only for retained developer benchmarks.
 
@@ -57,3 +57,34 @@ The dedicated bucket has public r2.dev access disabled and a one-day expiry rule
 `/proposals` GET/POST `{task,base,candidate}`; `/diff?proposal=` GET; `/review` POST `{id,status}`; `/merge` GET reads intent and POST `{id}` publishes an approved candidate; `/reconcile` POST checks actual refs/fences. Empty canonical seeding uses 40 zeroes as base and follows the same task/proposal/approval flow. `/check` is absent.
 
 `/auth/login` and callback are GET; logout/refresh/organization are POST with exact Origin. LFS paths use SHA256/basic and explicit bearer/Basic access tokens. Git credentials are scoped native capabilities, not Git author emails or the WorkOS server key. API/LFS access rechecks live WorkOS state; native capabilities bypass the app until expiry or explicit provider revoke. ACL/visibility/logout paths revoke tracked tokens; externally revoked WorkOS sessions can leave already-issued native capabilities valid for at most their 60-second TTL.
+
+## Agents
+
+An agent works on its own strand: a private task fork of the canonical repository, created through the same `createTask` path as `POST /tasks`. The agent edits a checkout of that strand inside a Cloudflare Container, Braid commits and pushes the result to the strand, then opens an immutable proposal through the same `openProposal` path as `POST /proposals`. Nothing reaches the canonical history until a person approves and braids it in.
+
+API (all under `/api/repos/:id/agent-runs`; never public-read; the existing `/agents` path remains the read-only reviewer):
+
+- `POST {goal}` → `202 {runId,status:"queued"}`. Writer role, canonical repository, repository ready, goal 3–2000 characters without control characters. One active run per repository (409) and at most 10 runs per repository per day (429); at most 30 runs per day for the whole deployment (429).
+- `GET` → `{runs:[…]}` (latest 20; reader). `GET /:runId` → status, strand, base, candidate, proposal, summary, request count and the last 50 progress events (reader). `POST /:runId/cancel` (writer).
+- Statuses: `queued`, `setting_up`, `working`, `pushing`, `proposed`, `failed`, `cancelled`. The stored principal (including its session id) is never returned.
+
+Runtime (`src/agent-run.ts`, `src/agents.ts`, entry `src/main.ts`):
+
+- `AgentRun` Durable Object (SQLite). Instance `repo:<id>` is the registry (membership, admission caps, list); `run:<runId>` holds one run; `deployment-agent-budget` holds the daily deployment cap. A 30-second alarm heartbeat keeps the run alive, enforces the 20-minute wall limit and resumes an interrupted run (at most 2 resumes). Completed phases are persisted, so a resume never recreates the strand, re-pushes or opens a second proposal.
+- Container: `scheduling_policy: "durable_object"`, the Cloudflare-managed `cloudflare/debian-trixie` image, `standard-1`, `enableInternet: false`. Git and CA certificates are installed with apt through an outbound HTTP intercept that only passes GET/HEAD to `deb.debian.org` and is closed right after install. No Dockerfile.
+- Git credentials never enter the container. The strand remote's HTTPS host is intercepted by the `AgentGitGate` entrypoint, which mints a fresh 60-second Artifacts token per request for this run's strand only (revoked when the response ends), forwards only `info/refs`, `git-upload-pack` and — only during the push step — `git-receive-pack` for that exact repository path. Git trusts the intercept CA via `http.sslCAInfo`.
+- Agent loop: Pi Durable `Harness` with the built-in `CodingTools` (read, write, edit, bash) over an `ExecutionEnv` implemented on `ctx.container.exec`; file tools are confined to `/work/repo` and `/tmp`. The Workers AI provider wrapper is shared with the reviewer (`workersAIModels` in `src/read-agent.ts`). Model `@cf/openai/gpt-oss-120b` by default (optional `AGENT_MODEL` var, `@cf/…` only). Budgets: 15 model requests per run (across resumes), 16 minutes of model loop, 120 seconds per command, 4096 output tokens per request. The Pi journal lives in the run object's SQLite (`src/pi-storage.ts`).
+- Every phase and every model request rechecks the live session (local revocation, WorkOS session, organization membership) and the writer ACL; losing access stops the run before any push or proposal.
+- Commits use author `Braid agent <agent@braid.invalid>`, are pushed to the strand's default branch, and the proposal's base is the canonical head at strand creation. If the canonical head moved meanwhile, the proposal is refused (409) and the run fails with that message; the pushed strand remains.
+- UI: the **Agents** tab (`web/agents.js`, `web/agents.css`) starts runs, polls live status every 4 seconds while a run is active, shows the progress log and links to the proposal in Changes.
+
+| Agents | Verified | Not yet verified |
+|---|---|---|
+| API ACL, validation, caps, strand exclusion, public-read denial | Contract tests (`test/agents.test.ts`) with a runtime double | — |
+| Run engine phases, gated push window, resume without duplicate push/proposal, cancellation, ACL loss | Engine tests with container/model/app doubles | — |
+| Pi CodingTools driving the container ExecutionEnv via Workers AI-shaped tool calls; request budget cutoff | Test with real Pi Durable harness + JSONL journal, scripted model, in-memory container exec | Real `gpt-oss-120b` tool-use quality on coding tasks |
+| Container start, apt via intercept, HTTPS intercept of the Artifacts host, clone/push through the gate | Deployed (bundle and container application accepted) | Not yet exercised: requires a signed-in writer to start a run |
+| End-to-end run on the live site | — | Pending a run triggered from a signed-in browser |
+
+Known limitations: no Internet in the container (package installs, tests needing downloads fail); one container per run, git installed per run (no snapshot reuse yet); no streaming of tool output; a model that ends without edits fails the run rather than asking for clarification; no automatic rebase when the canonical head moves.
+

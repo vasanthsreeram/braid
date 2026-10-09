@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cf-native-forge-evaluation",
   "account_id": "7efeb52ec5727a903edd8ef7ae8eb925",
-  "main": "src/worker.ts",
+  "main": "src/main.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
@@ -39,10 +39,18 @@
   },
   "ai": { "binding": "AI" },
   "durable_objects": {
-    "bindings": [{ "name": "REVIEWS", "class_name": "ReviewCoordinator" }],
+    "bindings": [
+      { "name": "REVIEWS", "class_name": "ReviewCoordinator" },
+      { "name": "AGENTS", "class_name": "AgentRun" },
+    ],
   },
   "migrations": [
     { "tag": "v1-review", "new_sqlite_classes": ["ReviewCoordinator"] },
+    { "tag": "v2-agent-run", "new_sqlite_classes": ["AgentRun"] },
+  ],
+  // Coding agent runs start their own container (Cloudflare-managed image chosen in code).
+  "containers": [
+    { "class_name": "AgentRun", "scheduling_policy": "durable_object" },
   ],
   "observability": { "enabled": false },
 }

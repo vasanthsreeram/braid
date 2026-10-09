@@ -25,6 +25,8 @@ import {
   copyManifests,
 } from "./storage.ts";
 import { ZERO, SHA, branchRef, descendant, diff } from "./review.ts";
+import { agentGoal } from "./agents.ts";
+import { strands } from "./strands.ts";
 const LFS = "application/vnd.git-lfs+json";
 const rank: Record<Role, number> = {
   reader: 1,
@@ -196,6 +198,13 @@ async function createRepo(
       )
     )
       return r;
+    // Operator log: error code/message only, never credentials or request data.
+    console.error("repo operation failed", {
+      kind: parent ? "fork" : importURL ? "import" : "create",
+      code: e?.code,
+      status: e?.status,
+      message: String(e?.message ?? e).slice(0, 300),
+    });
     await s.catalog.state(id, "failed");
     throw new Fault(
       502,
@@ -219,10 +228,65 @@ function query(u: URL) {
   check(q.length <= 100, 400, "Search limited to 100 characters");
   return q;
 }
-async function head(s: Services, r: Repo) {
+export async function head(s: Pick<Services, "git">, r: Repo) {
   const info = (await s.git.info(r.physical)) as { defaultBranch: string };
   const ref = branchRef(info.defaultBranch);
   return { ref, sha: (await s.git.log(r.physical, ref))[0]?.sha ?? ZERO };
+}
+/** The task-fork ("strand") path shared by POST /tasks and agent runs. */
+export async function createTask(
+  s: Services,
+  p: Principal,
+  parent: Repo,
+  b: any,
+): Promise<Repo> {
+  check(!parent.parent, 400, "Tasks fork canonical repositories");
+  await authorize(s, p, parent.id, "contributor");
+  return createRepo(s, p, b, parent);
+}
+/** Immutable proposal creation shared by POST /proposals and agent runs. */
+export async function openProposal(
+  s: Services,
+  p: Principal,
+  r: Repo,
+  b: any,
+): Promise<Proposal> {
+  const id = r.id;
+  const task = await authorize(s, p, b.task, "writer");
+  check(
+    task.parent === id &&
+      /^[0-9a-f]{40}$/.test(b.base) &&
+      /^[0-9a-f]{40}$/.test(b.candidate),
+    400,
+    "Invalid proposal",
+  );
+  const base = await s.git.log(r.physical, b.base),
+    candidate = await s.git.log(task.physical, b.candidate);
+  check(
+    (b.base === ZERO
+      ? !(await s.git.log(r.physical, "HEAD")).length
+      : base[0]?.sha === b.base) && candidate[0]?.sha === b.candidate,
+    422,
+    "Commit unavailable",
+  );
+  check(!r.parent, 400, "Proposals target a canonical repository");
+  check(
+    (await head(s, r)).sha === b.base,
+    409,
+    "Canonical head moved; new proposal required",
+  );
+  await descendant(s.git, task.physical, b.base, b.candidate);
+  const proposal: Proposal = {
+    id: uuid(),
+    repo: id,
+    task: task.id,
+    base: b.base,
+    candidate: b.candidate,
+    author: p.id,
+    status: "open",
+  };
+  await s.catalog.propose(proposal);
+  return proposal;
 }
 export function application(s: Services) {
   return async (request: Request): Promise<Response> => {
@@ -466,7 +530,8 @@ export function application(s: Services) {
           "invites",
           "merge",
           "reconcile",
-        ].includes(action)
+        ].includes(action) ||
+          (!action && request.method === "DELETE")
           ? "admin"
           : ["tasks", "proposals"].includes(action) && request.method === "POST"
             ? "contributor"
@@ -484,14 +549,40 @@ export function application(s: Services) {
                 "grants",
                 "invites",
                 "proposals",
+                "strands",
                 "diff",
                 "review",
                 "token",
                 "merge",
                 "reconcile",
+                "agent-runs",
               ].includes(action)),
         );
-        if (
+        if (action === "agent-runs") {
+          // Coding agent runs: an agent working on its own strand. Never public-read;
+          // starting and cancelling need writer, reading needs reader, rechecked here.
+          // 401 (not 404) without a session so the app refreshes an expired token;
+          // it is returned before any repository lookup, so it reveals nothing.
+          check(p, 401, "Authentication required");
+          await authorize(s, p, id, "reader");
+          check(s.runs, 503, "Agent runtime unavailable");
+          check(!r.parent, 400, "Agents run on the original repository");
+          const run = path[4];
+          check(!run || ID.test(run), 404, "Not found");
+          if (!run && request.method === "GET")
+            result = json({ runs: await s.runs.list(r) });
+          else if (!run && request.method === "POST") {
+            await authorize(s, p, id, "writer");
+            check(r.state === "ready", 409, "Repository is not ready");
+            const goal = agentGoal(await bodyJSON(request));
+            result = json(await s.runs.start(r, p, goal), 202);
+          } else if (run && !path[5] && request.method === "GET")
+            result = json(await s.runs.get(r, run));
+          else if (run && path[5] === "cancel" && !path[6] && request.method === "POST") {
+            await authorize(s, p, id, "writer");
+            result = json(await s.runs.cancel(r, run, p));
+          } else throw new Fault(404, "Not found");
+        } else if (
           ["issues", "collaborators", "discussion", "agents"].includes(action)
         ) {
           check(p && s.collaboration, 404, "Not found");
@@ -620,6 +711,30 @@ export function application(s: Services) {
               result = json(await s.reviews.cancel(r, path[4], p));
             } else throw new Fault(404, "Not found");
           } else throw new Fault(404, "Not found");
+        } else if (!action && request.method === "DELETE") {
+          // Owner-confirmed deletion. Strands must go first so no proposal or
+          // task fork is left pointing at a missing repository.
+          const b = await bodyJSON(request);
+          check(b.confirm === r.name, 400, "Type the repository name to confirm");
+          check(
+            (await s.catalog.children(id)).length === 0,
+            409,
+            "Delete this repository's strands first",
+          );
+          check(
+            (await s.catalog.mergeIntent(id))?.state !== "publishing",
+            409,
+            "A merge is still being published",
+          );
+          await revokeTokens(s, r);
+          await s.catalog.remove(id);
+          try {
+            await s.git.remove(r.physical);
+          } catch (e: any) {
+            // Storage may already be gone (e.g. a failed import); the catalog row is what users see.
+            console.error("repo storage delete failed", { message: String(e?.message ?? e).slice(0, 200) });
+          }
+          result = json({ ok: true, deleted: id });
         } else if (!action && request.method === "GET") {
           const role =
             p?.id === r.owner
@@ -785,48 +900,23 @@ export function application(s: Services) {
           check(p, 401, "Authentication required");
           check(!r.parent, 400, "Tasks fork canonical repositories");
           result = json(
-            await createRepo(s, p, await bodyJSON(request), r),
+            await createTask(s, p, r, await bodyJSON(request)),
             201,
+          );
+        } else if (action === "strands" && request.method === "GET") {
+          check(p, 404, "Not found");
+          result = json(
+            await strands(s, r, (task) =>
+              authorize(s, p, task, "reader").then(() => true),
+            ),
           );
         } else if (action === "proposals" && request.method === "GET")
           result = json(await s.catalog.proposals(id));
         else if (action === "proposals" && request.method === "POST") {
-          const b = await bodyJSON(request);
-          const task = await authorize(s, p, b.task, "writer");
-          check(
-            task.parent === id &&
-              /^[0-9a-f]{40}$/.test(b.base) &&
-              /^[0-9a-f]{40}$/.test(b.candidate),
-            400,
-            "Invalid proposal",
+          result = json(
+            await openProposal(s, p!, r, await bodyJSON(request)),
+            201,
           );
-          const base = await s.git.log(r.physical, b.base),
-            candidate = await s.git.log(task.physical, b.candidate);
-          check(
-            (b.base === ZERO
-              ? !(await s.git.log(r.physical, "HEAD")).length
-              : base[0]?.sha === b.base) && candidate[0]?.sha === b.candidate,
-            422,
-            "Commit unavailable",
-          );
-          check(!r.parent, 400, "Proposals target a canonical repository");
-          check(
-            (await head(s, r)).sha === b.base,
-            409,
-            "Canonical head moved; new proposal required",
-          );
-          await descendant(s.git, task.physical, b.base, b.candidate);
-          const proposal: Proposal = {
-            id: uuid(),
-            repo: id,
-            task: task.id,
-            base: b.base,
-            candidate: b.candidate,
-            author: p!.id,
-            status: "open",
-          };
-          await s.catalog.propose(proposal);
-          result = json(proposal, 201);
         } else if (action === "review" && request.method === "POST") {
           const b = await bodyJSON(request);
           check(
