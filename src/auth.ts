@@ -50,6 +50,8 @@ class WorkOSFailure extends Fault {
     readonly category: ProviderCategory,
     readonly providerStatus: number | null,
     readonly reason: "pkce_rejected" | "generic" = "generic",
+    readonly providerCode: string | null = null,
+    readonly pending: { token: string; email: string } | null = null,
   ) {
     super(
       category === "invalid_client" ||
@@ -88,9 +90,19 @@ async function providerErrorBody(r: Response): Promise<unknown> {
     await reader.cancel().catch(() => {});
   }
 }
+const PENDING_CODES = new Set([
+  "email_verification_required",
+  "organization_selection_required",
+  "mfa_enrollment",
+  "mfa_challenge",
+  "sso_required",
+  "organization_authentication_methods_required",
+]);
 function providerFailure(status: number, body: unknown) {
   let category: ProviderCategory = "unexpected_response";
   let reason: "pkce_rejected" | "generic" = "generic";
+  let code: string | null = null;
+  let pending: { token: string; email: string } | null = null;
   if (status === 429) category = "rate_limit";
   else if (status >= 500) category = "upstream";
   else if (status === 400 || status === 401 || status === 403) {
@@ -109,9 +121,20 @@ function providerFailure(status: number, body: unknown) {
         b.error_description === "Invalid code verifier."
       )
         reason = "pkce_rejected";
+      // Fixed WorkOS pending-authentication codes only; never echo free text.
+      if (typeof b.code === "string" && PENDING_CODES.has(b.code))
+        code = b.code;
+      if (
+        code === "email_verification_required" &&
+        typeof b.pending_authentication_token === "string" &&
+        /^[A-Za-z0-9_-]{8,512}$/.test(b.pending_authentication_token) &&
+        typeof b.email === "string" &&
+        b.email.length <= 320
+      )
+        pending = { token: b.pending_authentication_token, email: b.email };
     }
   }
-  return new WorkOSFailure(category, status, reason);
+  return new WorkOSFailure(category, status, reason, code, pending);
 }
 export function authReady(c: AuthConfig) {
   return (
@@ -151,7 +174,12 @@ export async function verifyAccess(
     sets.set(c.WORKOS_CLIENT_ID, keys);
   }
   const { payload } = await jwtVerify(token, keySet ?? keys, {
-    issuer: c.WORKOS_ACCESS_TOKEN_ISSUER ?? "https://api.workos.com",
+    // Live AuthKit tokens carry the client-specific issuer; the documented
+    // session-token issuer is also accepted. Both are pinned configuration.
+    issuer: [
+      c.WORKOS_ACCESS_TOKEN_ISSUER ?? "https://api.workos.com",
+      c.WORKOS_ISSUER,
+    ],
     algorithms: ["RS256"],
     requiredClaims: ["sub", "exp", "iat", "sid", "client_id"],
     maxTokenAge: "1h",
@@ -332,10 +360,18 @@ export async function sessionCookie(
     "Incomplete token exchange",
   );
   const p = await livePrincipal(c, tokens.access_token, io);
-  if (tokens.oauth_tokens?.provider === "GitHubOAuth" && io.connectGitHub) {
+  // WorkOS spells this provider both "GitHubOAuth" and "GithubOAuth" across APIs.
+  if (
+    String(tokens.oauth_tokens?.provider).toLowerCase() === "githuboauth" &&
+    io.connectGitHub
+  ) {
     io.phase?.("github_connection");
     check(tokens.user?.id === p.id, 401, "Provider identity mismatch");
-    await io.connectGitHub(p, tokens.oauth_tokens);
+    // Repository listing is optional; a rejected provider token must not block sign-in.
+    // The user can still connect explicitly through /auth/github.
+    try {
+      await io.connectGitHub(p, tokens.oauth_tokens);
+    } catch {}
   }
   io.phase?.("session_sealing");
   const sealed = await new EncryptJWT({
@@ -446,6 +482,7 @@ export async function authRoute(
         { headers: { "set-cookie": next, "cache-control": "no-store" } },
       );
     }
+    if (u.pathname === "/auth/verify") return await verifyEmail(c, r, io);
     check(r.method === "GET", 405, "Unsupported method");
     if (u.pathname === "/auth/login") {
       const state = crypto.randomUUID(),
@@ -509,18 +546,43 @@ export async function authRoute(
       "Invalid OAuth state",
     );
     phase = "code_exchange";
-    const tokens = await workos(
-      c,
-      "/user_management/authenticate",
-      {
-        client_id: c.WORKOS_CLIENT_ID,
-        client_secret: c.WORKOS_API_KEY,
-        grant_type: "authorization_code",
-        code: u.searchParams.get("code"),
-        code_verifier: payload.verifier,
-      },
-      io,
-    );
+    let tokens: any;
+    try {
+      tokens = await workos(
+        c,
+        "/user_management/authenticate",
+        {
+          client_id: c.WORKOS_CLIENT_ID,
+          client_secret: c.WORKOS_API_KEY,
+          grant_type: "authorization_code",
+          code: u.searchParams.get("code"),
+          code_verifier: payload.verifier,
+        },
+        io,
+      );
+    } catch (e) {
+      // GitHub identity matched an existing account whose email WorkOS has not verified.
+      // WorkOS emails a one-time code; the pending token stays sealed server-side.
+      if (!(e instanceof WorkOSFailure && e.pending)) throw e;
+      const pending = await new EncryptJWT({
+        pending: e.pending.token,
+        email: e.pending.email,
+        returnTo: payload.returnTo,
+      })
+        .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+        .setIssuer(c.ORIGIN)
+        .setAudience("forge-verify")
+        .setIssuedAt()
+        .setExpirationTime("10m")
+        .encrypt(sessionKey(c));
+      const headers = new Headers({
+        location: "/auth/verify",
+        "cache-control": "no-store",
+      });
+      headers.append("set-cookie", sealedCookie("__Host-forge-verify", pending, 600));
+      headers.append("set-cookie", sealedCookie("__Host-forge-flow", "", 0));
+      return new Response(null, { status: 303, headers });
+    }
     phase = "login_policy";
     check(
       tokens.authentication_method === "GitHubOAuth",
@@ -567,6 +629,7 @@ export async function authRoute(
               category: e.category,
               reason: e.reason,
               provider_status: e.providerStatus,
+              provider_code: e.providerCode,
               correlation: e.correlation,
             }
           : {}),
@@ -581,4 +644,89 @@ export async function authRoute(
       { status: e instanceof Fault ? e.status : 401, headers },
     );
   }
+}
+
+const verifyCSP =
+  "default-src 'none'; style-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'";
+function maskEmail(email: string) {
+  const [name, domain] = email.split("@");
+  return (name.length <= 2 ? name[0] + "…" : name.slice(0, 2) + "…") + "@" + (domain ?? "");
+}
+const escapeHTML = (v: string) =>
+  v.replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+function verifyPage(email: string, error = "", status = 200) {
+  return new Response(
+    `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verify your email · Braid</title><link rel="stylesheet" href="/public/welcome.css"></head><body class="verify"><main class="verify-card"><h1>Check your email</h1><p>GitHub sign-in matched an existing account. WorkOS sent a six-digit code to <strong>${escapeHTML(maskEmail(email))}</strong>. Enter it to link GitHub and finish signing in.</p>${error ? `<p role="alert" class="verify-error">${escapeHTML(error)}</p>` : ""}<form method="post" action="/auth/verify"><label for="code">Verification code</label><input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required autofocus><button type="submit">Verify and continue</button></form><p><a href="/auth/login">Start over</a></p></main></body></html>`,
+    {
+      status,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+        "content-security-policy": verifyCSP,
+        "x-content-type-options": "nosniff",
+        // no-referrer would make browsers send Origin: null on the form POST.
+        "referrer-policy": "same-origin",
+      },
+    },
+  );
+}
+async function verifyEmail(c: AuthConfig, r: Request, io: AuthIO) {
+  const sealed = cookie(r, "__Host-forge-verify");
+  if (!sealed)
+    return new Response(null, {
+      status: 303,
+      headers: { location: "/auth/login", "cache-control": "no-store" },
+    });
+  let payload: any;
+  try {
+    ({ payload } = await jwtDecrypt(sealed, sessionKey(c), {
+      issuer: c.ORIGIN,
+      audience: "forge-verify",
+    }));
+  } catch {
+    return new Response(null, {
+      status: 303,
+      headers: {
+        location: "/auth/login",
+        "set-cookie": sealedCookie("__Host-forge-verify", "", 0),
+        "cache-control": "no-store",
+      },
+    });
+  }
+  check(typeof payload.pending === "string" && typeof payload.email === "string", 400, "Invalid verification state");
+  if (r.method === "GET") return verifyPage(payload.email);
+  check(r.method === "POST", 405, "Unsupported method");
+  check(r.headers.get("origin") === c.ORIGIN, 403, "Origin required");
+  const form = await r.formData();
+  const code = String(form.get("code") ?? "").trim();
+  if (!/^[0-9]{6}$/.test(code))
+    return verifyPage(payload.email, "Enter the six-digit code from the email.", 400);
+  let tokens: any;
+  try {
+    tokens = await workos(
+      c,
+      "/user_management/authenticate",
+      {
+        client_id: c.WORKOS_CLIENT_ID,
+        client_secret: c.WORKOS_API_KEY,
+        grant_type: "urn:workos:oauth:grant-type:email-verification:code",
+        code,
+        pending_authentication_token: payload.pending,
+      },
+      io,
+    );
+  } catch (e) {
+    if (e instanceof WorkOSFailure && e.status === 401)
+      return verifyPage(payload.email, "That code was not accepted. Check the latest email and try again, or start over.", 400);
+    throw e;
+  }
+  const returnTo =
+    typeof payload.returnTo === "string" &&
+    /^\/\?invite=[A-Za-z0-9_-]+$/.test(payload.returnTo)
+      ? payload.returnTo
+      : "/";
+  const headers = new Headers({ location: returnTo, "cache-control": "no-store" });
+  headers.append("set-cookie", await sessionCookie(c, tokens, io));
+  headers.append("set-cookie", sealedCookie("__Host-forge-verify", "", 0));
+  return new Response(null, { status: 303, headers });
 }

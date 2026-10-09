@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { build } from "esbuild";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
-import { EncryptJWT, jwtDecrypt } from "jose";
+import { EncryptJWT, jwtDecrypt, SignJWT } from "jose";
 import { authRoute } from "../src/auth.ts";
 import { digest } from "../src/storage.ts";
 const c = {
@@ -146,6 +146,7 @@ test("exchange diagnostics allowlist malicious bodies, never mint sessions, and 
         "category",
         "reason",
         "provider_status",
+        "provider_code",
         "correlation",
         "retry",
         "advice",
@@ -309,4 +310,79 @@ test("real workerd fetch reaches the provider double and rejects redirects witho
     await mf.dispose();
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
+});
+
+test("email verification required: pending token stays sealed, code completes sign-in, wrong origin/code rejected (contract double)", async () => {
+  const pending = "pending_fixture_token_abc123";
+  const calls: any[] = [];
+  const access = await new SignJWT({ sub: "user_a", sid: "session_a" })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("1h")
+    .sign(new TextEncoder().encode("test-only-key-that-is-long-enough"));
+  const io = {
+    verify: async () => ({ id: "user_a", tenant: "user_a" }),
+    request: (async (url: any, init: any) => {
+      const u = new URL(url);
+      if (u.pathname.endsWith("/sessions"))
+        return Response.json({
+          data: [{ id: "session_a", user_id: "user_a", status: "active" }],
+        });
+      if (u.pathname.endsWith("/users/user_a"))
+        return Response.json({ id: "user_a", email: "person@example.invalid", email_verified: true });
+      const body = JSON.parse(init.body);
+      calls.push(body);
+      if (body.grant_type === "authorization_code")
+        return Response.json(
+          {
+            code: "email_verification_required",
+            message: "Email ownership must be verified before authentication.",
+            pending_authentication_token: pending,
+            email: "person@example.invalid",
+            email_verification_id: "email_verification_fixture",
+          },
+          { status: 403 },
+        );
+      if (body.code !== "123456")
+        return Response.json({ error: "invalid_grant", error_description: "bad" }, { status: 400 });
+      return Response.json({ access_token: access, refresh_token: "refresh1", user: { id: "user_a" } });
+    }) as typeof fetch,
+  };
+  const f = await flow();
+  const handoff = (await authRoute(c, callback(f), io))!;
+  assert.equal(handoff.status, 303);
+  assert.equal(handoff.headers.get("location"), "/auth/verify");
+  const verifyCookie = handoff.headers
+    .getSetCookie()
+    .find((v) => v.startsWith("__Host-forge-verify="))!
+    .split(";")[0];
+  assert.ok(!verifyCookie.includes(pending));
+  const page = (await authRoute(
+    c,
+    new Request(c.ORIGIN + "/auth/verify", { headers: { cookie: verifyCookie } }),
+    io,
+  ))!;
+  assert.equal(page.status, 200);
+  const html = await page.text();
+  assert.ok(html.includes("pe…@example.invalid") && !html.includes(pending));
+  const post = (code: string, origin = c.ORIGIN) =>
+    authRoute(
+      c,
+      new Request(c.ORIGIN + "/auth/verify", {
+        method: "POST",
+        headers: { cookie: verifyCookie, origin, "content-type": "application/x-www-form-urlencoded" },
+        body: "code=" + code,
+      }),
+      io,
+    );
+  assert.equal((await post("123456", "https://evil.invalid"))!.status, 403);
+  assert.equal((await post("12ab"))!.status, 400);
+  assert.equal((await post("000000"))!.status, 400);
+  const done = (await post("123456"))!;
+  assert.equal(done.status, 303);
+  assert.equal(done.headers.get("location"), "/");
+  assert.ok(done.headers.getSetCookie().some((v) => v.startsWith("__Host-forge=") && !v.includes("Max-Age=0")));
+  const last = calls.at(-1);
+  assert.equal(last.grant_type, "urn:workos:oauth:grant-type:email-verification:code");
+  assert.equal(last.pending_authentication_token, pending);
 });

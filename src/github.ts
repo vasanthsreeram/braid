@@ -1,4 +1,5 @@
 import { EncryptJWT, jwtDecrypt } from "jose";
+import { cookie, sealedCookie } from "./auth.ts";
 import type { Principal } from "./contracts.ts";
 import type { SQL } from "./catalog.ts";
 import { workos, type AuthConfig } from "./auth.ts";
@@ -20,7 +21,8 @@ export class GitHubAccounts {
   constructor(
     private c: GitHubConfig,
     private db: SQL,
-    private request: typeof fetch = fetch,
+    // Wrapped: workerd throws "Illegal invocation" when fetch is called as a method.
+    private request: typeof fetch = (input, init) => fetch(input, init),
   ) {}
   private key() {
     check(
@@ -60,13 +62,14 @@ export class GitHubAccounts {
   ) {
     const r = await this.request("https://api.github.com" + path, {
       method,
-      redirect: "error",
+      // workerd only implements follow/manual; non-2xx (including 3xx) is rejected below.
+      redirect: "manual",
       signal: AbortSignal.timeout(15000),
       headers: {
         authorization: (basic ? "Basic " : "Bearer ") + token,
         accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2026-03-10",
-        "user-agent": "Gitflare",
+        "user-agent": "Braid",
         "content-type": "application/json",
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
@@ -100,7 +103,7 @@ export class GitHubAccounts {
       "GitHub repository connection needs dedicated app setup",
     );
     check(
-      oauth?.provider === "GitHubOAuth" &&
+      String(oauth?.provider).toLowerCase() === "githuboauth" &&
         typeof oauth.access_token === "string",
       401,
       "GitHub provider token required",
@@ -128,7 +131,8 @@ export class GitHubAccounts {
         identities.some(
           (i: any) =>
             i.type === "OAuth" &&
-            i.provider === "GitHubOAuth" &&
+            // WorkOS identities use "GithubOAuth"; compare case-insensitively.
+            String(i.provider).toLowerCase() === "githuboauth" &&
             String(i.idp_id) === String(user.id),
         ),
       401,
@@ -197,7 +201,7 @@ export class GitHubAccounts {
       access: "public",
       privateAccess: false,
       setupReady: !!this.c.GITHUB_CLIENT_ID && !!this.c.GITHUB_CLIENT_SECRET,
-      reconnect: "/auth/login",
+      reconnect: "/auth/github",
       revokeUrl: "https://github.com/settings/connections/applications",
     };
   }
@@ -359,7 +363,7 @@ export class GitHubAccounts {
     check(
       this.c.GITHUB_CLIENT_ID && this.c.GITHUB_CLIENT_SECRET,
       503,
-      "Connection removed locally; revoke Gitflare in GitHub application settings",
+      "Connection removed locally; revoke Braid in GitHub application settings",
     );
     try {
       await this.api(
@@ -377,5 +381,106 @@ export class GitHubAccounts {
       };
     }
     return { ok: true, revoked: true };
+  }
+}
+
+const back = (location: string, cookieHeader?: string) => {
+  const headers = new Headers({ location, "cache-control": "no-store" });
+  if (cookieHeader) headers.append("set-cookie", cookieHeader);
+  return new Response(null, { status: 303, headers });
+};
+// Direct GitHub OAuth for repository listing. Sign-in identity stays with WorkOS;
+// connect() binds this token to the WorkOS-linked GitHub identity before storing it.
+export async function githubRoute(
+  c: GitHubConfig,
+  r: Request,
+  authenticate: (r: Request) => Promise<Principal | null>,
+  accounts: GitHubAccounts,
+  request: typeof fetch = fetch,
+): Promise<Response | null> {
+  const u = new URL(r.url);
+  if (u.pathname !== "/auth/github" && u.pathname !== "/auth/github/callback")
+    return null;
+  if (r.method !== "GET")
+    return new Response("Unsupported method", { status: 405 });
+  const p = await authenticate(r);
+  if (!p) return back("/auth/login");
+  if (!c.GITHUB_CLIENT_ID || !c.GITHUB_CLIENT_SECRET)
+    return back("/?github=setup");
+  const key = new Uint8Array(
+    Buffer.from(
+      digest(new TextEncoder().encode("gitflare/github-oauth/v1\0" + c.SESSION_SECRET)),
+      "hex",
+    ),
+  );
+  if (u.pathname === "/auth/github") {
+    const state = crypto.randomUUID();
+    const flow = await new EncryptJWT({ state })
+      .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+      .setIssuer(c.ORIGIN)
+      .setAudience("gitflare-github-oauth")
+      .setSubject(p.id)
+      .setIssuedAt()
+      .setExpirationTime("10m")
+      .encrypt(key);
+    const authorize = new URL("https://github.com/login/oauth/authorize");
+    for (const [k, v] of Object.entries({
+      client_id: c.GITHUB_CLIENT_ID,
+      redirect_uri: c.ORIGIN + "/auth/github/callback",
+      state,
+      allow_signup: "false",
+    }))
+      authorize.searchParams.set(k, v);
+    // No scope: public repository listing only.
+    return back(authorize.href, sealedCookie("__Host-forge-gh", flow, 600));
+  }
+  const clear = sealedCookie("__Host-forge-gh", "", 0);
+  try {
+    const flow = cookie(r, "__Host-forge-gh");
+    check(flow, 400, "state");
+    const { payload } = await jwtDecrypt(flow, key, {
+      issuer: c.ORIGIN,
+      audience: "gitflare-github-oauth",
+      subject: p.id,
+    });
+    const code = u.searchParams.get("code");
+    check(
+      payload.state === u.searchParams.get("state") &&
+        code &&
+        /^[A-Za-z0-9_-]{1,128}$/.test(code),
+      400,
+      u.searchParams.get("error") === "access_denied" ? "denied" : "state",
+    );
+    const res = await request("https://github.com/login/oauth/access_token", {
+      method: "POST",
+      redirect: "manual",
+      signal: AbortSignal.timeout(15000),
+      headers: { accept: "application/json", "content-type": "application/json" },
+      body: JSON.stringify({
+        client_id: c.GITHUB_CLIENT_ID,
+        client_secret: c.GITHUB_CLIENT_SECRET,
+        code,
+        redirect_uri: c.ORIGIN + "/auth/github/callback",
+      }),
+    });
+    check(res.ok, 502, "exchange");
+    const token: any = await res.json().catch(() => null);
+    check(typeof token?.access_token === "string" && token.access_token, 502, "exchange");
+    await accounts.connect(p, {
+      provider: "GitHubOAuth",
+      access_token: token.access_token,
+      scopes: typeof token.scope === "string" ? token.scope.split(",") : [],
+    });
+    return back("/?github=connected", clear);
+  } catch (e) {
+    const reason =
+      e instanceof Fault
+        ? e.status === 401 && /identity/i.test(e.message)
+          ? "identity"
+          : ["denied", "state", "exchange"].includes(e.message)
+            ? e.message
+            : "connect"
+        : "connect";
+    return back("/?github=" + reason, clear);
   }
 }
