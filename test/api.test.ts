@@ -231,10 +231,19 @@ test("production entry denies accidental dev credentials and reports missing Wor
     DEV_AUTH: "local-owner",
     LOCAL_AUTH: "true",
   };
+  // `/` is the public welcome page; dev credentials must still get the signed-out page.
+  const home = await worker.fetch(
+    new Request("https://forge.invalid/", {
+      headers: { authorization: "Bearer local-owner" },
+    }),
+    env,
+  );
+  assert.equal(home.status, 200);
+  assert.match(await home.text(), /Sign-in is temporarily unavailable/);
   assert.equal(
     (
       await worker.fetch(
-        new Request("https://forge.invalid/", {
+        new Request("https://forge.invalid/app.js", {
           headers: { authorization: "Bearer local-owner" },
         }),
         env,

@@ -63,7 +63,7 @@ const url = await new Promise<string>((resolve, reject) => {
 try {
   const checks = [];
   const cases: [string, string, unknown, Record<string, string>, number][] = [
-    ["/", "GET", undefined, {}, 401],
+    ["/", "GET", undefined, {}, 200],
     ["/auth/login", "GET", undefined, {}, 503],
     ["/api/discovery", "GET", undefined, {}, 401],
     ["/api/repos", "GET", undefined, {}, 401],

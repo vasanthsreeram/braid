@@ -129,7 +129,8 @@ export default {
               )
             : "Authentication required",
           {
-            status: 401,
+            // The welcome page is public content; every other path is denied.
+            status: path === "/" ? 200 : 401,
             headers: {
               "cache-control": "no-store, no-transform",
               "content-type":

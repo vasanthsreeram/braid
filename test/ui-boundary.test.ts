@@ -21,7 +21,7 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
   const local = await uiWorker();
   try {
     const gate = await fetch(local.url);
-    assert.equal(gate.status, 401);
+    assert.equal(gate.status, 200);
     assert.match(
       gate.headers.get("content-security-policy")!,
       /default-src 'none'/,
@@ -98,13 +98,13 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
   }
 });
 
-test("local workerd: AuthKit-ready gate stays 401 and login retains PKCE redirect", async () => {
+test("local workerd: AuthKit-ready welcome is 200 and login retains PKCE redirect", async () => {
   const local = await uiWorker(true);
   try {
     const gate = await fetch(local.url + "/?invite=fixture_invite", {
       headers: { cookie: "__Host-forge=invalid-fixture" },
     });
-    assert.equal(gate.status, 401);
+    assert.equal(gate.status, 200);
     const html = await gate.text();
     assert.doesNotMatch(html, /temporarily unavailable/);
     assert.match(html, /Resume session/);
@@ -118,6 +118,23 @@ test("local workerd: AuthKit-ready gate stays 401 and login retains PKCE redirec
     assert.equal(target.searchParams.get("code_challenge_method"), "S256");
     assert.equal(target.searchParams.get("provider"), "GitHubOAuth");
     assert.equal((await fetch(local.url + "/app.js")).status, 401);
+  } finally {
+    await local.close();
+  }
+});
+
+test("local workerd: only / is public; /api/me and private assets stay 401", async () => {
+  const local = await uiWorker(true);
+  try {
+    const home = await fetch(local.url + "/");
+    assert.equal(home.status, 200);
+    assert.match(home.headers.get("content-type")!, /text\/html/);
+    assert.match(await home.text(), /<title>Braid/);
+    for (const path of ["/api/me", "/app.js", "/index.html"]) {
+      const r = await fetch(local.url + path);
+      assert.equal(r.status, 401, path);
+      assert.doesNotMatch(await r.text(), /Resume session|use strict/, path);
+    }
   } finally {
     await local.close();
   }
