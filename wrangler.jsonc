@@ -6,7 +6,11 @@
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
-  "routes": [{ "pattern": "gitflare.lintlabs.org", "custom_domain": true }],
+  "routes": [
+    { "pattern": "braid.lintlabs.org", "custom_domain": true },
+    // Legacy host: the worker 308-redirects it to ORIGIN.
+    { "pattern": "gitflare.lintlabs.org", "custom_domain": true },
+  ],
   "preview_urls": false,
   "limits": { "cpu_ms": 300000 },
   "artifacts": [
@@ -32,7 +36,7 @@
     "WORKOS_CLIENT_ID": "client_01M3WQ9VJ9G2MH74MYP7WBD708",
     "WORKOS_ACCESS_TOKEN_ISSUER": "https://api.workos.com",
     "WORKOS_ISSUER": "https://api.workos.com/user_management/client_01M3WQ9VJ9G2MH74MYP7WBD708",
-    "ORIGIN": "https://gitflare.lintlabs.org",
+    "ORIGIN": "https://braid.lintlabs.org",
     "ALLOW_PUBLIC": "false",
     "R2_ACCOUNT_ID": "7efeb52ec5727a903edd8ef7ae8eb925",
     "R2_BUCKET_NAME": "cf-native-forge-lfs-evaluation",

@@ -47,6 +47,7 @@ export default {
     if (
       url.hostname ===
         "cf-native-forge-evaluation.s-vasanthrojin.workers.dev" ||
+      url.hostname === "gitflare.lintlabs.org" ||
       (url.hostname === new URL(env.ORIGIN).hostname &&
         url.protocol !== "https:")
     ) {

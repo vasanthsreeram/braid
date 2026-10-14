@@ -483,3 +483,6 @@ body.verify { display: grid; place-items: center; min-height: 100vh; padding: 16
 .verify-card input { font: inherit; font-size: 1.4rem; letter-spacing: 0.3em; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); }
 .verify-card button { font: inherit; font-weight: 600; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--ink); color: var(--bg); cursor: pointer; }
 .verify-error { color: #b42318; }
+
+.header-github{display:inline-flex;align-items:center;color:inherit;margin-inline:.75rem;opacity:.8}
+.header-github:hover,.header-github:focus-visible{opacity:1}

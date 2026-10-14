@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 import { writeFile } from "node:fs/promises";
-const origin = "https://gitflare.lintlabs.org";
+const origin = "https://braid.lintlabs.org";
 const browser = await chromium.launch({
   headless: true,
   executablePath:
