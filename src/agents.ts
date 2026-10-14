@@ -41,9 +41,9 @@ export const AGENT_LIMITS = {
   perRepoDaily: 20,
   deploymentDaily: 60,
   /** Agents working on one repository at the same time (each on its own strand and container). */
-  perRepoConcurrent: 3,
+  perRepoConcurrent: 6,
   /** Catching up a stale proposal: rebase onto the new head, resolve conflicts, propose again. */
-  catchUps: 4,
+  catchUps: 6,
   catchUpWallMs: 12 * 60 * 1000,
   resolveRequests: 6,
   events: 50,
@@ -120,6 +120,8 @@ export interface CatchUp {
   conflicts?: boolean;
   files?: string[];
   proposal?: string;
+  /** Rebased in the Worker without a container. */
+  fast?: boolean;
 }
 export interface CatchUpSummary {
   n: number;
@@ -129,6 +131,7 @@ export interface CatchUpSummary {
   proposal: string;
   conflicts: boolean;
   files: string[];
+  fast?: boolean;
 }
 
 export function agentGoal(b: any): string {
@@ -630,6 +633,16 @@ export interface EngineDeps {
   resolve?(env: ExecutionEnv, files: string[], round: number): Promise<LoopResult>;
   /** Mark the old proposal as superseded by the new one. */
   supersede?(from: string, to: string, note: string): Promise<void>;
+  /**
+   * Fast catch-up in the Worker (rebase.ts): no container, for a one-commit change that
+   * does not overlap what landed. Pushes to braid/attempt-<n>; otherwise says why not.
+   */
+  fast?(
+    n: number,
+  ): Promise<
+    | { ok: true; onto: string; candidate: string; files: string[]; ref: string; ms: number }
+    | { ok: false; reason: string }
+  >;
 }
 export function record(r: RunRecord, text: string) {
   r.events.push({ at: Date.now(), text: text.slice(0, 300) });
@@ -829,6 +842,26 @@ export async function catchUpOnce(r: RunRecord, d: EngineDeps, reuse?: Exec) {
   check(d.canonical && d.resolve, 503, "Catching up is unavailable");
   const stop = () => check(!d.signal.aborted, 409, "Agent stopped");
   await d.access();
+  if (!c.candidate && d.fast) {
+    record(r, "Trying a fast catch-up in the Worker");
+    await d.save();
+    const f = await d
+      .fast(c.n)
+      .catch((e) => ({ ok: false as const, reason: e instanceof Fault ? e.message : "the fast path failed" }));
+    stop();
+    if (f.ok) {
+      c.onto = f.onto;
+      c.candidate = f.candidate;
+      c.conflicts = false;
+      c.files = f.files.slice(0, 200);
+      c.fast = true;
+      r.base = f.onto;
+      r.candidate = f.candidate;
+      r.candidateRef = f.ref;
+      record(r, `Rebased onto ${f.onto.slice(0, 7)} in the Worker in ${f.ms} ms (no container, no conflicts)`);
+      await d.save();
+    } else record(r, `Fast catch-up not possible (${f.reason}); using a container`);
+  }
   if (!c.candidate) {
     let exec = reuse;
     const strand = await d.remote(r.task);
@@ -961,7 +994,11 @@ export async function catchUpOnce(r: RunRecord, d: EngineDeps, reuse?: Exec) {
         c.from,
         c.proposal,
         `Superseded by a caught-up proposal on ${c.onto!.slice(0, 7)}` +
-          (c.conflicts ? " (conflicts were resolved by the agent; please review)." : " (rebased without conflicts)."),
+          (c.conflicts
+          ? " (conflicts were resolved by the agent; please review)."
+          : c.fast
+            ? " (rebased in the Worker; the changes did not overlap)."
+            : " (rebased without conflicts)."),
       );
     } catch {}
   }
@@ -975,6 +1012,7 @@ export async function catchUpOnce(r: RunRecord, d: EngineDeps, reuse?: Exec) {
       proposal: c.proposal,
       conflicts: !!c.conflicts,
       files: c.files ?? [],
+      ...(c.fast ? { fast: true } : {}),
     },
   ];
   r.catchup = undefined;
@@ -1045,5 +1083,9 @@ export function runsClient(
     swarms: (repo: Repo, id?: string) => call(repo, "swarms", { id: id ?? null }),
     catchUp: (repo: Repo, run: string, proposal: string) =>
       call(repo, "catch-up-run", { run, proposal }),
+    landed: (repo: Repo) => call(repo, "landed", { repo }),
+    queue: (repo: Repo) => call(repo, "queue", {}),
+    enqueue: (repo: Repo, actor: Principal, body: { proposal: string; mode: "approved" }) =>
+      call(repo, "enqueue", { repo, actor, ...body }),
   };
 }

@@ -126,3 +126,32 @@
     gap: 2px;
   }
 }
+#agent-runs-view .agent-auto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#agent-runs-view .agent-auto input {
+  accent-color: var(--ink);
+}
+#agent-runs-view .agent-swarm-view .card-head {
+  gap: 10px;
+}
+#agent-runs-view .row-side {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+/* Braid queue: saffron strand while waiting in line; held parts need a person. */
+.badge-queue {
+  color: var(--t1);
+  border-color: color-mix(in srgb, var(--s2) 55%, transparent);
+  background: color-mix(in srgb, var(--s2) 14%, var(--surface));
+}
+.badge-held {
+  color: var(--s1);
+  border-color: color-mix(in srgb, var(--s1) 45%, transparent);
+  background: color-mix(in srgb, var(--s1) 8%, var(--surface));
+}

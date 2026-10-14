@@ -277,13 +277,25 @@ export class SQLCatalog implements Catalog {
       .bind(p.id, p.repo, p.task, p.base, p.candidate, p.author, p.status)
       .run();
   }
+  /** The 100 most recent proposals (insertion order), newest last. */
   async proposals(repo: string) {
     return (
       await this.db
-        .prepare("SELECT * FROM proposals WHERE repo=? LIMIT 100")
+        .prepare(
+          "SELECT * FROM (SELECT rowid AS seq, * FROM proposals WHERE repo=? ORDER BY rowid DESC LIMIT 100) ORDER BY seq",
+        )
         .bind(repo)
-        .all<Proposal>()
-    ).results;
+        .all<Proposal & { seq?: number }>()
+    ).results.map(({ seq, ...p }) => p as Proposal);
+  }
+  /** One proposal by id, however old (lists are capped at 100). */
+  async proposal(repo: string, id: string) {
+    return (
+      (await this.db
+        .prepare("SELECT * FROM proposals WHERE repo=? AND id=?")
+        .bind(repo, id)
+        .first<Proposal>()) ?? undefined
+    );
   }
   async supersede(repo: string, id: string) {
     const r = await this.db

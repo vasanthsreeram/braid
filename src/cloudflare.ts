@@ -5,8 +5,12 @@ import {
   importHTTP,
   advertisedRefs,
   completeRefsHTTP,
+  copyTipHTTP,
+  pushPackHTTP,
 } from "./git-http.ts";
+import { ZERO } from "./review.ts";
 import type { GitPlane, Ticket } from "./contracts.ts";
+import { planFastRebase, encodePack } from "./rebase.ts";
 import type { ObjectStore } from "./storage.ts";
 import { check, digest, root, ID } from "./storage.ts";
 export class R2Store implements ObjectStore {
@@ -136,12 +140,25 @@ export class NativeGit implements GitPlane {
     }
   }
   async fork(source: string, target: string) {
-    using repo = await this.handle(source);
-    const r = await repo.fork(target, {
-      defaultBranchOnly: false,
-      readOnly: false,
-    });
-    await this.discard(target, r.token);
+    // Under concurrent load (20–30 forks of one repository at once) Artifacts sometimes
+    // answers INTERNAL_ERROR although the fork went through. Retry with backoff; a retry
+    // that finds the target already there is done. The caller then checks the new
+    // repository's refs against the recorded source snapshot, so a bad fork still fails.
+    for (let attempt = 0; ; attempt++) {
+      try {
+        using repo = await this.handle(source);
+        const r = await repo.fork(target, {
+          defaultBranchOnly: false,
+          readOnly: false,
+        });
+        await this.discard(target, r.token);
+        return;
+      } catch (e: any) {
+        if (attempt > 0 && e?.code === "ALREADY_EXISTS") return;
+        if (e?.code !== "INTERNAL_ERROR" || attempt >= 3) throw e;
+        await new Promise((r) => setTimeout(r, 250 * 2 ** attempt + Math.random() * 250));
+      }
+    }
   }
   async info(name: string) {
     using repo = await this.handle(name);
@@ -199,6 +216,36 @@ export class NativeGit implements GitPlane {
       await this.discard(source, read.id);
       if (write) await this.discard(target, write.id);
     }
+  }
+  /**
+   * Fast catch-up (rebase.ts): rebuild a one-commit strand change on `onto` in the Worker
+   * and push it to `ref` on the strand. Copies `onto` into the strand first (as
+   * `ontoRef`) so the new commit's history is complete there. Returns null when the fast
+   * path does not apply; the caller then uses a container.
+   */
+  async fastRebase(o: {
+    canonical: string;
+    strand: string;
+    base: string;
+    candidate: string;
+    onto: string;
+    ref: string;
+    ontoRef: string;
+  }) {
+    const plan = await planFastRebase({ git: this, ...o });
+    if (!plan.ok) return { ok: false as const, reason: plan.reason, conflicts: plan.conflicts ?? [] };
+    const pack = await encodePack(plan.objects);
+    const read = await this.token(o.canonical, "read");
+    let write: any;
+    try {
+      write = await this.token(o.strand, "write");
+      await copyTipHTTP(read, write, o.ontoRef, o.base, o.onto);
+      await pushPackHTTP(write, o.ref, ZERO, plan.commit.hash, pack);
+    } finally {
+      await this.discard(o.canonical, read.id);
+      if (write) await this.discard(o.strand, write.id);
+    }
+    return { ok: true as const, candidate: plan.commit.hash, files: plan.files, packBytes: pack.length };
   }
   async token(name: string, scope: "read" | "write") {
     using repo = await this.handle(name);

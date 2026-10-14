@@ -44,7 +44,7 @@ const FRIENDLY = {
   "Not found": "That isn't available. It may have been removed, or you no longer have access.",
   "Authentication required": "Please sign in again.",
   "Canonical head moved; new proposal required":
-    "This repository changed after these changes were proposed. Propose them again from the latest version. If an agent made them, open its run in Agents and choose Catch up.",
+    "Something else was braided in after these changes were proposed. Choose “Braid in when ready” to catch them up onto the latest version and braid them in.",
   "An approved proposal is required": "Approve these changes before braiding them in.",
   "Publication uncertain; reconcile retained intent before retrying":
     "We couldn't confirm the braid finished. Run Check repository in Settings, then try again.",
@@ -1610,7 +1610,31 @@ async function showProposal(id) {
     p.base === ZERO ? "" : shaChip(p.base),
   );
   const actions = [];
-  if (selectedRepo.role === "admin" && p.status === "open") {
+  // The braid queue catches a proposal up onto the latest commit if needed, then braids it in, in order.
+  const queue = await api(repoAPI("queue")).catch(() => null);
+  if (activeProposal?.id !== id) return;
+  const queued = queue?.entries?.find((e) => e.proposal === p.id);
+  const enqueue = el("button", {
+    type: "button",
+    class: "btn btn-secondary",
+    text: "Braid in when ready",
+    title: "Catch up onto the latest commit if needed, then braid in, one at a time",
+    onclick: action(async () => {
+      const q = await api(repoAPI("queue"), { proposal: p.id });
+      const at = q.entries.find((e) => e.proposal === p.id)?.position;
+      await showProposals(p.id);
+      say(at ? `Queued to braid in (position ${at}).` : "Queued to braid in.");
+    }),
+  });
+  if (queued) {
+    actions.push(
+      el("span", {
+        class: "badge badge-queue",
+        text: `In the braid queue · ${queued.position === 1 ? "next" : "#" + queued.position}`,
+        title: queued.note ?? "",
+      }),
+    );
+  } else if (selectedRepo.role === "admin" && p.status === "open") {
     actions.push(
       el("button", {
         type: "button",
@@ -1624,10 +1648,11 @@ async function showProposal(id) {
         text: "Approve",
         onclick: action(() => decide(p, "approved")),
       }),
+      enqueue,
     );
-  }
-  if (selectedRepo.role === "admin" && p.status === "approved")
+  } else if (selectedRepo.role === "admin" && p.status === "approved")
     actions.push(
+      enqueue,
       el("button", {
         type: "button",
         class: "btn btn-primary btn-braid",
@@ -2218,6 +2243,7 @@ window.braidApp = {
   repoAPI: (suffix) => repoAPI(suffix),
   repo: () => selectedRepo,
   canWrite,
+  isAdmin: () => selectedRepo?.role === "admin",
   isActive: () => $("detail").dataset.mode === "agents",
   openChange: async (id) => {
     route("&tab=changes");

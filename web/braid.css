@@ -794,6 +794,10 @@ textarea:focus {
   flex-wrap: wrap;
   gap: 8px;
 }
+.sm-legend li {
+  min-width: 0;
+  max-width: 100%;
+}
 .sm-chip {
   display: inline-flex;
   align-items: center;
@@ -845,7 +849,11 @@ textarea:focus {
 }
 .sm-chip.is-rejected .sm-dot {
   background: transparent;
-  border: 2px dashed var(--muted);
+  border: 2px solid var(--muted);
+  opacity: 0.7;
+}
+.sm-chip.is-rejected .sm-chip-name {
+  color: var(--muted);
 }
 .sm-more {
   align-self: center;
@@ -1113,9 +1121,6 @@ textarea:focus {
   .sm-chip {
     font-size: 13px;
     padding: 0 12px 0 10px;
-  }
-  .sm-chip-status {
-    display: none;
   }
   .sm-legend {
     gap: 6px;

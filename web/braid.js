@@ -68,6 +68,35 @@ export function strandStatus(st) {
 const ACTIVE = new Set(["working", "proposed", "approved"]);
 export const strandColor = (i) => "s" + ((i % 3) + 1);
 
+// Readable strand name: swarm strands are "swarm-<id>-<n>-<task-slug>"; the swarm id is
+// noise on screen, so they read "#n task slug". The full name stays in titles.
+export function displayName(name) {
+  if (!name) return "a strand";
+  const m = /^swarm-[0-9a-f]{6,}-(\d+)-(.+)$/.exec(name);
+  return m ? `#${m[1]} ${m[2].replace(/-/g, " ")}` : name;
+}
+
+// Text width in px for SVG labels; falls back to an estimate without canvas.
+let measureCtx;
+function textWidth(text, font) {
+  measureCtx ??= document.createElement("canvas").getContext("2d");
+  if (!measureCtx) return text.length * 7.4;
+  measureCtx.font = font;
+  return measureCtx.measureText(text).width;
+}
+// Shortens `text` with an ellipsis until it fits `max` px.
+function fit(text, max, font) {
+  if (textWidth(text, font) <= max) return text;
+  let lo = 0,
+    hi = text.length;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (textWidth(text.slice(0, mid).trimEnd() + "…", font) <= max) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo ? text.slice(0, lo).trimEnd() + "…" : "";
+}
+
 const cache = new Map(); // repo id -> { at, promise }
 const TTL = 30_000;
 export function strands(repoId, { fresh = false } = {}) {
@@ -388,7 +417,7 @@ function render() {
   const legend = html(
     "ul",
     { class: "sm-legend", "aria-label": "Strands" },
-    list.slice(0, 12).map((s) =>
+    [...list].sort((a, b) => rank(a) - rank(b)).slice(0, 12).map((s) =>
       html(
         "li",
         {},
@@ -399,10 +428,11 @@ function render() {
             class: `sm-chip ${strandColor(s.index)} is-${s.status}`,
             "data-strand": s.id,
             "aria-label": `${s.name ?? "Strand"}, ${STATUS_LABEL[s.status]}. Show strand`,
+            title: s.name ?? "",
             onclick: () => host()?.openStrand(s.id),
           },
           html("span", { class: "sm-dot", "aria-hidden": "true" }),
-          html("span", { class: "sm-chip-name", text: s.name ?? "a strand" }),
+          html("span", { class: "sm-chip-name", text: displayName(s.name) }),
           html("span", { class: "sm-chip-status", text: STATUS_LABEL[s.status] }),
         ),
       ),
@@ -426,7 +456,7 @@ function draw(repo, log, list, width) {
   const narrow = width < 560;
   const L = narrow ? 26 : 40,
     R = narrow ? 14 : 24,
-    tailMin = narrow ? 150 : 300,
+    tailMin = narrow ? 170 : 340,
     laneGap = narrow ? 34 : 38;
   const all = [...log].reverse();
   const shown = all.slice(-24);
@@ -439,32 +469,32 @@ function draw(repo, log, list, width) {
   const endX = total - R;
   const baseX = (sha) => (sha && xOf.has(sha) ? xOf.get(sha) : !k || sha === ZERO ? startX : startX);
 
-  // Build drawable items, at most 8 on the canvas (open strands first).
+  // Build drawable items: up to 6 open strands (labelled at the right, where the line
+  // runs on) and up to 10 braided loops (unlabelled history; hover or the legend names
+  // them), so long names never pile up over the commits.
   const items = [];
   const ordered = [...list].sort((a, b) => rank(a) - rank(b));
-  for (const s of ordered.slice(0, 8)) {
+  let loops = 0,
+    opens = 0;
+  for (const s of ordered) {
     const braid = [...s.proposals].reverse().find((p) => p.braided && xOf.has(p.candidate));
-    const label = `${s.name ?? "a strand"} · ${STATUS_LABEL[s.status]}`;
-    const lw = Math.min(260, label.length * 7.2 + 14);
-    if (braid) {
+    if (braid && loops < 10) {
+      loops++;
       const bx = baseX(braid.base),
         mx = xOf.get(braid.candidate);
-      const cx = (bx + mx) / 2;
-      // On narrow canvases a loop is only labelled when the name fits inside it; the
-      // legend below the map always names every strand.
-      const labelled = !narrow || lw <= mx - bx + 8;
-      const half = labelled ? lw / 2 : 0;
-      items.push({ s, kind: "loop", bx, mx, label, labelled, x1: Math.min(bx, cx - half) - 2, x2: Math.max(mx - 3, cx + half + 6) });
+      items.push({ s, kind: "loop", bx, mx, label: `${s.name ?? "a strand"} · braided in`, x1: bx + 2, x2: mx - 2 });
     }
-    if (s.status !== "braided") {
+    if (s.status !== "braided" && opens < 6) {
+      opens++;
       const from = braid ? xOf.get(braid.candidate) : s.base ? baseX(s.base) : headX;
-      items.push({ s, kind: "open", bx: from, label, x1: from + 3, x2: endX + 40, faded: !braid && s.base && s.base !== ZERO && !xOf.has(s.base) });
+      items.push({ s, kind: "open", bx: from, label: `${s.name ?? "a strand"} · ${STATUS_LABEL[s.status]}`, x1: from + 3, x2: endX + 40 });
     }
   }
-  // Interval packing onto lanes alternating above/below the ink line.
-  const laneOrder = [-1, 1, -2, 2, -3, 3, -4, 4, -5, 5, -6, 6];
+  // Interval packing onto lanes alternating above/below the ink line. Loops go first so
+  // short history arcs stay low; open strands take whichever lane is free to the edge.
+  const laneOrder = [-1, 1, -2, 2, -3, 3, -4, 4, -5, 5, -6, 6, -7, 7, -8, 8];
   const used = new Map();
-  for (const it of items.filter((i) => i.kind === "open").concat(items.filter((i) => i.kind === "loop"))) {
+  for (const it of items.filter((i) => i.kind === "loop").concat(items.filter((i) => i.kind === "open"))) {
     for (const lane of laneOrder) {
       const spans = used.get(lane) ?? [];
       if (spans.every(([a, b]) => it.x2 < a || it.x1 > b)) {
@@ -547,16 +577,18 @@ function draw(repo, log, list, width) {
     g.addEventListener("click", () => host()?.openStrand(it.s.id));
     strandLayer.append(g);
 
-    if (it.kind === "loop" && !it.labelled) continue;
-    // Labels: above lanes print above the line, below lanes print beneath it.
+    if (it.kind === "loop") continue;
+    // Open strands are labelled in the tail past the head commit, right-aligned to the
+    // lane end: above lanes print above the line, below lanes beneath it. Names shorten
+    // to fit the tail so they never run back over the history.
     const ty = it.lane < 0 ? y - 10 : y + 19;
-    const name = it.s.name ?? "a strand";
-    const status2 = it.kind === "loop" ? "braided in" : STATUS_LABEL[status];
-    const text =
-      it.kind === "loop"
-        ? svg("text", { class: "sm-label", x: (it.bx + it.mx) / 2, y: ty, "text-anchor": "middle" })
-        : svg("text", { class: "sm-label", x: endX - 22, y: ty, "text-anchor": "end" });
-    text.append(svg("tspan", { class: "sm-label-name" }, name), svg("tspan", { class: "sm-label-status", dx: 6 }, status2));
+    // On narrow canvases the name gets the room and the legend chips carry the status.
+    const status2 = narrow ? "" : STATUS_LABEL[status];
+    const room = endX - 22 - Math.max(headX, it.bx) - 44 - (status2 ? textWidth(status2, STATUS_FONT) + 6 : 0);
+    const name = fit(displayName(it.s.name), Math.max(0, room), LABEL_FONT);
+    const text = svg("text", { class: "sm-label", x: endX - 22, y: ty, "text-anchor": "end" });
+    if (name) text.append(svg("tspan", { class: "sm-label-name" }, name));
+    if (status2 || !name) text.append(svg("tspan", { class: "sm-label-status", dx: name ? 6 : 0 }, status2 || STATUS_LABEL[status]));
     text.dataset.strand = it.s.id;
     text.addEventListener("click", () => host()?.openStrand(it.s.id));
     labelLayer.append(text);
@@ -588,6 +620,8 @@ function draw(repo, log, list, width) {
   root.append(svg("text", { class: "sm-head-tag", x: endX, y: mid + 4, "text-anchor": "end" }, tag));
   return { svg: root, width: total };
 }
+const LABEL_FONT = '650 13px ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+const STATUS_FONT = '500 13px ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 function rank(s) {
   return { proposed: 0, approved: 1, working: 2, rejected: 3, braided: 4 }[s.status] ?? 9;
 }
@@ -624,6 +658,7 @@ window.Braid = {
   decorateRepos,
   swatch,
   sparkline,
+  displayName,
   logo,
   art,
 };

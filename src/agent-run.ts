@@ -7,8 +7,10 @@ import type { Principal, Repo, Services } from "./contracts.ts";
 import { SQLCatalog } from "./catalog.ts";
 import { Collaboration } from "./issues.ts";
 import { NativeGit, R2Store } from "./cloudflare.ts";
-import { authorize, createTask, head, openProposal } from "./app.ts";
-import { subGoal, swarmStrandName, type SubTask, type SwarmRecord } from "./swarm.ts";
+import { authorize, braidIn, createTask, head, openProposal } from "./app.ts";
+import { decide, outsideScope, queueView, QUEUE, type QueueEntry, type QueueOutcome } from "./queue.ts";
+import { treeChanges } from "./rebase.ts";
+import { SWARM, subGoal, swarmStrandName, type SubTask, type SwarmRecord } from "./swarm.ts";
 import { workos } from "./auth.ts";
 import { check, Fault } from "./storage.ts";
 import { journalFiles } from "./pi-storage.ts";
@@ -151,6 +153,9 @@ export class AgentRun {
     sql.exec("CREATE TABLE IF NOT EXISTS state (k TEXT PRIMARY KEY, v TEXT NOT NULL)");
     sql.exec("CREATE TABLE IF NOT EXISTS budget (day TEXT PRIMARY KEY, n INTEGER NOT NULL)");
     sql.exec("CREATE TABLE IF NOT EXISTS swarms (id TEXT PRIMARY KEY, created INTEGER NOT NULL, data TEXT NOT NULL)");
+    // Braid queue (registry instance): waiting entries in order, and recent outcomes.
+    sql.exec("CREATE TABLE IF NOT EXISTS queue (proposal TEXT PRIMARY KEY, queued INTEGER NOT NULL, data TEXT NOT NULL)");
+    sql.exec("CREATE TABLE IF NOT EXISTS queue_log (at INTEGER NOT NULL, data TEXT NOT NULL)");
   }
   private rows(q: string, ...args: any[]): any[] {
     return this.ctx.storage.sql.exec(q, ...args).toArray();
@@ -290,7 +295,7 @@ export class AgentRun {
         }
         case "swarm": {
           const tasks = b.tasks as SubTask[];
-          check(Array.isArray(tasks) && tasks.length >= 2 && tasks.length <= 4, 422, "Invalid plan");
+          check(Array.isArray(tasks) && tasks.length >= SWARM.minAgents && tasks.length <= SWARM.maxAgents, 422, "Invalid plan");
           const now = Date.now();
           // Atomic: admission and every row are written before the first await.
           admitRun(this.admission(), now, tasks.length);
@@ -301,14 +306,16 @@ export class AgentRun {
             run: crypto.randomUUID(),
             strand: swarmStrandName(sid, i + 1, t.title),
           }));
-          const swarm: SwarmRecord = {
+          const swarm: SwarmRecord & { braider?: Principal } = {
             id: sid,
             goal: b.goal,
             actor: b.actor.id,
             created: now,
             model: b.model,
             tasks: planned,
+            ...(b.autoBraid ? { autoBraid: true, braider: b.actor } : {}),
           };
+          this.remember(b.repo);
           for (const t of planned)
             this.rows(
               "INSERT INTO runs VALUES (?,?,?,?)",
@@ -376,6 +383,53 @@ export class AgentRun {
           check(row, 404, "Not found");
           const data = { ...JSON.parse(row.data), ...b.summary };
           this.rows("UPDATE runs SET status=?, data=? WHERE id=?", data.status, JSON.stringify(data), b.id);
+          // A swarm that opted into auto-braid sends each finished part to the braid queue.
+          if (data.status === "proposed" && data.proposal && data.swarm) {
+            const sw = this.rows("SELECT data FROM swarms WHERE id=?", data.swarm)[0];
+            const swarm = sw ? JSON.parse(sw.data) : undefined;
+            const queued = this.entries().some((e) => e.run === b.id);
+            if (swarm?.autoBraid && swarm.braider && !queued && !this.finishedRun(b.id)) {
+              const t = swarm.tasks.find((x: any) => x.run === b.id);
+              this.enqueueEntry({
+                proposal: data.proposal,
+                run: b.id,
+                swarm: swarm.id,
+                mode: "auto",
+                files: t?.files ?? [],
+                actor: swarm.braider,
+                queued: Date.now(),
+                state: "waiting",
+              });
+            }
+          }
+          if (this.entries().some((e) => e.run === b.id)) await this.ctx.storage.setAlarm(Date.now() + 200);
+          return Response.json({ ok: true });
+        }
+        case "enqueue": {
+          this.remember(b.repo);
+          check(typeof b.proposal === "string" && b.mode === "approved", 422, "Invalid queue request");
+          const existing = this.entries().find((e) => e.proposal === b.proposal);
+          if (!existing) {
+            check(this.entries().length < QUEUE.size, 429, "The braid queue is full");
+            const run = this.summaries().find((x) => x.proposal === b.proposal);
+            this.enqueueEntry({
+              proposal: b.proposal,
+              ...(run ? { run: run.id, ...(run.swarm ? { swarm: run.swarm } : {}) } : {}),
+              mode: "approved",
+              actor: b.actor,
+              queued: Date.now(),
+              state: "waiting",
+            });
+          }
+          await this.ctx.storage.setAlarm(Date.now() + 100);
+          return Response.json(this.queueState());
+        }
+        case "queue":
+          return Response.json(this.queueState());
+        case "landed": {
+          this.remember(b.repo);
+          await this.catchUpStale(this.services(), b.repo);
+          if (this.entries().length) await this.ctx.storage.setAlarm(Date.now() + 100);
           return Response.json({ ok: true });
         }
         case "catch-up-run": {
@@ -460,6 +514,253 @@ export class AgentRun {
       );
     }
   }
+  /* ---------------- braid queue (registry instance) ---------------- */
+
+  private draining = false;
+  /** Queue actors whose access was rechecked live in the last minute (id:role → time). */
+  private checked = new Map<string, number>();
+  private async queueAccess(s: Services, p: Principal, repo: string) {
+    const key = p.id + ":" + p.session + ":" + repo;
+    if (Date.now() - (this.checked.get(key) ?? 0) < 60_000) return;
+    await this.liveAccess(s, p, repo, "admin");
+    this.checked.set(key, Date.now());
+  }
+  private remember(repo: Repo) {
+    if (repo?.id)
+      this.rows("INSERT INTO state VALUES ('repo',?) ON CONFLICT(k) DO UPDATE SET v=excluded.v", JSON.stringify(repo));
+  }
+  private entries(): QueueEntry[] {
+    return this.rows("SELECT data FROM queue ORDER BY queued, proposal").map((r) => JSON.parse(r.data));
+  }
+  private enqueueEntry(e: QueueEntry) {
+    this.rows("INSERT OR IGNORE INTO queue VALUES (?,?,?)", e.proposal, e.queued, JSON.stringify(e));
+  }
+  private saveEntry(e: QueueEntry, previous = e.proposal) {
+    this.rows("DELETE FROM queue WHERE proposal=?", previous);
+    this.rows("INSERT OR REPLACE INTO queue VALUES (?,?,?)", e.proposal, e.queued, JSON.stringify(e));
+  }
+  private finishedRun(run: string) {
+    return this.rows("SELECT data FROM queue_log ORDER BY at DESC LIMIT ?", QUEUE.log)
+      .map((r) => JSON.parse(r.data) as QueueOutcome)
+      .some((o) => o.run === run);
+  }
+  private finish(e: QueueEntry, outcome: QueueOutcome["outcome"], note: string, now = Date.now()) {
+    this.rows("DELETE FROM queue WHERE proposal=?", e.proposal);
+    const o: QueueOutcome = {
+      proposal: e.proposal,
+      ...(e.run ? { run: e.run } : {}),
+      ...(e.swarm ? { swarm: e.swarm } : {}),
+      outcome,
+      note,
+      at: now,
+      ...(outcome === "braided" ? { waited: now - e.queued } : {}),
+    };
+    this.rows("INSERT INTO queue_log VALUES (?,?)", now, JSON.stringify(o));
+    this.rows("DELETE FROM queue_log WHERE rowid NOT IN (SELECT rowid FROM queue_log ORDER BY at DESC LIMIT ?)", QUEUE.log);
+  }
+  private queueState() {
+    const log = this.rows("SELECT data FROM queue_log ORDER BY at DESC LIMIT ?", QUEUE.log).map(
+      (r) => JSON.parse(r.data) as QueueOutcome,
+    );
+    return queueView(this.entries(), log);
+  }
+  private async kick(run: string, proposal: string, note: string) {
+    const v = await this.call("run:" + run, "catch-up", { proposal });
+    const data = { ...this.summary(run), status: v.status ?? "catching_up", last: note, updated: Date.now() };
+    this.rows("UPDATE runs SET status=?, data=? WHERE id=?", data.status, JSON.stringify(data), run);
+  }
+  /** Something landed: every agent proposal that is now stale (and not queued) catches up. */
+  private async catchUpStale(s: Services, repo: Repo) {
+    const queued = new Set(this.entries().map((e) => e.proposal));
+    const [current, proposals, line] = await Promise.all([
+      head(s, repo),
+      s.catalog.proposals(repo.id),
+      s.git.log(repo.physical, "HEAD").then((l) => new Set(l.map((c: any) => c.sha as string))).catch(() => new Set<string>()),
+    ]);
+    const byId = new Map(proposals.map((p) => [p.id, p]));
+    let kicked = 0;
+    for (const run of this.summaries()) {
+      if (kicked >= 10) break;
+      if (run.status !== "proposed" || !run.proposal || queued.has(run.proposal)) continue;
+      const p = byId.get(run.proposal);
+      if (!p || p.status === "rejected" || p.base === current.sha || line.has(p.candidate)) continue;
+      try {
+        await this.kick(run.id, p.id, "Catching up automatically: another change was braided in");
+        kicked++;
+      } catch {}
+    }
+    return kicked;
+  }
+  /** One pass over the queue front: braid in what is ready, catch up the first stale entry. */
+  private async drain() {
+    if (this.draining) return;
+    this.draining = true;
+    try {
+      const saved = this.rows("SELECT v FROM state WHERE k='repo'")[0];
+      if (!saved) return;
+      const s = this.services();
+      const repo = await s.catalog.get(JSON.parse(saved.v).id);
+      if (!repo) {
+        for (const e of this.entries()) this.finish(e, "dropped", "The repository was removed");
+        return;
+      }
+      for (let i = 0; i < QUEUE.steps; i++) {
+        const e = this.entries()[0];
+        if (!e) return;
+        const now = Date.now();
+        const [current, proposal, log] = await Promise.all([
+          head(s, repo),
+          s.catalog.proposal(repo.id, e.proposal),
+          s.git.log(repo.physical, "HEAD").catch(() => []),
+        ]);
+        const line = new Set(log.map((c: any) => c.sha as string));
+        const run = e.run ? this.summary(e.run) : undefined;
+        const step = decide(e, {
+          proposal,
+          run,
+          head: current.sha,
+          braided: !!proposal && line.has(proposal.candidate),
+          now,
+        });
+        if (step.do === "wait") {
+          await this.ctx.storage.setAlarm(now + QUEUE.pollMs);
+          return;
+        }
+        if (step.do === "done") {
+          this.finish(e, step.outcome, step.note);
+          continue;
+        }
+        if (step.do === "follow") {
+          const prev = e.proposal;
+          e.proposal = step.proposal;
+          e.state = "waiting";
+          e.note = "Caught up; next in line";
+          this.saveEntry(e, prev);
+          // A clean catch-up keeps an approval a person gave.
+          if (e.mode === "approved") await s.catalog.review(repo.id, step.proposal, "approved").catch(() => false);
+          continue;
+        }
+        if (step.do === "catch_up") {
+          try {
+            await this.kick(e.run!, e.proposal, "Catching up: next in the braid queue");
+            e.state = "catching_up";
+            e.kicked = now;
+            e.catchups = (e.catchups ?? 0) + 1;
+            e.note = "Catching up onto the latest commit";
+            this.saveEntry(e);
+          } catch (err: any) {
+            if (/Caught up \d+ times/.test(err?.message ?? "")) {
+              this.finish(e, "held", err.message);
+              continue;
+            }
+            e.note = err?.message ?? "Could not start catching up";
+            this.saveEntry(e);
+          }
+          await this.ctx.storage.setAlarm(now + QUEUE.pollMs);
+          return;
+        }
+        if (step.do === "rebase") {
+          // A person's proposal (no agent behind it): fast catch-up here, or a person must.
+          const task = proposal ? await s.catalog.get(proposal.task) : null;
+          const tag = crypto.randomUUID().slice(0, 8);
+          const res =
+            task && proposal
+              ? await (s.git as NativeGit)
+                  .fastRebase({
+                    canonical: repo.physical,
+                    strand: task.physical,
+                    base: proposal.base,
+                    candidate: proposal.candidate,
+                    onto: current.sha,
+                    ref: `refs/heads/braid/queue-${tag}`,
+                    ontoRef: `refs/heads/braid/onto-${tag}`,
+                  })
+                  .catch((err: any) => ({ ok: false as const, reason: err?.message ?? "failed", conflicts: [] }))
+              : { ok: false as const, reason: "strand unavailable", conflicts: [] as string[] };
+          if (!res.ok) {
+            this.finish(
+              e,
+              "held",
+              res.conflicts.length
+                ? `Overlaps what landed (${res.conflicts.slice(0, 3).join(", ")}); catch it up by hand`
+                : `Couldn't catch up automatically: ${res.reason}`,
+            );
+            continue;
+          }
+          try {
+            await this.queueAccess(s, e.actor, repo.id);
+            const next = await openProposal(s, e.actor, repo, {
+              task: task!.id,
+              base: current.sha,
+              candidate: res.candidate,
+            });
+            await s.catalog.supersede(repo.id, proposal!.id);
+            await s.collaboration
+              ?.review(repo.id, proposal!.id, e.actor, `Superseded by the braid queue: rebased onto ${current.sha.slice(0, 7)} in the Worker (no overlap). New proposal: ${next.id}.`)
+              .catch(() => {});
+            await s.catalog.review(repo.id, next.id, "approved");
+            const prev = e.proposal;
+            e.proposal = next.id;
+            e.note = "Rebased in the Worker; next in line";
+            this.saveEntry(e, prev);
+          } catch (err: any) {
+            this.finish(e, "held", err?.message ?? "Couldn't propose the rebased change");
+          }
+          continue;
+        }
+        // braid
+        try {
+          await this.queueAccess(s, e.actor, repo.id);
+        } catch (err: any) {
+          this.finish(e, "held", `The person who queued this can't braid in now (${err?.message ?? "access"})`);
+          continue;
+        }
+        if (e.mode === "auto") {
+          const task = await s.catalog.get(proposal!.task);
+          let outside: string[] = ["(unknown)"];
+          try {
+            const [b, c] = await Promise.all([
+              s.git.commit(task!.physical, proposal!.base),
+              s.git.commit(task!.physical, proposal!.candidate),
+            ]);
+            const changed = [...(await treeChanges(s.git, task!.physical, b!.tree, c!.tree)).keys()];
+            outside = outsideScope(changed, e.files);
+          } catch {}
+          if (outside.length) {
+            this.finish(e, "held", `Changed files outside its part (${outside.slice(0, 3).join(", ")}); review it by hand`);
+            continue;
+          }
+        }
+        if (step.approve) await s.catalog.review(repo.id, proposal!.id, "approved");
+        try {
+          await braidIn(s, repo, proposal!.id);
+        } catch (err: any) {
+          // Moved under us: decide again on the new head. Anything else needs a person.
+          if (err instanceof Fault && err.status === 409 && /head moved/.test(err.message)) continue;
+          this.finish(e, "held", err?.message ?? "Braiding in failed");
+          continue;
+        }
+        this.finish(e, "braided", e.mode === "auto" ? "Braided in automatically (clean, inside its part)" : "Braided in from the queue");
+        try {
+          await new Collaboration(this.env.DB as any).audit(repo.id, e.actor.id, "braid_queue_braided", {
+            proposal: proposal!.id,
+            run: e.run ?? null,
+            swarm: e.swarm ?? null,
+            mode: e.mode,
+            waited: now - e.queued,
+          });
+        } catch {}
+        // Agent proposals outside the queue catch up on their own.
+        const queued = new Set(this.entries().map((x) => x.proposal));
+        if (this.summaries().some((x) => x.status === "proposed" && x.proposal && !queued.has(x.proposal)))
+          await this.catchUpStale(s, repo).catch(() => 0);
+      }
+      await this.ctx.storage.setAlarm(Date.now() + 100);
+    } finally {
+      this.draining = false;
+    }
+  }
+
   private prune() {
     for (const stale of this.rows("SELECT id FROM runs ORDER BY created DESC LIMIT -1 OFFSET 50"))
       this.rows("DELETE FROM runs WHERE id=?", stale.id);
@@ -515,6 +816,7 @@ export class AgentRun {
   }
   async alarm() {
     const r = this.live ?? this.load();
+    if (!r && this.rows("SELECT proposal FROM queue LIMIT 1").length) return this.drain();
     if (!r || terminal(r.status)) {
       await this.destroyContainer();
       return;
@@ -747,6 +1049,29 @@ export class AgentRun {
             r.requests++;
             record(r, `Resolving conflicts (model request ${c.requests} of ${AGENT_LIMITS.resolveRequests})`);
           });
+        },
+        fast: async (n) => {
+          const t0 = Date.now();
+          const onto = (await head(s, r.repo)).sha;
+          check(r.task && r.base && r.candidate, 409, "Nothing to catch up");
+          if (onto === r.base) return { ok: false as const, reason: "already on the latest commit" };
+          const res = await (s.git as NativeGit).fastRebase({
+            canonical: r.repo.physical,
+            strand: r.task!.physical,
+            base: r.base!,
+            candidate: r.candidate!,
+            onto,
+            ref: `refs/heads/braid/attempt-${n}`,
+            ontoRef: `refs/heads/braid/onto-${n}`,
+          });
+          if (!res.ok)
+            return {
+              ok: false as const,
+              reason: res.conflicts.length
+                ? `both sides changed ${res.conflicts.slice(0, 3).join(", ")}`
+                : res.reason,
+            };
+          return { ok: true as const, onto, candidate: res.candidate, files: res.files, ref: `braid/attempt-${n}`, ms: Date.now() - t0 };
         },
         supersede: async (from, to, note) => {
           await s.catalog.supersede(r.repo.id, from);

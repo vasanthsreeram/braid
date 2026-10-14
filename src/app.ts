@@ -289,6 +289,96 @@ export async function openProposal(
   await s.catalog.propose(proposal);
   return proposal;
 }
+/**
+ * Braid in an approved proposal: fenced, compare-and-swap publication of its candidate as
+ * the new canonical head. Shared by POST /merge and the braid queue; callers authorize.
+ */
+export async function braidIn(s: Services, r: Repo, proposalId: string) {
+  const id = r.id;
+  const proposal = await s.catalog.proposal(id, proposalId);
+  check(
+    proposal?.status === "approved",
+    409,
+    "An approved proposal is required",
+  );
+  const prior = await s.catalog.mergeIntent(id);
+  if (prior?.state === "merged" && prior.proposal === proposalId)
+    return {
+      ok: true,
+      integrated: true,
+      candidate: prior.candidate,
+    };
+  check(
+    prior?.state !== "publishing",
+    409,
+    "Publishing intent exists; reconcile before retrying",
+  );
+  const task = await s.catalog.get(proposal.task);
+  check(
+    task && task.parent === id && task.tenant === r.tenant,
+    422,
+    "Task unavailable",
+  );
+  const current = await head(s, r);
+  check(
+    current.sha === proposal.base,
+    409,
+    "Canonical head moved; new proposal required",
+  );
+  await descendant(
+    s.git,
+    task.physical,
+    proposal.base,
+    proposal.candidate,
+  );
+  const intent: MergeIntent = {
+    repo: id,
+    proposal: proposalId,
+    base: proposal.base,
+    candidate: proposal.candidate,
+    ref: current.ref,
+    fence: uuid(),
+    state: "publishing",
+    error: null,
+  };
+  check(
+    await s.catalog.beginMerge(intent),
+    409,
+    "Another publisher holds the fence",
+  );
+  try {
+    // Immutable LFS associations become readable before ref publication. No repo code runs.
+    await copyManifests(s.store, r.tenant, task.id, id);
+    await s.git.publish(
+      task.physical,
+      r.physical,
+      current.ref,
+      proposal.base,
+      proposal.candidate,
+    );
+    check(
+      (await head(s, r)).sha === proposal.candidate,
+      502,
+      "Publication receipt disagrees with canonical head",
+    );
+    check(
+      await s.catalog.finishMerge(id, intent.fence, "merged"),
+      409,
+      "Publisher fence changed",
+    );
+  } catch {
+    // A transport failure can follow a successful remote push. Keep the fence until read-only reconciliation.
+    throw new Fault(
+      502,
+      "Publication uncertain; reconcile retained intent before retrying",
+    );
+  }
+  return {
+    ok: true,
+    integrated: true,
+    candidate: proposal.candidate,
+  };
+}
 /** Up to SWARM.listing file paths at the canonical head, for the swarm planner. */
 export async function repoPaths(s: Pick<Services, "git">, r: Repo) {
   const tip = (await s.git.log(r.physical, "HEAD").catch(() => []))[0]?.sha;
@@ -561,7 +651,7 @@ export function application(s: Services) {
               : "reader";
         // Agent and swarm routes answer 401 (not 404) without a session so the app
         // refreshes an expired token; it is returned before any repository lookup.
-        if (action === "agent-runs" || action === "swarms")
+        if (action === "agent-runs" || action === "swarms" || action === "queue")
           check(p, 401, "Authentication required");
         const r = await authorize(
           s,
@@ -580,6 +670,7 @@ export function application(s: Services) {
                 "token",
                 "merge",
                 "reconcile",
+                "queue",
                 "agent-runs",
                 "swarms",
               ].includes(action)),
@@ -614,7 +705,7 @@ export function application(s: Services) {
             check(s.runs.catchUp, 503, "Agent runtime unavailable");
             const info = await s.runs.get(r, run);
             check(info.status === "proposed" && info.proposal, 409, "This agent has no proposal to catch up");
-            const proposal = (await s.catalog.proposals(id)).find((x) => x.id === info.proposal);
+            const proposal = await s.catalog.proposal(id, info.proposal);
             check(proposal && proposal.status !== "rejected", 409, "This proposal was rejected or replaced");
             const current = await head(s, r);
             check(current.sha !== proposal.base, 409, "This proposal is already on the latest commit");
@@ -648,7 +739,9 @@ export function application(s: Services) {
             check(r.state === "ready", 409, "Repository is not ready");
             const b = await bodyJSON(request);
             const goal = agentGoal(b);
-            const { agents } = swarmRequest(b);
+            const { agents, autoBraid } = swarmRequest(b);
+            // Braiding in is an admin action; opting a swarm into it needs the same role.
+            if (autoBraid) await authorize(s, p!, id, "admin");
             const room = await s.runs.capacity?.(r);
             if (room)
               check(
@@ -659,7 +752,7 @@ export function application(s: Services) {
                   : `Only ${room.limit - room.active} of ${room.limit} agent slots are free right now. Choose fewer agents or wait.`,
               );
             const tasks = await s.runs.plan(r, goal, agents, await repoPaths(s, r));
-            const started = await s.runs.swarm(r, p!, { goal, tasks });
+            const started = await s.runs.swarm(r, p!, { goal, tasks, autoBraid });
             result = json({ swarmId: started.swarmId, swarm: (await views(started.swarmId))[0] ?? null }, 202);
           } else if (sid && !path[5] && request.method === "GET") {
             const view = (await views(sid))[0];
@@ -1008,9 +1101,7 @@ export function application(s: Services) {
             400,
             "Invalid decision",
           );
-          const proposal = (await s.catalog.proposals(id)).find(
-            (x) => x.id === b.id,
-          );
+          const proposal = await s.catalog.proposal(id, b.id);
           check(proposal, 404, "Not found");
           if (b.status === "approved") {
             const current = await head(s, r);
@@ -1027,9 +1118,7 @@ export function application(s: Services) {
           );
           result = json({ ok: true, integrated: false });
         } else if (action === "diff" && request.method === "GET") {
-          const proposal = (await s.catalog.proposals(id)).find(
-            (x) => x.id === url.searchParams.get("proposal"),
-          );
+          const proposal = await s.catalog.proposal(id, url.searchParams.get("proposal") ?? "");
           check(proposal, 404, "Not found");
           const task = await s.catalog.get(proposal.task);
           check(
@@ -1044,91 +1133,29 @@ export function application(s: Services) {
           result = json(await s.catalog.mergeIntent(id));
         else if (action === "merge" && request.method === "POST") {
           const b = await bodyJSON(request);
-          const proposal = (await s.catalog.proposals(id)).find(
-            (x) => x.id === b.id,
-          );
-          check(
-            proposal?.status === "approved",
-            409,
-            "An approved proposal is required",
-          );
-          const prior = await s.catalog.mergeIntent(id);
-          if (prior?.state === "merged" && prior.proposal === b.id)
-            return json({
-              ok: true,
-              integrated: true,
-              candidate: prior.candidate,
-            });
-          check(
-            prior?.state !== "publishing",
-            409,
-            "Publishing intent exists; reconcile before retrying",
-          );
-          const task = await s.catalog.get(proposal.task);
-          check(
-            task && task.parent === id && task.tenant === r.tenant,
-            422,
-            "Task unavailable",
-          );
-          const current = await head(s, r);
-          check(
-            current.sha === proposal.base,
-            409,
-            "Canonical head moved; new proposal required",
-          );
-          await descendant(
-            s.git,
-            task.physical,
-            proposal.base,
-            proposal.candidate,
-          );
-          const intent: MergeIntent = {
-            repo: id,
-            proposal: b.id,
-            base: proposal.base,
-            candidate: proposal.candidate,
-            ref: current.ref,
-            fence: uuid(),
-            state: "publishing",
-            error: null,
-          };
-          check(
-            await s.catalog.beginMerge(intent),
-            409,
-            "Another publisher holds the fence",
-          );
-          try {
-            // Immutable LFS associations become readable before ref publication. No repo code runs.
-            await copyManifests(s.store, r.tenant, task.id, id);
-            await s.git.publish(
-              task.physical,
-              r.physical,
-              current.ref,
-              proposal.base,
-              proposal.candidate,
-            );
-            check(
-              (await head(s, r)).sha === proposal.candidate,
-              502,
-              "Publication receipt disagrees with canonical head",
-            );
-            check(
-              await s.catalog.finishMerge(id, intent.fence, "merged"),
-              409,
-              "Publisher fence changed",
-            );
-          } catch {
-            // A transport failure can follow a successful remote push. Keep the fence until read-only reconciliation.
-            throw new Fault(
-              502,
-              "Publication uncertain; reconcile retained intent before retrying",
-            );
-          }
-          result = json({
-            ok: true,
-            integrated: true,
-            candidate: proposal.candidate,
-          });
+          result = json(await braidIn(s, r, b.id));
+          // Something landed: stale agent proposals catch up on their own, and the braid
+          // queue moves on. Best effort; a person can still press "Catch up".
+          if (s.runs?.landed) await s.runs.landed(r).catch(() => {});
+        } else if (action === "queue") {
+          // Braid queue: approved or opted-in proposals braided in one at a time, each
+          // caught up onto the latest commit first. Reading needs reader, queuing admin
+          // (braiding in is an admin action).
+          check(p, 401, "Authentication required");
+          check(s.runs?.queue && s.runs.enqueue, 503, "Braid queue unavailable");
+          check(!r.parent, 400, "Proposals target a canonical repository");
+          if (request.method === "GET") result = json(await s.runs.queue(r));
+          else if (request.method === "POST") {
+            await authorize(s, p, id, "admin");
+            const b = await bodyJSON(request);
+            const proposal = await s.catalog.proposal(id, b.proposal);
+            check(proposal && proposal.status !== "rejected", 409, "Only open or approved proposals can be queued");
+            if (proposal.status === "open") {
+              // Queuing is approval: a person looked at it and wants it in.
+              check(await s.catalog.review(id, proposal.id, "approved"), 409, "Already reviewed");
+            }
+            result = json(await s.runs.enqueue(r, p, { proposal: proposal.id, mode: "approved" }), 202);
+          } else throw new Fault(405, "Method not allowed");
         } else if (action === "reconcile" && request.method === "POST") {
           const intent = await s.catalog.mergeIntent(id);
           if (intent?.state === "publishing") {
