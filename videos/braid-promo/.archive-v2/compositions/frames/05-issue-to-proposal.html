@@ -1,0 +1,370 @@
+<template>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      color: #fffdf8;
+      font-family: "Barlow", sans-serif;
+    }
+    .\30 5-issue-to-proposal-bg { position: absolute; inset: 0; background: #2a2823; }
+    .\30 5-issue-to-proposal-stage { position: absolute; inset: 0; transform-origin: 50% 42%; }
+    .\30 5-issue-to-proposal-mono {
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+    }
+
+    /* chrome */
+    .\30 5-issue-to-proposal-num { position: absolute; left: 104px; top: 112px; font-size: 15px; color: #b8b0a3; opacity: 0.6; }
+    .\30 5-issue-to-proposal-num b { color: #ff681e; font-weight: 500; }
+
+    /* issue card */
+    .\30 5-issue-to-proposal-card {
+      position: absolute; left: 104px; top: 300px; width: 456px; height: 230px;
+      background: #1A1918; border-top: 1px solid #b8b0a3;
+      padding: 26px 30px; transform-origin: 0 0; z-index: 5;
+    }
+    .\30 5-issue-to-proposal-card-meta { display: flex; justify-content: space-between; font-size: 16px; color: #b8b0a3; }
+    .\30 5-issue-to-proposal-card-meta b { color: #ff681e; font-weight: 500; }
+    .\30 5-issue-to-proposal-card-title { margin-top: 22px; font-size: 46px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; text-transform: lowercase; }
+    .\30 5-issue-to-proposal-line { height: 8px; background: #504B48; margin-top: 18px; }
+
+    /* Clef panel */
+    .\30 5-issue-to-proposal-panel {
+      position: absolute; left: 620px; top: 120px; width: 760px; height: 704px;
+      background: #1A1918; border: 1px solid #504B48;
+    }
+    .\30 5-issue-to-proposal-hdr { position: absolute; left: 40px; top: 26px; font-size: 18px; color: #fffdf8; }
+    .\30 5-issue-to-proposal-kick { position: absolute; left: 40px; top: 56px; font-size: 15px; color: #ff681e; }
+    .\30 5-issue-to-proposal-rule { position: absolute; right: 40px; top: 34px; width: 36px; height: 2px; background: #ff681e; }
+    .\30 5-issue-to-proposal-stamp {
+      position: absolute; left: 362px; top: 116px; padding: 14px 20px;
+      border: 3px solid #ff681e; color: #ff681e; font-size: 22px; letter-spacing: 0.12em;
+      transform-origin: 50% 50%;
+    }
+    .\30 5-issue-to-proposal-stamp b { color: #fffdf8; font-weight: 500; }
+    .\30 5-issue-to-proposal-strap { position: absolute; left: 40px; top: 254px; font-size: 15px; color: #b8b0a3; min-width: 680px; display: flex; align-items: baseline; }
+    .\30 5-issue-to-proposal-strap i { font-style: normal; color: #ff681e; margin-right: 10px; }
+    .\30 5-issue-to-proposal-caret { display: inline-block; width: 9px; height: 17px; background: #ff681e; margin-left: 3px; transform: translateY(2px); }
+
+    .\30 5-issue-to-proposal-rows { position: absolute; left: 40px; top: 292px; width: 680px; }
+    .\30 5-issue-to-proposal-row {
+      position: relative; height: 96px; border-top: 1px solid #504B48;
+      display: grid; grid-template-columns: 150px 150px 1fr 100px; align-items: center;
+    }
+    .\30 5-issue-to-proposal-hl { position: absolute; inset: 1px -16px 0 -16px; background: #ff681e; opacity: 0; }
+    .\30 5-issue-to-proposal-q { position: relative; font-size: 15px; color: #b8b0a3; }
+    .\30 5-issue-to-proposal-q i { font-style: normal; color: #504B48; margin-left: 8px; }
+    .\30 5-issue-to-proposal-a {
+      position: relative; display: inline-block; justify-self: start;
+      font-size: 44px; font-weight: 700; letter-spacing: -0.02em; text-transform: lowercase;
+      transform-origin: 0% 55%;
+    }
+    .\30 5-issue-to-proposal-track { position: relative; height: 10px; background: #504B48; margin-right: 26px; overflow: hidden; }
+    .\30 5-issue-to-proposal-fill { width: 100%; height: 100%; background: #ff681e; transform: scaleX(0); transform-origin: left center; }
+    .\30 5-issue-to-proposal-v { position: relative; font-size: 22px; text-align: right; color: #fffdf8; letter-spacing: 0.06em; }
+
+    /* stopwatch */
+    .\30 5-issue-to-proposal-watch { position: absolute; left: 104px; top: 380px; width: 456px; border-top: 1px solid #504B48; padding-top: 24px; }
+    .\30 5-issue-to-proposal-watch-lbl { display: flex; align-items: center; gap: 14px; font-size: 15px; color: #ff681e; }
+    .\30 5-issue-to-proposal-big { margin-top: 18px; display: flex; align-items: baseline; gap: 14px; transform-origin: 0% 80%; }
+    .\30 5-issue-to-proposal-big-n { font-size: 210px; font-weight: 900; line-height: 0.82; letter-spacing: -0.04em; color: #ff681e; }
+    .\30 5-issue-to-proposal-big-u { font-size: 72px; font-weight: 900; letter-spacing: -0.03em; color: #fffdf8; }
+    .\30 5-issue-to-proposal-watch-sub { margin-top: 26px; font-size: 15px; color: #b8b0a3; }
+
+    /* strand + rail + proposal */
+    .\30 5-issue-to-proposal-svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .\30 5-issue-to-proposal-rail-lbl { position: absolute; left: 1470px; top: 290px; font-size: 15px; color: #b8b0a3; min-width: 346px; }
+    .\30 5-issue-to-proposal-rail-lbl b { color: #ff681e; font-weight: 500; }
+    .\30 5-issue-to-proposal-rail { position: absolute; left: 1470px; top: 333px; width: 346px; height: 6px; background: #504B48; overflow: hidden; }
+    .\30 5-issue-to-proposal-rail-fill { width: 100%; height: 100%; background: #ff681e; transform: scaleX(0); transform-origin: left center; }
+    .\30 5-issue-to-proposal-prop {
+      position: absolute; left: 1470px; top: 372px; width: 346px; height: 224px;
+      background: #ff681e; color: #2a2823; padding: 26px 28px;
+    }
+    .\30 5-issue-to-proposal-prop-k { font-size: 15px; color: rgba(17,17,17,0.55); }
+    .\30 5-issue-to-proposal-prop-t { margin-top: 18px; font-size: 54px; font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; }
+    .\30 5-issue-to-proposal-prop-t span { display: block; }
+    .\30 5-issue-to-proposal-prop-r { position: absolute; left: 28px; bottom: 26px; width: 36px; height: 2px; background: #2a2823; }
+    .\30 5-issue-to-proposal-prop-by { position: absolute; right: 28px; bottom: 18px; font-size: 13px; color: rgba(17,17,17,0.55); }
+    .\30 5-issue-to-proposal-coffee { position: absolute; left: 1470px; top: 622px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: #b8b0a3; transform-origin: 0% 50%; }
+  </style>
+
+  <div data-hf-id="hf-qufu" id="root" data-composition-id="05-issue-to-proposal" data-start="0" data-duration="13.203" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-6xw5" id="05-issue-to-proposal-bg" class="05-issue-to-proposal-bg clip" data-start="0" data-duration="13.203" data-track-index="0"></div>
+
+    <div data-hf-id="hf-umqq" id="05-issue-to-proposal-stage" class="05-issue-to-proposal-stage">
+      <div data-hf-id="hf-rgjo" id="05-issue-to-proposal-num" class="05-issue-to-proposal-num 05-issue-to-proposal-mono"><b data-hf-id="hf-30ij">No. 05</b> &#160;/&#160; issue → proposal</div>
+
+      <!-- Clef decision panel (focal) -->
+      <div data-hf-id="hf-bsl6" id="05-issue-to-proposal-panel" class="05-issue-to-proposal-panel">
+        <div data-hf-id="hf-84zo" id="05-issue-to-proposal-hdr" class="05-issue-to-proposal-hdr 05-issue-to-proposal-mono">CLEF · @cf/cloudflare/clef-flash</div>
+        <div data-hf-id="hf-e554" id="05-issue-to-proposal-kick" class="05-issue-to-proposal-kick 05-issue-to-proposal-mono">Workers AI decision model</div>
+        <div data-hf-id="hf-99ew" id="05-issue-to-proposal-rule" class="05-issue-to-proposal-rule"></div>
+
+        <div data-hf-id="hf-8h9e" id="05-issue-to-proposal-stamp" class="05-issue-to-proposal-stamp 05-issue-to-proposal-mono">ASSIGNED → <b data-hf-id="hf-44np">AGENT-042</b></div>
+
+        <div data-hf-id="hf-hvm4" id="05-issue-to-proposal-strap" class="05-issue-to-proposal-strap 05-issue-to-proposal-mono"><i data-hf-id="hf-6q95">/</i><span data-hf-id="hf-x713" id="05-issue-to-proposal-strap-text"></span><span data-hf-id="hf-3vsr" id="05-issue-to-proposal-caret" class="05-issue-to-proposal-caret"></span></div>
+
+        <div data-hf-id="hf-aa7q" id="05-issue-to-proposal-rows" class="05-issue-to-proposal-rows">
+          <div data-hf-id="hf-r4ku" class="05-issue-to-proposal-row" data-k="type">
+            <div data-hf-id="hf-x7df" class="05-issue-to-proposal-hl"></div>
+            <div data-hf-id="hf-m0ai" class="05-issue-to-proposal-q 05-issue-to-proposal-mono">type<i data-hf-id="hf-9w8a">→</i></div>
+            <div data-hf-id="hf-zbgr" class="05-issue-to-proposal-a" data-k="type">bug</div>
+            <div data-hf-id="hf-65r8" class="05-issue-to-proposal-track"><div data-hf-id="hf-ux0c" class="05-issue-to-proposal-fill" data-p="0.97"></div></div>
+            <div data-hf-id="hf-bz6s" class="05-issue-to-proposal-v 05-issue-to-proposal-mono" data-k="type" data-p="0.97">0.00</div>
+          </div>
+          <div data-hf-id="hf-r4uq" class="05-issue-to-proposal-row" data-k="priority">
+            <div data-hf-id="hf-dtrn" class="05-issue-to-proposal-hl"></div>
+            <div data-hf-id="hf-smha" class="05-issue-to-proposal-q 05-issue-to-proposal-mono">priority<i data-hf-id="hf-9hym">→</i></div>
+            <div data-hf-id="hf-touw" class="05-issue-to-proposal-a" data-k="priority">p1</div>
+            <div data-hf-id="hf-yzj0" class="05-issue-to-proposal-track"><div data-hf-id="hf-c8s2" class="05-issue-to-proposal-fill" data-p="0.91"></div></div>
+            <div data-hf-id="hf-b71a" class="05-issue-to-proposal-v 05-issue-to-proposal-mono" data-k="priority" data-p="0.91">0.00</div>
+          </div>
+          <div data-hf-id="hf-36wf" class="05-issue-to-proposal-row" data-k="owner">
+            <div data-hf-id="hf-dfgm" class="05-issue-to-proposal-hl"></div>
+            <div data-hf-id="hf-qhol" class="05-issue-to-proposal-q 05-issue-to-proposal-mono">owner<i data-hf-id="hf-9w9n">→</i></div>
+            <div data-hf-id="hf-cr5u" class="05-issue-to-proposal-a" data-k="owner">auth</div>
+            <div data-hf-id="hf-xslx" class="05-issue-to-proposal-track"><div data-hf-id="hf-0w8g" class="05-issue-to-proposal-fill" data-p="0.88"></div></div>
+            <div data-hf-id="hf-yma5" class="05-issue-to-proposal-v 05-issue-to-proposal-mono" data-k="owner" data-p="0.88">0.00</div>
+          </div>
+          <div data-hf-id="hf-jn4p" class="05-issue-to-proposal-row" data-k="urgent">
+            <div data-hf-id="hf-d15l" class="05-issue-to-proposal-hl"></div>
+            <div data-hf-id="hf-iejf" class="05-issue-to-proposal-q 05-issue-to-proposal-mono">urgent<i data-hf-id="hf-aako">→</i></div>
+            <div data-hf-id="hf-9twr" class="05-issue-to-proposal-a" data-k="urgent">yes</div>
+            <div data-hf-id="hf-y6wy" class="05-issue-to-proposal-track"><div data-hf-id="hf-3kw7" class="05-issue-to-proposal-fill" data-p="0.94"></div></div>
+            <div data-hf-id="hf-ydt4" class="05-issue-to-proposal-v 05-issue-to-proposal-mono" data-k="urgent" data-p="0.94">0.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- issue card (drops in, then docks into the panel) -->
+      <div data-hf-id="hf-mwkw" id="05-issue-to-proposal-card" class="05-issue-to-proposal-card">
+        <div data-hf-id="hf-n9oj" class="05-issue-to-proposal-card-meta 05-issue-to-proposal-mono"><b data-hf-id="hf-mxsv">#142</b><span data-hf-id="hf-36vh">open</span></div>
+        <div data-hf-id="hf-0ny8" class="05-issue-to-proposal-card-title">login redirect loops</div>
+        <div data-hf-id="hf-dq3u" class="05-issue-to-proposal-line" style="width: 82%"></div>
+        <div data-hf-id="hf-mk8p" class="05-issue-to-proposal-line" style="width: 54%"></div>
+      </div>
+
+      <!-- stopwatch -->
+      <div data-hf-id="hf-wff6" id="05-issue-to-proposal-watch" class="05-issue-to-proposal-watch">
+        <div data-hf-id="hf-t9sf" class="05-issue-to-proposal-watch-lbl 05-issue-to-proposal-mono">
+          <svg data-hf-id="hf-imct" width="26" height="30" viewBox="0 0 26 30" aria-hidden="true">
+            <rect data-hf-id="hf-lw99" x="9" y="0" width="8" height="3" fill="#ff681e" />
+            <circle data-hf-id="hf-j9w1" cx="13" cy="17" r="11" fill="none" stroke="#ff681e" stroke-width="2.5" />
+            <line data-hf-id="hf-sg9q" id="05-issue-to-proposal-hand" x1="13" y1="17" x2="13" y2="9" stroke="#fffdf8" stroke-width="2.5" />
+          </svg>
+          decision latency
+        </div>
+        <div data-hf-id="hf-szmm" id="05-issue-to-proposal-big" class="05-issue-to-proposal-big">
+          <span data-hf-id="hf-hs15" id="05-issue-to-proposal-big-n" class="05-issue-to-proposal-big-n">0</span><span data-hf-id="hf-ys5o" class="05-issue-to-proposal-big-u">ms</span>
+        </div>
+        <div data-hf-id="hf-9te8" id="05-issue-to-proposal-watch-sub" class="05-issue-to-proposal-watch-sub 05-issue-to-proposal-mono">all calls · one pass</div>
+      </div>
+
+      <!-- strand spinning off the panel into the rail -->
+      <svg data-hf-id="hf-wcwj" class="05-issue-to-proposal-svg" viewBox="0 0 1920 1080" aria-hidden="true">
+        <path data-hf-id="hf-pk2v" id="05-issue-to-proposal-strand" d="M1380 266 C1440 266 1474 214 1448 182 C1424 152 1386 196 1412 238 C1436 276 1470 292 1470 336" fill="none" stroke="#ff681e" stroke-width="3" stroke-linecap="butt" />
+      </svg>
+      <div data-hf-id="hf-vp31" id="05-issue-to-proposal-rail-lbl" class="05-issue-to-proposal-rail-lbl 05-issue-to-proposal-mono"><b data-hf-id="hf-xyvd">AGENT-042</b> · <span data-hf-id="hf-qr3y" id="05-issue-to-proposal-rail-text">working</span></div>
+      <div data-hf-id="hf-o1ek" id="05-issue-to-proposal-rail" class="05-issue-to-proposal-rail"><div data-hf-id="hf-e8ki" id="05-issue-to-proposal-rail-fill" class="05-issue-to-proposal-rail-fill"></div></div>
+
+      <div data-hf-id="hf-fmwe" id="05-issue-to-proposal-prop" class="05-issue-to-proposal-prop">
+        <div data-hf-id="hf-5sj3" class="05-issue-to-proposal-prop-k 05-issue-to-proposal-mono">proposal ready</div>
+        <div data-hf-id="hf-qmo3" class="05-issue-to-proposal-prop-t"><span data-hf-id="hf-ykm9">#142 →</span><span data-hf-id="hf-qor4">7e2d10b</span></div>
+        <div data-hf-id="hf-3wud" class="05-issue-to-proposal-prop-r"></div>
+        <div data-hf-id="hf-sjqi" class="05-issue-to-proposal-prop-by 05-issue-to-proposal-mono">agent-042</div>
+      </div>
+
+      <div data-hf-id="hf-b127" id="05-issue-to-proposal-coffee" class="05-issue-to-proposal-coffee 05-issue-to-proposal-mono">
+        <svg data-hf-id="hf-176h" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+          <path data-hf-id="hf-vmkb" d="M5 12 H21 V22 Q21 27 16 27 H10 Q5 27 5 22 Z" fill="none" stroke="#ff681e" stroke-width="2.5" />
+          <path data-hf-id="hf-9n1r" d="M21 15 H24 Q27 15 27 18.5 Q27 22 24 22 H21" fill="none" stroke="#ff681e" stroke-width="2.5" />
+          <path data-hf-id="hf-u816" d="M10 3 Q8 6 10 8 M15 2 Q13 5 15 8" fill="none" stroke="#b8b0a3" stroke-width="2" />
+        </svg>
+        still hot
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const P = "05-issue-to-proposal-";
+      const D = 12.703;
+      const $ = (n) => document.getElementById(P + n);
+      const $$ = (c) => Array.from(document.getElementsByClassName(P + c));
+      const tl = gsap.timeline({ paused: true });
+
+      // macro: near-imperceptible push underneath the whole shot
+      tl.fromTo($("stage"), { scale: 1 }, { scale: 1.025, duration: D, ease: "none" }, 0);
+
+      // ── Scene 1 (0.0–1.0): issue card drops in, left third ──
+      tl.fromTo($("num"), { opacity: 0 }, { opacity: 0.6, duration: 0.4 }, 0);
+      tl.fromTo($("card"), { y: -110, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.5)" }, 0.1);
+
+      // ── Scene 2 (1.0–3.2): Clef panel; card slides in and docks; header, kicker, typed strap ──
+      tl.fromTo($("panel"), { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.85);
+      tl.fromTo($("hdr"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 1.0);
+      tl.fromTo($("rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power2.out", transformOrigin: "right center" }, 1.1);
+      // dock: left 104/top 300 -> panel slot 660/214 at 0.6 scale
+      tl.fromTo($("card"), { x: 0, scale: 1 }, { x: 556, y: -86, scale: 0.6, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 1.05);
+      tl.fromTo($("kick"), { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }, 2.6);
+
+      // discrete-text-sequence strap
+      const STRAP = [
+        { t: 0, text: "" },
+        { t: 1.55, text: "NO" },
+        { t: 1.66, text: "NO TOK" },
+        { t: 1.76, text: "NO TOKENS" },
+        { t: 1.92, text: "NO TOKENS GEN" },
+        { t: 2.02, text: "NO TOKENS GENERATED" },
+        { t: 2.38, text: "NO TOKENS GENERATED ·" },
+        { t: 2.52, text: "NO TOKENS GENERATED · EVERY" },
+        { t: 2.62, text: "NO TOKENS GENERATED · EVERY OPTION" },
+        { t: 2.82, text: "NO TOKENS GENERATED · EVERY OPTION SCORED IN PARALLEL" },
+      ];
+      const strapText = $("strap-text");
+      const caret = $("caret");
+      function strapAt(time) {
+        for (let i = STRAP.length - 1; i >= 0; i--) if (time >= STRAP[i].t) return STRAP[i].text;
+        return "";
+      }
+      const sd = { t: 0 };
+      tl.fromTo($("strap"), { opacity: 0 }, { opacity: 1, duration: 0.01 }, 1.5);
+      tl.fromTo(sd, { t: 0 }, {
+        t: D, duration: D, ease: "none",
+        onUpdate: () => {
+          strapText.textContent = strapAt(sd.t);
+          const on = sd.t < 3.3 && Math.sin(sd.t * Math.PI * 2 / 0.6) > -0.2;
+          caret.style.opacity = sd.t >= 1.5 && on ? "1" : "0";
+        },
+      }, 0);
+
+      // ── Scene 3 (3.2–5.4): rows appear; on "39 ms" all four bars snap at once + stopwatch freezes ──
+      const rows = $$("row");
+      tl.fromTo(rows, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.09 }, 3.2);
+      tl.fromTo($("watch"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 3.5);
+
+      const SNAP = 4.2, SNAP_DUR = 0.32;
+      const fills = $$("fill");
+      fills.forEach((f) => {
+        tl.fromTo(f, { scaleX: 0 }, { scaleX: parseFloat(f.dataset.p), duration: SNAP_DUR, ease: "power4.out" }, SNAP);
+      });
+      const answers = $$("a");
+      tl.fromTo(answers, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "power2.out" }, SNAP);
+      const vals = $$("v");
+      const vp = { v: 0 };
+      tl.fromTo(vp, { v: 0 }, {
+        v: 1, duration: SNAP_DUR, ease: "power4.out",
+        onUpdate: () => vals.forEach((el) => { el.textContent = (parseFloat(el.dataset.p) * vp.v).toFixed(2); }),
+      }, SNAP);
+
+      const bigN = $("big-n");
+      const hand = $("hand");
+      const sw = { ms: 0 };
+      tl.fromTo(sw, { ms: 0 }, {
+        ms: 39, duration: 0.36, ease: "none",
+        onUpdate: () => {
+          bigN.textContent = String(Math.round(sw.ms));
+          hand.setAttribute("transform", "rotate(" + (sw.ms * 9.2).toFixed(1) + " 13 17)");
+        },
+      }, SNAP);
+      tl.fromTo($("big"), { scale: 1.1 }, { scale: 1, duration: 0.35, ease: "back.out(2.4)" }, SNAP + 0.36);
+      tl.fromTo($("watch-sub"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, SNAP + 0.5);
+
+      // ── Scene 4 (5.4–8.6): asr-keyword-glow on each answer as it is spoken ──
+      const TIMINGS = {
+        type: { start: 5.4, end: 5.8 },
+        priority: { start: 5.9, end: 6.4 },
+        owner: { start: 6.6, end: 7.1 },
+        urgent: { start: 8.1, end: 8.9 },
+      };
+      const ATTACK = 0.12, RELEASE = 0.4, REST = 0.12, MAX_BLUR = 36, BOOST = 0.18;
+      const REST_RGB = { r: 255, g: 253, b: 248 }, ACT_RGB = { r: 255, g: 104, b: 30 };
+      function env(t, s, e) {
+        if (t < s) return 0;
+        if (t < e) return Math.min((t - s) / ATTACK, 1);
+        if (t < e + RELEASE) return 1 - ((t - e) / RELEASE) * (1 - REST);
+        return REST;
+      }
+      const lerp = (a, b, k) => Math.round(a + (b - a) * k);
+      const glowItems = rows.map((row) => ({
+        k: row.dataset.k,
+        a: row.getElementsByClassName(P + "a")[0],
+        v: row.getElementsByClassName(P + "v")[0],
+        hl: row.getElementsByClassName(P + "hl")[0],
+      }));
+      const gd = { t: 0 };
+      tl.fromTo(gd, { t: 0 }, {
+        t: D, duration: D, ease: "none",
+        onUpdate: () => {
+          glowItems.forEach((it) => {
+            const tm = TIMINGS[it.k];
+            const e = env(gd.t, tm.start, tm.end);
+            const col = "rgb(" + lerp(REST_RGB.r, ACT_RGB.r, e) + "," + lerp(REST_RGB.g, ACT_RGB.g, e) + "," + lerp(REST_RGB.b, ACT_RGB.b, e) + ")";
+            it.a.style.color = col;
+            it.a.style.textShadow = "0 0 " + (MAX_BLUR * e).toFixed(1) + "px rgba(255,104,30," + (0.75 * e).toFixed(3) + ")";
+            it.a.style.transform = "scale(" + (1 + BOOST * e).toFixed(4) + ")";
+            it.v.style.color = col;
+            it.hl.style.opacity = (0.09 * e).toFixed(3);
+          });
+        },
+      }, 0);
+
+      // ── Scene 5 (8.6–10.6): stamp thunks on; strand spins off; progress rail runs ──
+      tl.fromTo($("stamp"), { opacity: 0, scale: 1.7, rotation: -10 }, { opacity: 1, scale: 1, rotation: -4, duration: 0.2, ease: "power4.in" }, 8.7);
+      tl.fromTo($("panel"), { y: 0 }, { y: 5, duration: 0.06, ease: "power2.out" }, 8.9);
+      tl.to($("panel"), { y: 0, duration: 0.25, ease: "back.out(3)" }, 8.96);
+
+      const strand = $("strand");
+      const LEN = strand.getTotalLength();
+      strand.style.strokeDasharray = LEN;
+      tl.fromTo(strand, { strokeDashoffset: LEN }, { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 8.95);
+      tl.fromTo($("rail-lbl"), { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out" }, 9.35);
+      tl.fromTo($("rail"), { opacity: 0 }, { opacity: 1, duration: 0.15 }, 9.45);
+      tl.fromTo($("rail-fill"), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power1.inOut" }, 9.5);
+
+      const RAIL = [
+        { t: 0, text: "WORKING" },
+        { t: 9.5, text: "READING #142" },
+        { t: 9.78, text: "PATCHING" },
+        { t: 10.05, text: "RUNNING TESTS" },
+        { t: 10.3, text: "DONE" },
+      ];
+      const railText = $("rail-text");
+      const rd = { t: 0 };
+      tl.fromTo(rd, { t: 0 }, {
+        t: D, duration: D, ease: "none",
+        onUpdate: () => {
+          let s = RAIL[0].text;
+          for (let i = RAIL.length - 1; i >= 0; i--) if (rd.t >= RAIL[i].t) { s = RAIL[i].text; break; }
+          railText.textContent = s;
+        },
+      }, 0);
+
+      // ── Scene 6 (10.1–12.7): proposal card slides out at the strand's end; coffee pops; hold ──
+      tl.fromTo($("prop"),
+        { y: -40, opacity: 0, clipPath: "inset(0% 0% 100% 0%)" },
+        { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: "power3.out" }, 10.25);
+      tl.fromTo($("coffee"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)" }, 12.0);
+
+      tl.set({}, {}, D);
+      window.__timelines["05-issue-to-proposal"] = tl;
+    })();
+  </script>
+</template>

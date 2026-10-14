@@ -1,0 +1,336 @@
+<template>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      container-type: size;
+      font-family: "Barlow", "Montserrat", sans-serif;
+    }
+    [id="10-outro-ground"],
+    [id="10-outro-orange"],
+    [id="10-outro-fade"] {
+      position: absolute;
+      inset: 0;
+    }
+    [id="10-outro-ground"] { background: #2a2823; }
+    [id="10-outro-orange"] { background: #ff681e; opacity: 0; }
+    [id="10-outro-fade"] { background: #2a2823; opacity: 0; }
+
+    /* ---------- dark register (verb barrage + h2 line) ---------- */
+    [id="10-outro-dark"] {
+      position: absolute;
+      inset: 0;
+      container-type: size;
+    }
+    [id="10-outro-kickers"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 22cqh;
+      height: 30px;
+      text-align: center;
+    }
+    [data-10-outro="kicker"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 1.15cqw;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #ff681e;
+      opacity: 0;
+    }
+    [id="10-outro-verbs"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 27cqh;
+      height: 13cqw;
+    }
+    [data-10-outro="verb"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      text-align: center;
+      font-weight: 900;
+      font-size: 13cqw;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+      color: #fffdf8;
+      opacity: 0;
+    }
+    [data-10-outro="line"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 37cqh;
+      text-align: center;
+      font-weight: 700;
+      font-size: 4.5cqw;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: #fffdf8;
+      opacity: 0;
+    }
+    [data-10-outro="line"] span { display: inline-block; }
+    [data-10-outro="line"] .accent { color: #ff681e; }
+    [id="10-outro-strand"] {
+      position: absolute;
+      left: 18.75cqw;
+      width: 62.5cqw;
+      top: 58cqh;
+      height: 160px;
+      overflow: visible;
+    }
+
+    /* ---------- orange register (lockup) ---------- */
+    [id="10-outro-lockup"] {
+      position: absolute;
+      inset: 0;
+      container-type: size;
+      opacity: 0;
+    }
+    [id="10-outro-mark"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 22cqh;
+      text-align: center;
+      font-weight: 900;
+      font-size: 15cqw;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+      color: #2a2823;
+      transform-origin: 50% 80%;
+    }
+    [id="10-outro-braid"] {
+      position: absolute;
+      left: 27cqw;
+      width: 46cqw;
+      top: 49.5cqh;
+      height: 80px;
+      overflow: visible;
+    }
+    [id="10-outro-tagline"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 60cqh;
+      text-align: center;
+      font-weight: 600;
+      font-size: 2.8cqw;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      text-transform: lowercase;
+      color: rgba(17, 17, 17, 0.75);
+    }
+    [id="10-outro-tagline"] span { display: inline-block; margin: 0 0.12em; }
+    [id="10-outro-built"] {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 71.5cqh;
+      text-align: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 1.15cqw;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(17, 17, 17, 0.55);
+    }
+    [id="10-outro-built"] i {
+      display: inline-block;
+      width: 36px;
+      height: 2px;
+      background: #2a2823;
+      vertical-align: middle;
+      margin: 0 18px 4px;
+    }
+  </style>
+
+  <div data-hf-id="hf-xqa8" id="root" data-composition-id="10-outro" data-width="1920" data-height="1080" data-start="0" data-duration="7.988">
+    <!-- track 0: full-bleed grounds -->
+    <div data-hf-id="hf-pj6f" id="10-outro-ground" class="clip" data-start="0" data-duration="7.988" data-track-index="0"></div>
+    <div data-hf-id="hf-bwtv" id="10-outro-orange" class="clip" data-start="0" data-duration="7.988" data-track-index="1"></div>
+
+    <!-- track 2: dark register content -->
+    <div data-hf-id="hf-yrxs" id="10-outro-dark" class="clip" data-start="0" data-duration="7.988" data-track-index="2">
+      <div data-hf-id="hf-5c49" id="10-outro-kickers">
+        <div data-hf-id="hf-9h50" data-10-outro="kicker">01 / 05</div>
+        <div data-hf-id="hf-wvr3" data-10-outro="kicker">02 / 05</div>
+        <div data-hf-id="hf-3df6" data-10-outro="kicker">03 / 05</div>
+        <div data-hf-id="hf-fjit" data-10-outro="kicker">04 / 05</div>
+        <div data-hf-id="hf-izow" data-10-outro="kicker">05 / 05</div>
+      </div>
+      <div data-hf-id="hf-t0hl" id="10-outro-verbs">
+        <div data-hf-id="hf-jvif" data-10-outro="verb">fork</div>
+        <div data-hf-id="hf-btd3" data-10-outro="verb">triage</div>
+        <div data-hf-id="hf-r58v" data-10-outro="verb">propose</div>
+        <div data-hf-id="hf-wdpn" data-10-outro="verb">review</div>
+        <div data-hf-id="hf-3pdt" data-10-outro="verb">merge</div>
+      </div>
+      <div data-hf-id="hf-fgee" data-10-outro="line" id="10-outro-line-a"><span data-hf-id="hf-yzp0">hundreds</span> <span data-hf-id="hf-ah8k">of</span> <span data-hf-id="hf-97vv">agents</span></div>
+      <div data-hf-id="hf-biad" data-10-outro="line" id="10-outro-line-b"><span data-hf-id="hf-04x7">one</span> <span data-hf-id="hf-ybl8" class="accent">clean</span> <span data-hf-id="hf-jrpz">history.</span></div>
+      <svg data-hf-id="hf-skii" id="10-outro-strand" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true">
+        <path data-hf-id="hf-818p" data-10-outro="s" fill="none" stroke="#b8b0a3" stroke-width="6" stroke-linecap="round" />
+        <path data-hf-id="hf-u1e1" data-10-outro="s" fill="none" stroke="#fffdf8" stroke-width="6" stroke-linecap="round" />
+        <path data-hf-id="hf-9ef1" data-10-outro="s" fill="none" stroke="#ff681e" stroke-width="6" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <!-- track 3: orange register lockup -->
+    <div data-hf-id="hf-5l65" id="10-outro-lockup" class="clip" data-start="0" data-duration="7.988" data-track-index="3">
+      <div data-hf-id="hf-hmlk" id="10-outro-mark">braid</div>
+      <svg data-hf-id="hf-m797" id="10-outro-braid" viewBox="0 0 900 80" preserveAspectRatio="none" aria-hidden="true">
+        <path data-hf-id="hf-avqr" data-10-outro="b" fill="none" stroke="#2a2823" stroke-width="7" stroke-linecap="round" />
+        <path data-hf-id="hf-8bk7" data-10-outro="b" fill="none" stroke="rgba(17,17,17,0.55)" stroke-width="7" stroke-linecap="round" />
+        <path data-hf-id="hf-ka3p" data-10-outro="b" fill="none" stroke="rgba(17,17,17,0.75)" stroke-width="7" stroke-linecap="round" />
+      </svg>
+      <div data-hf-id="hf-q0cp" id="10-outro-tagline"><span data-hf-id="hf-dghw">where</span><span data-hf-id="hf-h5tq">parallel</span><span data-hf-id="hf-ydlo">work</span><span data-hf-id="hf-vkhe">comes</span><span data-hf-id="hf-tebv">together</span></div>
+      <div data-hf-id="hf-dred" id="10-outro-built"><i data-hf-id="hf-wt6k"></i>built on cloudflare<i data-hf-id="hf-zeb8"></i></div>
+    </div>
+
+    <!-- track 4: final fade to ink (final frame only) -->
+    <div data-hf-id="hf-8rbc" id="10-outro-fade" class="clip" data-start="0" data-duration="7.988" data-track-index="4"></div>
+  </div>
+
+  <script>
+    (function () {
+      var FID = "10-outro";
+      var DUR = 7.988;
+      var root = document.querySelector('[data-composition-id="' + FID + '"]');
+      function q(sel) { return root.querySelector(sel); }
+      function qa(sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); }
+      function byId(id) { return q('[id="' + FID + "-" + id + '"]'); }
+
+      // One onset array from the VO word timings: fork, triage, propose, review, merge.
+      var BEATS = [0.08, 0.56, 1.2, 1.84, 2.4];
+      var T_HUNDREDS = 3.04, T_ONE = 4.24, T_THIS = 5.44, T_BRAID = 5.68;
+
+      var verbs = qa('[data-10-outro="verb"]');
+      var kickers = qa('[data-10-outro="kicker"]');
+      var strands = qa('[data-10-outro="s"]');
+      var braids = qa('[data-10-outro="b"]');
+      var lineA = byId("line-a"), lineB = byId("line-b");
+      var dark = byId("dark"), orange = byId("orange"), lockup = byId("lockup");
+      var mark = byId("mark"), fade = byId("fade");
+      var strandSvg = byId("strand");
+      var tagWords = qa('[id="10-outro-tagline"] span');
+      var built = byId("built");
+
+      // Strand geometry: three strands, each y = cy + A*sin(PI*k*x/W + phase).
+      // k = twists (one per verb); A -> 0 straightens them into one clean line.
+      var PH = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
+      function buildPath(W, H, k, A, phase) {
+        var cy = H / 2, n = 140, d = "";
+        for (var j = 0; j <= n; j++) {
+          var x = (W * j) / n;
+          var y = cy + A * Math.sin((Math.PI * k * x) / W + phase);
+          d += (j === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2);
+        }
+        return d;
+      }
+      var strandState = { k: 0, A: 46 };
+      function drawStrand() {
+        for (var i = 0; i < strands.length; i++) {
+          strands[i].setAttribute("d", buildPath(1200, 160, strandState.k, strandState.A, PH[i]));
+        }
+      }
+      var braidState = { k: 0, A: 0 };
+      function drawBraid() {
+        for (var i = 0; i < braids.length; i++) {
+          braids[i].setAttribute("d", buildPath(900, 80, braidState.k, braidState.A, PH[i]));
+        }
+      }
+      drawStrand();
+      drawBraid();
+
+      var tl = gsap.timeline({ paused: true });
+
+      // ---- Macro camera: slow push on the dark register underneath the barrage ----
+      tl.fromTo(dark, { scale: 1 }, { scale: 1.035, duration: T_THIS, ease: "none" }, 0);
+
+      // ---- Scene 1: verb barrage (kinetic-beat-slam, distinct entrance per verb) ----
+      tl.fromTo(strandSvg, { opacity: 0, scaleX: 0.6 }, { opacity: 1, scaleX: 1, duration: 0.4, ease: "power3.out" }, 0);
+
+      var entrances = [
+        [{ scale: 1.5, filter: "blur(16px)", opacity: 0 }, { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.32, ease: "power4.out" }],
+        [{ x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "expo.out" }],
+        [{ y: 110, rotation: 6, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.36, ease: "circ.out" }],
+        [{ scaleX: 1.35, scaleY: 0.86, opacity: 0 }, { scaleX: 1, scaleY: 1, opacity: 1, duration: 0.36, ease: "power3.out" }],
+        [{ scale: 0.35, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(2)" }],
+      ];
+      BEATS.forEach(function (t, i) {
+        // hard cut: previous verb + counter vanish exactly on the next onset
+        if (i > 0) {
+          tl.set(verbs[i - 1], { opacity: 0 }, t);
+          tl.set(kickers[i - 1], { opacity: 0 }, t);
+        }
+        tl.fromTo(verbs[i], entrances[i][0], entrances[i][1], t);
+        tl.set(kickers[i], { opacity: 1 }, t);
+        // the strand gains one twist per verb
+        tl.fromTo(strandState, { k: i, A: 46 }, { k: i + 1, A: 46, duration: 0.34, ease: "power3.out", onUpdate: drawStrand, immediateRender: false }, t);
+      });
+
+      // ---- Scene 2: "hundreds of agents" -> swaps in place to "one clean history." ----
+      tl.set([verbs[4], kickers[4]], { opacity: 0 }, T_HUNDREDS);
+      tl.set(lineA, { opacity: 1 }, T_HUNDREDS);
+      tl.fromTo(lineA.children, { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: "power3.out", stagger: 0.1 }, T_HUNDREDS);
+      // hundreds of agents: strands tangle harder
+      tl.fromTo(strandState, { k: 5, A: 46 }, { k: 9, A: 58, duration: 0.9, ease: "power2.out", onUpdate: drawStrand, immediateRender: false }, T_HUNDREDS);
+
+      tl.set(lineA, { opacity: 0 }, T_ONE);
+      tl.fromTo(lineB, { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.28, ease: "power4.out" }, T_ONE);
+      // one clean history: the tangle straightens into one clean line
+      tl.fromTo(strandState, { k: 9, A: 58 }, { k: 9, A: 0, duration: 0.8, ease: "power3.inOut", onUpdate: drawStrand, immediateRender: false }, T_ONE + 0.05);
+
+      // ---- Scene 3: register slams to ORANGE, braid + lockup ----
+      tl.set(dark, { opacity: 0 }, T_THIS);
+      tl.fromTo(orange, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power4.out" }, T_THIS);
+      tl.set(lockup, { opacity: 1 }, T_THIS);
+
+      // the strands braid: amplitude grows + twists wind in while drawing left -> right
+      tl.fromTo(braids, { strokeDasharray: 1400, strokeDashoffset: 1400 }, { strokeDashoffset: 0, duration: 0.7, ease: "power3.out" }, T_THIS);
+      tl.fromTo(braidState, { k: 0, A: 0 }, { k: 7, A: 22, duration: 0.8, ease: "power3.out", onUpdate: drawBraid, immediateRender: false }, T_THIS);
+
+      // wordmark slams on "Braid"
+      tl.fromTo(mark, { opacity: 0, scale: 1.6, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.34, ease: "power4.out" }, T_BRAID);
+      // tagline builds word by word
+      tl.fromTo(tagWords, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power3.out", stagger: 0.07 }, 6.0);
+      // mono sign-off
+      tl.fromTo(built, { opacity: 0, scaleX: 1.3 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "expo.out" }, 6.42);
+      // final playful slam on "braid": squash, then spring back and hold still
+      tl.fromTo(mark, { scaleX: 1, scaleY: 1 }, { scaleX: 1.07, scaleY: 0.9, duration: 0.09, ease: "power2.in", immediateRender: false }, 6.24);
+      tl.fromTo(mark, { scaleX: 1.07, scaleY: 0.9 }, { scaleX: 1, scaleY: 1, duration: 0.55, ease: "elastic.out(1.1, 0.45)", immediateRender: false }, 6.33);
+
+      // ---- Final frame only: last 0.4s fade to ink ----
+      tl.fromTo(fade, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.in" }, DUR - 0.4);
+
+      // pad timeline to the exact render length
+      tl.set({}, {}, DUR);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FID] = tl;
+    })();
+  </script>
+</template>

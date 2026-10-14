@@ -1,0 +1,439 @@
+<template>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      color: #2a2823;
+      font-family: "Barlow", sans-serif;
+    }
+    .\30 9-cloudflare-bg {
+      position: absolute;
+      inset: 0;
+      background: #ff681e;
+    }
+    .\30 9-cloudflare-camera {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      will-change: transform;
+    }
+    .\30 9-cloudflare-lines {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      z-index: 1;
+      overflow: visible;
+    }
+    /* hub: braid core centred on C = (960, 430) */
+    .\30 9-cloudflare-hub {
+      position: absolute;
+      left: 760px;
+      top: 310px;
+      width: 400px;
+      height: 200px;
+      z-index: 5;
+      background: #ff681e;
+    }
+    .\30 9-cloudflare-kicker {
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 400px;
+      text-align: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 20px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(17, 17, 17, 0.55);
+      white-space: nowrap;
+    }
+    .\30 9-cloudflare-stub {
+      position: absolute;
+      left: 182px;
+      top: 44px;
+      width: 36px;
+      height: 2px;
+      background: #2a2823;
+    }
+    .\30 9-cloudflare-mark {
+      position: absolute;
+      left: 80px;
+      top: 65px;
+      width: 240px;
+      height: 110px;
+      overflow: visible;
+    }
+    .\30 9-cloudflare-node {
+      position: absolute;
+      width: 0;
+      height: 0;
+      z-index: 3;
+    }
+    .\30 9-cloudflare-pop {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+    }
+    .\30 9-cloudflare-dot {
+      position: absolute;
+      left: -14px;
+      top: -14px;
+      width: 28px;
+      height: 28px;
+      background: #2a2823;
+    }
+    .\30 9-cloudflare-label {
+      position: absolute;
+      width: 440px;
+      font-family: "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+    .\30 9-cloudflare-name {
+      display: block;
+      font-weight: 600;
+      font-size: 30px;
+      color: #2a2823;
+    }
+    .\30 9-cloudflare-sub {
+      display: block;
+      margin-top: 6px;
+      font-weight: 500;
+      font-size: 20px;
+      color: rgba(17, 17, 17, 0.55);
+    }
+    .\30 9-cloudflare-above { left: -220px; bottom: 30px; text-align: center; }
+    .\30 9-cloudflare-below { left: -220px; top: 30px; text-align: center; }
+
+    /* Scene 3–4 row: stamp + struck list, centred under the core */
+    .\30 9-cloudflare-row {
+      position: absolute;
+      left: 0;
+      top: 612px;
+      width: 1920px;
+      height: 170px;
+      z-index: 6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 64px;
+    }
+    .\30 9-cloudflare-stamp {
+      position: relative;
+      flex: none;
+      background: #2a2823;
+      color: #ff681e;
+      padding: 16px 30px 22px;
+      font-family: "Barlow", sans-serif;
+      font-weight: 800;
+      font-size: 56px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      white-space: nowrap;
+    }
+    .\30 9-cloudflare-list {
+      position: relative;
+      flex: none;
+      width: 380px;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 24px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #2a2823;
+    }
+    .\30 9-cloudflare-item {
+      position: relative;
+      display: block;
+      height: 46px;
+      line-height: 46px;
+      white-space: nowrap;
+    }
+    .\30 9-cloudflare-slash {
+      color: rgba(17, 17, 17, 0.55);
+      margin-right: 12px;
+    }
+    .\30 9-cloudflare-txt {
+      position: relative;
+      display: inline-block;
+    }
+    .\30 9-cloudflare-strike {
+      position: absolute;
+      left: -6px;
+      right: -6px;
+      top: 22px;
+      height: 3px;
+      background: #2a2823;
+    }
+  </style>
+
+  <div data-hf-id="hf-vhde" id="root" data-composition-id="09-cloudflare" data-width="1920" data-height="1080" data-start="0" data-duration="10.343">
+    <div data-hf-id="hf-xbn5" class="clip 09-cloudflare-bg" data-start="0" data-duration="10.343" data-track-index="0"></div>
+
+    <div data-hf-id="hf-z8sl" class="09-cloudflare-camera">
+      <svg data-hf-id="hf-8jns" class="09-cloudflare-lines" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <div data-hf-id="hf-tr7p" class="09-cloudflare-hub">
+        <div data-hf-id="hf-qt0k" class="09-cloudflare-kicker">Native on Cloudflare</div>
+        <div data-hf-id="hf-qp0s" class="09-cloudflare-stub"></div>
+        <svg data-hf-id="hf-775t" class="09-cloudflare-mark" viewBox="0 0 240 110" xmlns="http://www.w3.org/2000/svg">
+          <defs data-hf-id="hf-mh0t">
+            <clipPath data-hf-id="hf-wevw" id="09-cloudflare-markclip">
+              <rect data-hf-id="hf-3saj" class="09-cloudflare-markrect" x="-10" y="-20" width="0" height="150" />
+            </clipPath>
+          </defs>
+          <g data-hf-id="hf-qdia" clip-path="url(#09-cloudflare-markclip)">
+            <path data-hf-id="hf-0k8e" class="09-cloudflare-strand" fill="none" stroke="#2a2823" stroke-width="7" stroke-linecap="square" />
+            <path data-hf-id="hf-tf1u" class="09-cloudflare-strand" fill="none" stroke="#2a2823" stroke-width="7" stroke-linecap="square" />
+            <path data-hf-id="hf-ttcv" class="09-cloudflare-strand" fill="none" stroke="#2a2823" stroke-width="7" stroke-linecap="square" />
+          </g>
+        </svg>
+      </div>
+
+      <div data-hf-id="hf-s6ou" class="09-cloudflare-node" data-node="0">
+        <div data-hf-id="hf-2mvh" class="09-cloudflare-pop">
+          <div data-hf-id="hf-lla5" class="09-cloudflare-dot"></div>
+          <div data-hf-id="hf-5zrt" class="09-cloudflare-label 09-cloudflare-below"><span data-hf-id="hf-to5r" class="09-cloudflare-name">Workers</span></div>
+        </div>
+      </div>
+      <div data-hf-id="hf-w4sv" class="09-cloudflare-node" data-node="1">
+        <div data-hf-id="hf-07sx" class="09-cloudflare-pop">
+          <div data-hf-id="hf-wx01" class="09-cloudflare-dot"></div>
+          <div data-hf-id="hf-1yc8" class="09-cloudflare-label 09-cloudflare-above"><span data-hf-id="hf-630b" class="09-cloudflare-name">Artifacts</span><span data-hf-id="hf-f7az" class="09-cloudflare-sub">repo per agent</span></div>
+        </div>
+      </div>
+      <div data-hf-id="hf-l9b8" class="09-cloudflare-node" data-node="2">
+        <div data-hf-id="hf-1eq0" class="09-cloudflare-pop">
+          <div data-hf-id="hf-y3x4" class="09-cloudflare-dot"></div>
+          <div data-hf-id="hf-c9vh" class="09-cloudflare-label 09-cloudflare-above"><span data-hf-id="hf-1r37" class="09-cloudflare-name">Durable Objects</span><span data-hf-id="hf-wdjf" class="09-cloudflare-sub">fence + pi durable</span></div>
+        </div>
+      </div>
+      <div data-hf-id="hf-o8kt" class="09-cloudflare-node" data-node="3">
+        <div data-hf-id="hf-10ez" class="09-cloudflare-pop">
+          <div data-hf-id="hf-xpm3" class="09-cloudflare-dot"></div>
+          <div data-hf-id="hf-a3w5" class="09-cloudflare-label 09-cloudflare-above"><span data-hf-id="hf-kbxr" class="09-cloudflare-name">D1</span><span data-hf-id="hf-kevj" class="09-cloudflare-sub">issues + audit</span></div>
+        </div>
+      </div>
+      <div data-hf-id="hf-4soq" class="09-cloudflare-node" data-node="4">
+        <div data-hf-id="hf-z0vu" class="09-cloudflare-pop">
+          <div data-hf-id="hf-vq2y" class="09-cloudflare-dot"></div>
+          <div data-hf-id="hf-1kj1" class="09-cloudflare-label 09-cloudflare-below"><span data-hf-id="hf-lmvb" class="09-cloudflare-name">Workers AI</span><span data-hf-id="hf-ckhr" class="09-cloudflare-sub">clef + gpt-oss-120b</span></div>
+        </div>
+      </div>
+
+      <div class="09-cloudflare-row">
+        <div class="09-cloudflare-stamp">agent runtime: built in</div>
+        <div class="09-cloudflare-list">
+          <span class="09-cloudflare-item"><span class="09-cloudflare-slash">/</span><span class="09-cloudflare-txt"><span class="09-cloudflare-type">your agent servers</span><span class="09-cloudflare-strike"></span></span></span>
+          <span class="09-cloudflare-item"><span class="09-cloudflare-slash">/</span><span class="09-cloudflare-txt"><span class="09-cloudflare-type">your job queue</span><span class="09-cloudflare-strike"></span></span></span>
+          <span class="09-cloudflare-item"><span class="09-cloudflare-slash">/</span><span class="09-cloudflare-txt"><span class="09-cloudflare-type">your retry glue</span><span class="09-cloudflare-strike"></span></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const ID = "09-cloudflare";
+      const DUR = 9.943;
+      const root = document.querySelector('[data-composition-id="' + ID + '"]');
+      const q = (cls) => Array.from(root.querySelectorAll('[class~="' + ID + "-" + cls + '"]'));
+      const q1 = (cls) => q(cls)[0];
+      const SVGNS = "http://www.w3.org/2000/svg";
+
+      // ONE shared center — the braid mark's rendered center (hub 760,310 + mark 80,65 + 120,55).
+      const C = { x: 960, y: 430 };
+      const RX = 630;
+      const RY = 280;
+
+      // ---------- braid mark: three strands, 120deg out of phase ----------
+      const strands = q("strand");
+      function braidPath(phase) {
+        let d = "";
+        for (let i = 0; i <= 48; i++) {
+          const x = (i / 48) * 240;
+          const y = 55 + 34 * Math.sin((x / 240) * Math.PI * 4 + phase);
+          d += (i === 0 ? "M" : "L") + x.toFixed(2) + " " + y.toFixed(2) + " ";
+        }
+        return d;
+      }
+      const braid = { p: 0 };
+      function drawBraid() {
+        strands.forEach((s, k) => s.setAttribute("d", braidPath(braid.p + (k * Math.PI * 2) / 3)));
+      }
+      drawBraid();
+
+      // ---------- nodes on the upper arc of the ellipse (left -> over the top -> right) ----------
+      // The lower band of the frame is reserved for the stamp + struck list.
+      const nodes = q("node");
+      const svg = q1("lines");
+      const angles = [170, 220, 270, 320, 370].map((a) => (a * Math.PI) / 180);
+      const lines = [];
+      const pts = [];
+      nodes.forEach((n, i) => {
+        const x = C.x + Math.cos(angles[i]) * RX;
+        const y = C.y + Math.sin(angles[i]) * RY;
+        pts.push({ x, y });
+        n.style.left = x + "px";
+        n.style.top = y + "px";
+        const line = document.createElementNS(SVGNS, "line");
+        const len = Math.hypot(x - C.x, y - C.y);
+        line.setAttribute("x1", C.x);
+        line.setAttribute("y1", C.y);
+        line.setAttribute("x2", x);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "rgba(17,17,17,0.55)");
+        line.setAttribute("stroke-width", "1.5");
+        line.setAttribute("stroke-dasharray", len + " " + len);
+        line.style.strokeDashoffset = String(len);
+        svg.appendChild(line);
+        lines.push(line);
+      });
+
+      // orbit arc (hairline) from node 0 over the top to node 4 — length summed numerically
+      let arcLen = 0;
+      for (let k = 0; k < 200; k++) {
+        const a0 = angles[0] + ((angles[4] - angles[0]) * k) / 200;
+        const a1 = angles[0] + ((angles[4] - angles[0]) * (k + 1)) / 200;
+        arcLen += Math.hypot((Math.cos(a1) - Math.cos(a0)) * RX, (Math.sin(a1) - Math.sin(a0)) * RY);
+      }
+      const arc = document.createElementNS(SVGNS, "path");
+      arc.setAttribute("d", "M " + pts[0].x + " " + pts[0].y + " A " + RX + " " + RY + " 0 1 1 " + pts[4].x + " " + pts[4].y);
+      arc.setAttribute("fill", "none");
+      arc.setAttribute("stroke", "rgba(17,17,17,0.2)");
+      arc.setAttribute("stroke-width", "1");
+      arc.setAttribute("stroke-dasharray", arcLen + " " + arcLen);
+      arc.style.strokeDashoffset = String(arcLen);
+      svg.insertBefore(arc, svg.firstChild);
+
+      // ---------- list: split each line into per-char spans for the type-on ----------
+      const typeEls = q("type");
+      const typeLines = typeEls.map((el) => {
+        const text = el.textContent;
+        el.textContent = "";
+        return Array.from(text).map((ch) => {
+          const s = document.createElement("span");
+          s.textContent = ch;
+          el.appendChild(s);
+          return s;
+        });
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const cam = q1("camera");
+      const mark = q1("mark");
+      const pops = q("pop");
+      const dots = q("dot");
+      const labels = q("label");
+      const stamp = q1("stamp");
+      const items = q("item");
+      const strikes = q("strike");
+      const row = q1("row");
+
+      gsap.set(cam, { transformOrigin: C.x + "px " + C.y + "px", scale: 1 });
+      gsap.set(pops, { transformOrigin: "0px 0px" });
+
+      // ---------- Scene 1 (0.0–1.8s): braid mark at center; kicker on "native on Cloudflare" ----------
+      tl.fromTo(mark, { scale: 0.82, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.55, ease: "back.out(1.6)" }, 0);
+      tl.fromTo(q1("markrect"), { attr: { width: 40 } }, { attr: { width: 260 }, duration: 0.7, ease: "power2.out" }, 0);
+      // continuous slow twist of the strands across the whole shot (seek-safe proxy)
+      tl.fromTo(braid, { p: 0 }, { p: -Math.PI * 2.4, duration: DUR, ease: "none", onUpdate: drawBraid }, 0);
+      tl.fromTo(q1("kicker"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.56);
+      tl.fromTo(q1("stub"), { scaleX: 0, transformOrigin: "50% 50%" }, { scaleX: 1, duration: 0.4, ease: "power2.out" }, 0.72);
+
+      // macro camera drift underneath (slow push), 0 → 9.12s
+      tl.fromTo(cam, { scale: 1 }, { scale: 1.06, duration: 9.12, ease: "sine.inOut" }, 0);
+
+      // ---------- Scene 2 (1.8–5.6s): arc draws, nodes spring in on their words ----------
+      tl.to(arc, { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 1.5);
+
+      const cues = [1.92, 2.4, 3.12, 4.08, 4.8]; // Workers, Artifacts, Durable, D1, Workers (AI)
+      cues.forEach((t, i) => {
+        tl.fromTo(pops[i], { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(1.7)" }, t - 0.06);
+        tl.fromTo(labels[i], { opacity: 0, y: i === 0 || i === 4 ? -8 : 8 }, { opacity: 1, y: 0, duration: 0.32, ease: "power2.out" }, t + 0.02);
+        tl.to(lines[i], { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" }, t + 0.05);
+        tl.fromTo(dots[i], { scale: 1.35 }, { scale: 1, duration: 0.4, ease: "power2.out" }, t + 0.4);
+      });
+
+      // breathing dwell on the formed network (out-of-phase, one proxy), 5.6 → 9.12
+      const breath = { p: 0 };
+      tl.fromTo(
+        breath,
+        { p: 0 },
+        {
+          p: Math.PI * 2 * 1.5,
+          duration: 9.12 - 5.6,
+          ease: "none",
+          onUpdate: () => {
+            dots.forEach((d, i) => gsap.set(d, { scale: 1 + Math.sin(breath.p + (i / dots.length) * Math.PI * 2) * 0.06 }));
+          },
+        },
+        5.6,
+      );
+
+      // ---------- Scene 3 (5.6–7.6s): "agent runtime: built in" stamp slams under the core ----------
+      const SLAM = 6.16; // "agent"
+      // ring steps back so the stamp owns the beat (a dim, not an exit)
+      tl.to(nodes, { opacity: 0.42, duration: 0.45, ease: "power2.out" }, SLAM);
+      tl.to(svg, { opacity: 0.5, duration: 0.45, ease: "power2.out" }, SLAM);
+      tl.fromTo(
+        stamp,
+        { opacity: 0, scale: 2.1, rotation: -7, transformOrigin: "50% 50%" },
+        { opacity: 1, scale: 1, rotation: -2, duration: 0.22, ease: "power4.in" },
+        SLAM - 0.2,
+      );
+      // impact: squash + elastic settle, row jolt
+      tl.to(stamp, { scaleY: 0.92, scaleX: 1.04, duration: 0.06, ease: "power1.out" }, SLAM + 0.02);
+      tl.to(stamp, { scaleY: 1, scaleX: 1, duration: 0.4, ease: "elastic.out(1, 0.45)" }, SLAM + 0.08);
+      tl.fromTo(row, { y: 0 }, { y: 7, duration: 0.05, ease: "power1.out" }, SLAM + 0.02);
+      tl.to(row, { y: 0, duration: 0.45, ease: "elastic.out(1, 0.4)" }, SLAM + 0.07);
+      // "built in" — the stamp straightens
+      tl.to(stamp, { rotation: 0, duration: 0.3, ease: "back.out(2.4)" }, 7.04);
+
+      // ---------- Scene 4 (7.6–9.0s): mono list types beside the stamp, each line struck through ----------
+      const typeAt = [7.6, 7.84, 8.08];
+      const strikeAt = [8.0, 8.24, 8.56]; // "nothing", "for you", "host"
+      typeLines.forEach((chars, i) => {
+        tl.fromTo(items[i], { opacity: 0 }, { opacity: 1, duration: 0.01 }, typeAt[i]);
+        tl.fromTo(chars, { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: 0.2 / chars.length, ease: "none" }, typeAt[i]);
+        tl.fromTo(strikes[i], { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.18, ease: "power3.out" }, strikeAt[i]);
+        tl.to(typeEls[i], { opacity: 0.5, duration: 0.25, ease: "power1.out" }, strikeAt[i] + 0.12);
+      });
+
+      // ---------- Scene 5 (9.12–9.943s): "Nothing." — hard push into the braid core ----------
+      const PUSH = 9.12;
+      const PD = DUR - PUSH;
+      tl.to(cam, { scale: 7.5, duration: PD, ease: "power3.in" }, PUSH);
+      tl.to(nodes, { filter: "blur(10px)", duration: PD, ease: "power2.in" }, PUSH);
+      tl.to(svg, { filter: "blur(5px)", duration: PD, ease: "power2.in" }, PUSH);
+      tl.to(row, { filter: "blur(12px)", duration: PD, ease: "power2.in" }, PUSH);
+      tl.to(q1("kicker"), { filter: "blur(4px)", duration: PD, ease: "power2.in" }, PUSH);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

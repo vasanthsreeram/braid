@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+@font-face { font-family: "Inter Tight"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-600.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-700.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-800.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-900.woff2") format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter Tight", sans-serif; color: #1f1a15; }
+#s08-ground { position: absolute; inset: 0; background: #faf7f2; }
+#root .svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+#root .hl { position: absolute; left: 192px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; white-space: nowrap; color: #1f1a15; }
+#root .em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #e8590c; font-size: 1.12em; line-height: 0.8; }
+#root .w { display: inline-block; }
+#root .sw { opacity: 0; }
+#root .proof { position: absolute; left: 192px; top: 948px; display: flex; align-items: center; gap: 22px; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 25px; letter-spacing: 0.1em; text-transform: uppercase; color: #5e5248; white-space: nowrap; opacity: 0; }
+#root .proof .tick { width: 40px; height: 3px; background: #e8590c; }
+#root .label { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 22px; letter-spacing: 0.08em; color: #5e5248; white-space: nowrap; }
+#root .mono { font-family: "IBM Plex Mono", monospace; }
+#root .card { position: absolute; background: #ffffff; border: 3px solid #1f1a15; border-radius: 18px; }
+#root .pill { display: inline-block; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 20px; letter-spacing: 0.06em; border-radius: 99px; padding: 4px 14px; white-space: nowrap; }
+#root .pill.o { color: #e8590c; border: 2px solid #e8590c; }
+#root .pill.i { color: #faf7f2; background: #1f1a15; border: 2px solid #1f1a15; }
+#root .pill.u { color: #7a5c46; border: 2px solid #7a5c46; }
+
+
+#s08-a { top: 150px; font-size: 130px; }
+#s08-b { top: 290px; font-size: 130px; }
+#s08-c { top: 430px; font-size: 130px; }
+#s08-d1 { top: 150px; font-size: 120px; }
+#s08-d2 { top: 272px; font-size: 120px; }
+#s08-pol { left: 1020px; top: 230px; width: 710px; height: 400px; padding: 26px 32px; opacity: 0; }
+#s08-pol .hd { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 21px; letter-spacing: 0.12em; color: #5e5248; }
+#s08-pol .lv { margin: 10px 0 14px; font-weight: 800; font-size: 44px; letter-spacing: -0.03em; }
+#s08-pol .lv span { color: #e8590c; }
+#root .rr { display: flex; align-items: center; gap: 18px; height: 58px; border-top: 2px solid #e2d9cc; }
+#root .rr .ck { width: 34px; height: 34px; border-radius: 50%; background: #1f1a15; color: #faf7f2; font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+#root .rr .rt { flex: 1; font-weight: 600; font-size: 28px; letter-spacing: -0.01em; }
+#root .rr .rv { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 22px; color: #5e5248; }
+#s08-stamp { position: absolute; left: 1240px; top: 788px; opacity: 0; }
+#s08-ml { position: absolute; left: 192px; top: 910px; }
+
+      </style>
+      <div id="root" data-composition-id="v4-08-policy" data-width="1920" data-height="1080" data-duration="4.625">
+        <div id="s08-ground" class="clip" data-start="0" data-duration="4.625" data-track-index="0"></div>
+
+        <svg class="svg" viewBox="0 0 1920 1080"><path id="s08-main" d="M-20,880 L1940,880" pathLength="1" fill="none" stroke="#1f1a15" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1" /><circle id="s08-m0" cx="300" cy="880" r="12" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s08-m1" cx="520" cy="880" r="12" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s08-m2" cx="740" cy="880" r="12" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s08-m3" cx="960" cy="880" r="12" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><path id="s08-st" d="M-20,770 L940,770 C1060,770 1070,880 1180,880" pathLength="1" fill="none" stroke="#e8590c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1" /><circle id="s08-j" cx="1180" cy="880" r="15" fill="#e8590c" stroke="#faf7f2" stroke-width="4" /></svg>
+        <div id="s08-ml" class="label">main</div>
+        <div id="s08-a" class="hl sw">Small.</div>
+        <div id="s08-b" class="hl sw">Safe.</div>
+        <div id="s08-c" class="hl sw"><span class="em">Green?</span></div>
+        <div id="s08-d1" class="hl sw">It braids in</div>
+        <div id="s08-d2" class="hl sw">on its <span class="em">own.</span></div>
+        <div id="s08-pol" class="card"><div class="hd">POLICY &middot; REPO braid-demo-shop</div><div class="lv">Level 2 &middot; <span>autonomous, low risk</span></div><div class="rr sw" id="s08-r-small"><span class="ck">&#10003;</span><span class="rt">&le; 30 lines changed</span><span class="rv">6</span></div><div class="rr sw" id="s08-r-safe"><span class="ck">&#10003;</span><span class="rt">outside src/auth/</span><span class="rv">yes</span></div><div class="rr sw" id="s08-r-green"><span class="ck">&#10003;</span><span class="rt">checks green</span><span class="rv">12/12</span></div><div class="rr sw" id="s08-r-conf"><span class="ck">&#10003;</span><span class="rt">no agent-resolved conflicts</span><span class="rv">0</span></div></div>
+        <div id="s08-stamp"><span class="pill i" style="font-size:24px;padding:8px 18px">BRAIDED IN BY POLICY &middot; L2</span></div>
+
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        (function () {
+          const root = document.querySelector('[data-composition-id="v4-08-policy"]');
+
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => root.querySelector(s);
+const $$ = (s) => Array.prototype.slice.call(root.querySelectorAll(s));
+function rise(el, t, dy, d) { tl.fromTo(el, { opacity: 0, y: dy == null ? 60 : dy }, { opacity: 1, y: 0, duration: d || 0.5, ease: "expo.out" }, t); }
+function show(el, t) { tl.set(el, { opacity: 1 }, t); }
+function hide(el, t) { tl.set(el, { opacity: 0 }, t); }
+function draw(el, t, d, ease) { tl.fromTo(el, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: ease || "power2.inOut" }, t); }
+function pop(el, t, d) { tl.fromTo(el, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: d || 0.4, ease: "back.out(2.6)" }, t); }
+function slam(el, t) { tl.fromTo(el, { opacity: 0, scale: 0.86, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, t); }
+function proof(el, t) { tl.fromTo(el, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, t); }
+function swap(a, b, t) { hide(a, t); show(b, t); tl.fromTo(b, { y: 30 }, { y: 0, duration: 0.3, ease: "expo.out" }, t); }
+function count(el, from, to, t, d, fmt, ease) { const o = { v: from }; tl.to(o, { v: to, duration: d, ease: ease || "power2.out", onUpdate: function () { el.textContent = fmt ? fmt(o.v) : String(Math.round(o.v)); } }, t); tl.call(function () { el.textContent = fmt ? fmt(from) : String(from); }, null, Math.max(0, t - 0.001)); }
+
+
+draw($("#s08-main"), 0, 0.5, "power3.out");
+[0, 1, 2, 3].forEach(function (i) { pop($("#s08-m" + i), 0.1 + i * 0.06, 0.3); });
+slam($("#s08-pol"), 0.15);
+draw($("#s08-st"), 0.3, 0.8, "power2.out");
+tl.set($("#s08-st"), { strokeDashoffset: 0.12 }, 1.12);
+rise($("#s08-a"), 0.15, 40, 0.35); rise($("#s08-r-small"), 0.15 + 0.1, 14, 0.3);
+rise($("#s08-b"), 0.87, 40, 0.35); rise($("#s08-r-safe"), 0.87 + 0.1, 14, 0.3);
+rise($("#s08-c"), 1.59, 40, 0.4); rise($("#s08-r-green"), 1.59 + 0.1, 14, 0.3); rise($("#s08-r-conf"), 1.59 + 0.35, 14, 0.3);
+hide($("#s08-a"), 2.47); hide($("#s08-b"), 2.47); hide($("#s08-c"), 2.47);
+rise($("#s08-d1"), 2.47, 30, 0.35);
+rise($("#s08-d2"), 3.67, 30, 0.35);
+tl.fromTo($("#s08-pol"), { borderColor: "#1f1a15" }, { borderColor: "#e8590c", duration: 0.2 }, 2.47);
+tl.to($("#s08-st"), { strokeDashoffset: 0, duration: 0.35, ease: "power2.in" }, 3.19);
+pop($("#s08-j"), 3.19 + 0.32, 0.4);
+tl.fromTo($("#s08-stamp"), { opacity: 0, scale: 1.4, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "power4.out" }, 3.91);
+
+          window.__timelines["v4-08-policy"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

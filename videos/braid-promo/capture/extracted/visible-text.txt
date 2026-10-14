@@ -1,0 +1,32 @@
+## Intent
+
+A fun, energetic, "nice af" launch promo for **Braid**: where parallel work comes together.
+Hundreds of agents and people each work in their own isolated strand (a private fork pinned
+to a known base). Braid weaves those strands back into one clean history: every change arrives
+as an exact, reviewable proposal (exact base + exact candidate commit), conflicts surface before
+merge rather than after, and merging is a fenced operation that stays safe no matter how many
+changes race at once. Runs natively on Cloudflare: Workers, Artifacts, Durable Objects.
+
+Story: open on 100+ agents slamming one shared repo and everything breaks; then Braid gives each
+its own strand, proposals line up, fenced merge braids them into one clean history; close on a
+live counter (100+ agents braided into one repo) and "built on Cloudflare".
+The competition weights agent collaboration and concurrency at 75% of the score.
+
+## Customizations
+
+- Voiceover via the user's LiteLLM gateway (`qwen-tts`, https://llm.lintware.com/v1/audio/speech), energetic read.
+- Music bed plus sound effects; fun, high-energy pacing.
+- Motion graphics only, no UI capture. Carry the product's branch-and-merge / braid strand motif.
+
+## Notes
+
+- Source: product vision pasted by the user (README/docs proposal), repo /Users/vas/Documents/cf-native-forge.
+- Voice must be Qwen TTS (user rule): no Kokoro / HeyGen voices.
+
+Product facts (from the repo's vision):
+- One canonical repo for human-facing history.
+- Every agent or task gets its own fork, pinned to a baseline, instead of fighting over shared branches.
+- Changes come back as immutable proposals: exact base + exact candidate commit.
+- Merging is a deliberate, fenced operation, safe even when hundreds of proposals race. Already built and tested.
+- Also a private GitHub alternative: repos, sharing, issues, import from a GitHub URL, review, LFS dedupe.
+- Runs on Cloudflare Workers, Artifacts, Durable Objects.

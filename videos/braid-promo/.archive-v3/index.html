@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #faf7f2; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #faf7f2; }
+      .scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <!-- braid-promo v3 (2026-10-10): light "Braid Cream" cut. v2 source archived in .archive-v2/ -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="53.789" data-width="1920" data-height="1080">
+      <div id="el-v3-01-hook" class="scene" data-composition-id="v3-01-hook" data-composition-src="compositions/v3/01-hook.html" data-start="0" data-duration="2.976" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-02-cant" class="scene" data-composition-id="v3-02-cant" data-composition-src="compositions/v3/02-cant.html" data-start="2.976" data-duration="1.803" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-03-pain" class="scene" data-composition-id="v3-03-pain" data-composition-src="compositions/v3/03-pain.html" data-start="4.779" data-duration="5.645" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-04-meet" class="scene" data-composition-id="v3-04-meet" data-composition-src="compositions/v3/04-meet.html" data-start="10.424" data-duration="3.667" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-05-strand" class="scene" data-composition-id="v3-05-strand" data-composition-src="compositions/v3/05-strand.html" data-start="14.091" data-duration="4.063" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-06-clean" class="scene" data-composition-id="v3-06-clean" data-composition-src="compositions/v3/06-clean.html" data-start="18.154" data-duration="5.987" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-07-catchup" class="scene" data-composition-id="v3-07-catchup" data-composition-src="compositions/v3/07-catchup.html" data-start="24.141" data-duration="4.281" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-08-review" class="scene" data-composition-id="v3-08-review" data-composition-src="compositions/v3/08-review.html" data-start="28.422" data-duration="6.394" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-09-swarm" class="scene" data-composition-id="v3-09-swarm" data-composition-src="compositions/v3/09-swarm.html" data-start="34.816" data-duration="4.626" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-10-queue" class="scene" data-composition-id="v3-10-queue" data-composition-src="compositions/v3/10-queue.html" data-start="39.442" data-duration="5.923" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-11-vision" class="scene" data-composition-id="v3-11-vision" data-composition-src="compositions/v3/11-vision.html" data-start="45.365" data-duration="3.489" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="el-v3-12-lockup" class="scene" data-composition-id="v3-12-lockup" data-composition-src="compositions/v3/12-lockup.html" data-start="48.854" data-duration="4.935" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+
+      <!-- voiceover: Qwen TTS (qwen-tts, voice longanlingxin) -->
+      <audio id="el-vo-01" src="assets/vo3/vo-01.wav" data-start="0.15" data-duration="2.248" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-02" src="assets/vo3/vo-02.wav" data-start="3.126" data-duration="1.103" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-03" src="assets/vo3/vo-03.wav" data-start="4.929" data-duration="5.145" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-04" src="assets/vo3/vo-04.wav" data-start="10.574" data-duration="2.746" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-05" src="assets/vo3/vo-05.wav" data-start="14.241" data-duration="3.513" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-06" src="assets/vo3/vo-06.wav" data-start="18.304" data-duration="5.487" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-07" src="assets/vo3/vo-07.wav" data-start="24.291" data-duration="3.781" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-08" src="assets/vo3/vo-08.wav" data-start="28.572" data-duration="5.734" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-09" src="assets/vo3/vo-09.wav" data-start="34.966" data-duration="3.876" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-10" src="assets/vo3/vo-10.wav" data-start="39.592" data-duration="5.238" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-11" src="assets/vo3/vo-11.wav" data-start="45.515" data-duration="2.889" data-track-index="10" data-volume="1"></audio>
+      <audio id="el-vo-12" src="assets/vo3/vo-12.wav" data-start="49.004" data-duration="2.785" data-track-index="10" data-volume="1"></audio>
+
+      <!-- music bed -->
+      <audio id="el-bgm" src="assets/bgm/bed-v3.wav" data-start="0" data-duration="53.789" data-track-index="11" data-volume="0.4"></audio>
+
+      <!-- sfx -->
+      <audio id="el-sfx3-0" src="assets/sfx/pop.wav" data-start="0.82" data-duration="0.12" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="el-sfx3-1" src="assets/sfx/whoosh-short.wav" data-start="0.87" data-duration="0.6" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-2" src="assets/sfx/impact-thud.wav" data-start="3.766" data-duration="0.4" data-track-index="20" data-volume="0.6"></audio>
+      <audio id="el-sfx3-3" src="assets/sfx/glitch-hit.wav" data-start="3.816" data-duration="0.25" data-track-index="21" data-volume="0.25"></audio>
+      <audio id="el-sfx3-4" src="assets/sfx/clack.wav" data-start="5.519" data-duration="0.12" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="el-sfx3-5" src="assets/sfx/whoosh-short.wav" data-start="6.169" data-duration="0.5" data-track-index="21" data-volume="0.25"></audio>
+      <audio id="el-sfx3-6" src="assets/sfx/error-buzz.wav" data-start="6.689" data-duration="0.35" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="el-sfx3-7" src="assets/sfx/impact-thud.wav" data-start="6.839" data-duration="0.4" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-8" src="assets/sfx/card-flick.wav" data-start="8.489" data-duration="0.18" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="el-sfx3-9" src="assets/sfx/card-flick.wav" data-start="8.809" data-duration="0.18" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-10" src="assets/sfx/card-flick.wav" data-start="9.129" data-duration="0.18" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="el-sfx3-11" src="assets/sfx/card-flick.wav" data-start="9.449" data-duration="0.18" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-12" src="assets/sfx/card-flick.wav" data-start="9.769" data-duration="0.18" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="el-sfx3-13" src="assets/sfx/card-flick.wav" data-start="10.089" data-duration="0.18" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-14" src="assets/sfx/whoosh-big.wav" data-start="10.424" data-duration="1.1" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="el-sfx3-15" src="assets/sfx/impact-boom.wav" data-start="11.034" data-duration="1.2" data-track-index="21" data-volume="0.55"></audio>
+      <audio id="el-sfx3-16" src="assets/sfx/shimmer.wav" data-start="12.814" data-duration="1.4" data-track-index="20" data-volume="0.28"></audio>
+      <audio id="el-sfx3-17" src="assets/sfx/tick.wav" data-start="14.711" data-duration="0.08" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-18" src="assets/sfx/tick.wav" data-start="14.991" data-duration="0.08" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="el-sfx3-19" src="assets/sfx/tick.wav" data-start="15.271" data-duration="0.08" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-20" src="assets/sfx/whoosh-short.wav" data-start="16.161" data-duration="0.6" data-track-index="20" data-volume="0.25"></audio>
+      <audio id="el-sfx3-21" src="assets/sfx/pop.wav" data-start="19.764" data-duration="0.12" data-track-index="21" data-volume="0.42"></audio>
+      <audio id="el-sfx3-22" src="assets/sfx/pop.wav" data-start="20.564" data-duration="0.12" data-track-index="20" data-volume="0.42"></audio>
+      <audio id="el-sfx3-23" src="assets/sfx/pop.wav" data-start="21.074" data-duration="0.12" data-track-index="21" data-volume="0.42"></audio>
+      <audio id="el-sfx3-24" src="assets/sfx/bonk.wav" data-start="21.464" data-duration="0.3" data-track-index="20" data-volume="0.35"></audio>
+      <audio id="el-sfx3-25" src="assets/sfx/pop.wav" data-start="21.604" data-duration="0.12" data-track-index="21" data-volume="0.42"></audio>
+      <audio id="el-sfx3-26" src="assets/sfx/pop.wav" data-start="22.984" data-duration="0.12" data-track-index="20" data-volume="0.42"></audio>
+      <audio id="el-sfx3-27" src="assets/sfx/ding.wav" data-start="23.424" data-duration="1" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="el-sfx3-28" src="assets/sfx/tick.wav" data-start="24.771" data-duration="0.08" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="el-sfx3-29" src="assets/sfx/tick.wav" data-start="25.031" data-duration="0.08" data-track-index="21" data-volume="0.3"></audio>
+      <audio id="el-sfx3-30" src="assets/sfx/scan-sweep.wav" data-start="25.891" data-duration="1" data-track-index="20" data-volume="0.25"></audio>
+      <audio id="el-sfx3-31" src="assets/sfx/success-chime.wav" data-start="27.431" data-duration="1" data-track-index="21" data-volume="0.3"></audio>
+      <audio id="el-sfx3-32" src="assets/sfx/pop.wav" data-start="30.632" data-duration="0.12" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="el-sfx3-33" src="assets/sfx/pop.wav" data-start="31.432" data-duration="0.12" data-track-index="21" data-volume="0.4"></audio>
+      <audio id="el-sfx3-34" src="assets/sfx/pop.wav" data-start="32.152" data-duration="0.12" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="el-sfx3-35" src="assets/sfx/stamp-thud.wav" data-start="33.072" data-duration="0.5" data-track-index="21" data-volume="0.45"></audio>
+      <audio id="el-sfx3-36" src="assets/sfx/riser-short.wav" data-start="36.626" data-duration="1.2" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="el-sfx3-37" src="assets/sfx/stamp-thud.wav" data-start="38.166" data-duration="0.5" data-track-index="21" data-volume="0.55"></audio>
+      <audio id="el-sfx3-38" src="assets/sfx/whoosh-big.wav" data-start="39.542" data-duration="1.1" data-track-index="20" data-volume="0.3"></audio>
+      <audio id="el-sfx3-39" src="assets/sfx/riser-short.wav" data-start="42.072" data-duration="1.2" data-track-index="21" data-volume="0.22"></audio>
+      <audio id="el-sfx3-40" src="assets/sfx/impact-boom.wav" data-start="43.832" data-duration="1.2" data-track-index="20" data-volume="0.45"></audio>
+      <audio id="el-sfx3-41" src="assets/sfx/shimmer.wav" data-start="47.355" data-duration="1.4" data-track-index="21" data-volume="0.25"></audio>
+      <audio id="el-sfx3-42" src="assets/sfx/impact-thud.wav" data-start="49.274" data-duration="0.4" data-track-index="20" data-volume="0.5"></audio>
+      <audio id="el-sfx3-43" src="assets/sfx/success-chime.wav" data-start="51.374" data-duration="1" data-track-index="21" data-volume="0.3"></audio>
+    </div>
+    <script>
+      var tl = gsap.timeline({ paused: true }); tl.to({}, { duration: 53.789 }, 0); window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,222 @@
+<template>
+  <div id="root" data-composition-id="00b-the-ask" data-width="1920" data-height="1080" data-duration="4.758">
+    <style>
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        container-type: size;
+      }
+      #fb-ask-ground {
+        position: absolute;
+        inset: 0;
+        background: #ff681e;
+      }
+      #fb-ask-stage {
+        position: absolute;
+        inset: 0;
+        transform-origin: 106px 400px;
+      }
+      #fb-ask-kicker {
+        position: absolute;
+        left: 106px;
+        top: 92px;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      #fb-ask-rule {
+        width: 36px;
+        height: 2px;
+        background: #2a2823;
+        transform-origin: 0 50%;
+      }
+      #fb-ask-kicker-text {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 500;
+        font-size: 22px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(17, 17, 17, 0.55);
+        white-space: pre;
+      }
+      #fb-ask-stack {
+        position: absolute;
+        left: 96px;
+        top: 138px;
+      }
+      .fb-ask-line {
+        display: block;
+        font-family: "Barlow", sans-serif;
+        font-weight: 900;
+        font-size: 200px;
+        line-height: 0.86;
+        letter-spacing: -0.04em;
+        text-transform: lowercase;
+        color: #2a2823;
+        white-space: nowrap;
+        transform-origin: 0 60%;
+        will-change: transform, opacity;
+      }
+      #fb-ask-lead {
+        position: absolute;
+        left: 106px;
+        top: 694px;
+        font-family: "Barlow", sans-serif;
+        font-weight: 600;
+        font-size: 46px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        text-transform: lowercase;
+        color: rgba(17, 17, 17, 0.75);
+        white-space: nowrap;
+      }
+      .fb-ask-lw {
+        display: inline-block;
+        margin-right: 0.26em;
+      }
+      .fb-ask-lw-hot {
+        color: #2a2823;
+        font-weight: 900;
+      }
+      #fb-ask-field {
+        position: absolute;
+        left: 106px;
+        top: 782px;
+        width: 1708px;
+        height: 96px;
+      }
+      .fb-ask-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #2a2823;
+      }
+    </style>
+
+    <div id="fb-ask-ground" class="clip" data-start="0" data-duration="4.758" data-track-index="0"></div>
+
+    <div id="fb-ask-stage" class="clip" data-start="0" data-duration="4.758" data-track-index="1">
+      <div id="fb-ask-kicker">
+        <div id="fb-ask-rule"></div>
+        <div id="fb-ask-kicker-text"></div>
+      </div>
+
+      <div id="fb-ask-stack">
+        <div class="fb-ask-line" id="fb-ask-w-build">build</div>
+        <div class="fb-ask-line" id="fb-ask-w-next">the next</div>
+        <div class="fb-ask-line" id="fb-ask-w-github">github</div>
+      </div>
+
+      <div id="fb-ask-lead">
+        <span class="fb-ask-lw" id="fb-ask-l0">for</span><span class="fb-ask-lw" id="fb-ask-l1">hundreds</span><span class="fb-ask-lw" id="fb-ask-l2">of</span><span class="fb-ask-lw" id="fb-ask-l3">thousands</span><span class="fb-ask-lw" id="fb-ask-l4">of</span><span class="fb-ask-lw fb-ask-lw-hot" id="fb-ask-l5">agents</span>
+      </div>
+
+      <div id="fb-ask-field"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        var DUR = 4.758;
+        var root = document.querySelector('[data-composition-id="00b-the-ask"]');
+        var q = function (sel) { return root.querySelector(sel); };
+        var tl = gsap.timeline({ paused: true });
+
+        // ---- Exact word onsets (audio_meta.json, frame 2) ----
+        var W = {
+          cloudflare: 0.24, asked: 0.96, build: 1.36, the: 1.68, next: 1.76, github: 2.0,
+          lead: [2.64, 2.8, 3.2, 3.36, 3.76, 3.84], agentsEnd: 4.32
+        };
+
+        // ---- Macro camera: slow push under the whole shot ----
+        tl.fromTo(q("#fb-ask-stage"), { scale: 1 }, { scale: 1.03, duration: DUR, ease: "none" }, 0);
+
+        // ---- Scene 1: kicker types on across "Cloudflare asked" ----
+        tl.fromTo(q("#fb-ask-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "expo.out" }, 0.08);
+        var KICK = "THE CHALLENGE · CLOUDFLARE";
+        var kt = q("#fb-ask-kicker-text");
+        var chars = [];
+        for (var i = 0; i < KICK.length; i++) {
+          var s = document.createElement("span");
+          s.textContent = KICK.charAt(i);
+          kt.appendChild(s);
+          chars.push(s);
+        }
+        var typeStart = W.cloudflare, typeEnd = W.asked;
+        var step = (typeEnd - typeStart) / KICK.length;
+        chars.forEach(function (c, i) {
+          tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: 0.01, ease: "none" }, typeStart + i * step);
+        });
+
+        // ---- Scene 2: kinetic beat-slam — distinct entrance per word, on spoken cues ----
+        // "build" — scale + blur hard slam
+        tl.fromTo(q("#fb-ask-w-build"),
+          { scale: 1.45, filter: "blur(16px)", opacity: 0 },
+          { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.42, ease: "power4.out" }, W.build);
+        // "the next" — side snap
+        tl.fromTo(q("#fb-ask-w-next"),
+          { x: -340, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.36, ease: "expo.out" }, W.the);
+        // "github" — heavy rise + rotate, overshoot pop (the payoff word)
+        tl.fromTo(q("#fb-ask-w-github"),
+          { y: 120, rotation: 5, scale: 0.92, opacity: 0 },
+          { y: 0, rotation: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.8)" }, W.github);
+        // stack recoils slightly on the github hit
+        tl.fromTo(q("#fb-ask-stack"), { y: 0 }, { y: -8, duration: 0.12, ease: "power2.out" }, W.github);
+        tl.to(q("#fb-ask-stack"), { y: 0, duration: 0.35, ease: "power2.inOut" }, W.github + 0.12);
+
+        // ---- Scene 3: lead line per word + agent-dot waterfall ----
+        for (var j = 0; j < 6; j++) {
+          tl.fromTo(q("#fb-ask-l" + j),
+            { y: 26, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.3, ease: "circ.out" }, W.lead[j]);
+        }
+
+        // dense field of tiny ink agent dots — positions purely from index
+        var field = q("#fb-ask-field");
+        var COLS = 107, ROWS = 6, GAP = 16;
+        var wfStart = 2.8, wfEnd = 3.84; // waterfall left -> right, landing on "agents"
+        var dots = [];
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            var idx = r * COLS + c;
+            var d = document.createElement("div");
+            d.className = "fb-ask-dot";
+            d.style.left = (c * GAP) + "px";
+            d.style.top = (r * GAP + 4) + "px";
+            field.appendChild(d);
+            // deterministic jitter from index (no Math.random)
+            var h = Math.sin(idx * 12.9898 + 78.233) * 43758.5453;
+            var jit = h - Math.floor(h);
+            var t = wfStart + (c / (COLS - 1)) * (wfEnd - wfStart) * 0.92 + r * 0.012 + jit * 0.06;
+            tl.fromTo(d,
+              { scale: 0, opacity: 0 },
+              { scale: 1, opacity: 1, duration: 0.18, ease: "back.out(3)" }, t);
+            dots.push(d);
+          }
+        }
+
+        // peak on "agents": the whole field punches once, then settles and holds
+        tl.fromTo(field, { scale: 1 }, { scale: 1.035, duration: 0.14, ease: "power3.out" }, W.lead[5] + 0.06);
+        tl.to(field, { scale: 1, duration: 0.4, ease: "power2.out" }, W.lead[5] + 0.2);
+        tl.fromTo(q("#fb-ask-l5"), { scale: 1 }, { scale: 1.08, duration: 0.14, ease: "power3.out" }, W.lead[5] + 0.06);
+        tl.to(q("#fb-ask-l5"), { scale: 1, duration: 0.4, ease: "power2.out" }, W.lead[5] + 0.2);
+
+        // quiet hold breath on the stack (single tween, no repeat)
+        tl.fromTo(q("#fb-ask-stack"), { scale: 1 }, { scale: 1.01, duration: DUR - (W.agentsEnd), ease: "sine.inOut" }, W.agentsEnd);
+
+        // pin timeline length to the frame duration
+        tl.set({}, {}, DUR);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["00b-the-ask"] = tl;
+      })();
+    </script>
+  </div>
+</template>

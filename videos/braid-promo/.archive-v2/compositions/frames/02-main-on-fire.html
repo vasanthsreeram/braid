@@ -1,0 +1,497 @@
+<template>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      color: #fffdf8;
+    }
+    #root * {
+      box-sizing: border-box;
+    }
+    .\30 2-main-on-fire-bg {
+      position: absolute;
+      inset: 0;
+      background: #2a2823;
+    }
+    .\30 2-main-on-fire-world {
+      position: absolute;
+      inset: 0;
+    }
+    .\30 2-main-on-fire-layer {
+      position: absolute;
+      inset: 0;
+    }
+    /* depth layer 1 — the main strand */
+    .\30 2-main-on-fire-seg {
+      position: absolute;
+      top: 593px;
+      height: 14px;
+      width: 244px;
+      background: #ff681e;
+      transform-origin: 50% 50%;
+      clip-path: polygon(0 18%, 4% 0, 96% 12%, 100% 0, 98% 58%, 100% 100%, 3% 88%, 0 100%);
+    }
+    .\30 2-main-on-fire-dot {
+      position: absolute;
+      top: -4px;
+      width: 22px;
+      height: 22px;
+      margin-left: -11px;
+      background: #ff681e;
+      border-radius: 50%;
+    }
+    .\30 2-main-on-fire-shard {
+      position: absolute;
+      width: 34px;
+      height: 7px;
+      background: #ff681e;
+      clip-path: polygon(0 40%, 30% 0, 100% 30%, 85% 100%, 10% 80%);
+    }
+    .\30 2-main-on-fire-strandlabel {
+      position: absolute;
+      left: 105px;
+      top: 548px;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #ff681e;
+    }
+    /* depth layer 2 — the toast pile */
+    .\30 2-main-on-fire-toast {
+      position: absolute;
+      padding: 18px 30px 22px 30px;
+      background: #1a1918;
+      border: 1px solid #504b48;
+      white-space: nowrap;
+      font-family: "IBM Plex Mono", monospace;
+      transform-origin: 50% 50%;
+    }
+    .\30 2-main-on-fire-toast.\30 2-main-on-fire-err {
+      border-left: 8px solid #ff681e;
+    }
+    .\30 2-main-on-fire-tag {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #b8b0a3;
+      margin-bottom: 8px;
+    }
+    .\30 2-main-on-fire-err .\30 2-main-on-fire-tag {
+      color: #ff681e;
+    }
+    .\30 2-main-on-fire-line {
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1.2;
+      color: #fffdf8;
+    }
+    .\30 2-main-on-fire-line em {
+      font-style: normal;
+      color: #ff681e;
+    }
+    .\30 2-main-on-fire-big .\30 2-main-on-fire-line {
+      font-size: 40px;
+    }
+    .\30 2-main-on-fire-huge .\30 2-main-on-fire-line {
+      font-size: 60px;
+      font-weight: 700;
+    }
+    .\30 2-main-on-fire-veil {
+      position: absolute;
+      inset: 0;
+      background: #2a2823;
+    }
+    /* depth layer 3 — the headline */
+    .\30 2-main-on-fire-headline {
+      position: absolute;
+      left: 105px;
+      top: 318px;
+      font-family: "Barlow", "Archivo Black", sans-serif;
+      font-weight: 900;
+      font-size: 200px;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+      color: #fffdf8;
+      white-space: nowrap;
+      transform-origin: 30% 60%;
+    }
+    .\30 2-main-on-fire-rule {
+      position: absolute;
+      left: 110px;
+      top: 290px;
+      width: 36px;
+      height: 2px;
+      background: #ff681e;
+    }
+  </style>
+
+  <div data-hf-id="hf-ox38" id="root" data-composition-id="02-main-on-fire" data-duration="6.037" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-kddf" class="02-main-on-fire-bg clip" data-start="0" data-duration="6.037" data-track-index="0"></div>
+
+    <div data-hf-id="hf-wmby" class="02-main-on-fire-world" id="02-main-on-fire-world">
+      <!-- layer 1: strand -->
+      <div data-hf-id="hf-xvq1" class="02-main-on-fire-layer" id="02-main-on-fire-strand">
+        <div data-hf-id="hf-71pf" class="02-main-on-fire-strandlabel">main</div>
+      </div>
+
+      <!-- layer 2: toast pile -->
+      <div data-hf-id="hf-fjy1" class="02-main-on-fire-layer" id="02-main-on-fire-pile">
+        <div data-hf-id="hf-mgem" class="02-main-on-fire-toast" data-t="0.10" data-dx="-160" data-dy="-120" data-r="-2" style="left: 110px; top: 96px">
+          <div data-hf-id="hf-z725" class="02-main-on-fire-tag">zsh</div>
+          <div data-hf-id="hf-g9ih" class="02-main-on-fire-line">$ git push origin main</div>
+        </div>
+        <div data-hf-id="hf-uek3" class="02-main-on-fire-toast 02-main-on-fire-err" data-t="0.70" data-dx="200" data-dy="-120" data-r="1.5" style="left: 990px; top: 150px">
+          <div data-hf-id="hf-0ltj" class="02-main-on-fire-tag">remote / rejected</div>
+          <div data-hf-id="hf-8e7e" class="02-main-on-fire-line"><em data-hf-id="hf-q6nc">! [rejected]</em> main -&gt; main (non-fast-forward)</div>
+        </div>
+        <div data-hf-id="hf-5ze5" class="02-main-on-fire-toast" data-t="1.60" data-dx="-200" data-dy="140" data-r="1" style="left: 140px; top: 690px">
+          <div data-hf-id="hf-0dch" class="02-main-on-fire-tag">zsh</div>
+          <div data-hf-id="hf-cq7t" class="02-main-on-fire-line">$ git pull --rebase</div>
+        </div>
+        <div data-hf-id="hf-abdu" class="02-main-on-fire-toast 02-main-on-fire-err 02-main-on-fire-big" data-t="2.50" data-dx="240" data-dy="0" data-r="-1.5" style="left: 660px; top: 400px">
+          <div data-hf-id="hf-9vy1" class="02-main-on-fire-tag">merge / conflict</div>
+          <div data-hf-id="hf-h4k3" class="02-main-on-fire-line"><em data-hf-id="hf-p4xd">CONFLICT (content):</em> Merge conflict in src/auth.ts</div>
+        </div>
+        <div data-hf-id="hf-x70s" class="02-main-on-fire-toast 02-main-on-fire-err 02-main-on-fire-huge" data-t="3.10" data-dx="0" data-dy="0" data-r="2" data-slam="1" style="left: 600px; top: 250px">
+          <div data-hf-id="hf-g57f" class="02-main-on-fire-tag">zsh / force</div>
+          <div data-hf-id="hf-coue" class="02-main-on-fire-line">$ git push <em data-hf-id="hf-l60o">--force</em></div>
+        </div>
+        <div data-hf-id="hf-697k" class="02-main-on-fire-toast 02-main-on-fire-err" data-t="3.36" data-dx="220" data-dy="80" data-r="-2.5" style="left: 1030px; top: 600px">
+          <div data-hf-id="hf-y2ye" class="02-main-on-fire-tag">remote</div>
+          <div data-hf-id="hf-bz95" class="02-main-on-fire-line"><em data-hf-id="hf-x4fb">error:</em> failed to push some refs to 'origin'</div>
+        </div>
+        <div data-hf-id="hf-lc0s" class="02-main-on-fire-toast" data-t="3.52" data-dx="-220" data-dy="0" data-r="2.5" style="left: 50px; top: 440px">
+          <div data-hf-id="hf-8spl" class="02-main-on-fire-tag">hint</div>
+          <div data-hf-id="hf-x8y9" class="02-main-on-fire-line">hint: Updates were rejected (fetch first)</div>
+        </div>
+        <div data-hf-id="hf-3di6" class="02-main-on-fire-toast 02-main-on-fire-err" data-t="3.68" data-dx="0" data-dy="160" data-r="-1" style="left: 1180px; top: 765px">
+          <div data-hf-id="hf-776q" class="02-main-on-fire-tag">status</div>
+          <div data-hf-id="hf-680x" class="02-main-on-fire-line">Unmerged paths: src/auth.ts</div>
+        </div>
+        <div data-hf-id="hf-bhln" class="02-main-on-fire-toast 02-main-on-fire-err" data-t="3.84" data-dx="-120" data-dy="-160" data-r="3" style="left: 260px; top: 230px">
+          <div data-hf-id="hf-l4l3" class="02-main-on-fire-tag">remote / rejected</div>
+          <div data-hf-id="hf-nj5m" class="02-main-on-fire-line"><em data-hf-id="hf-7n6o">! [rejected]</em> main (fetch first)</div>
+        </div>
+        <div data-hf-id="hf-s8jz" class="02-main-on-fire-toast" data-t="3.98" data-dx="160" data-dy="140" data-r="-3" style="left: 560px; top: 735px">
+          <div data-hf-id="hf-o9n1" class="02-main-on-fire-tag">merge / conflict</div>
+          <div data-hf-id="hf-s2ls" class="02-main-on-fire-line"><em data-hf-id="hf-woc5">CONFLICT</em> (content): src/db.ts</div>
+        </div>
+        <div data-hf-id="hf-33js" class="02-main-on-fire-toast 02-main-on-fire-err" data-t="4.08" data-dx="200" data-dy="-160" data-r="1.8" style="left: 1370px; top: 40px">
+          <div data-hf-id="hf-f028" class="02-main-on-fire-tag">ci</div>
+          <div data-hf-id="hf-aht3" class="02-main-on-fire-line">main: <em data-hf-id="hf-lsmq">build failed</em></div>
+        </div>
+      </div>
+
+      <div data-hf-id="hf-e40i" class="02-main-on-fire-veil" id="02-main-on-fire-veil"></div>
+
+      <!-- layer 3: headline -->
+      <div data-hf-id="hf-k2xi" class="02-main-on-fire-layer" id="02-main-on-fire-top">
+        <div data-hf-id="hf-xeqq" class="02-main-on-fire-rule" id="02-main-on-fire-rule"></div>
+        <div data-hf-id="hf-mesd" class="02-main-on-fire-headline" id="02-main-on-fire-headline">who broke main?</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const ID = "02-main-on-fire";
+      const DUR = 5.637;
+      const root = document.querySelector('[data-composition-id="' + ID + '"]');
+      const byId = (s) => root.querySelector('[id="' + ID + "-" + s + '"]');
+      const cls = (s) => Array.from(root.getElementsByClassName(ID + "-" + s));
+
+      // deterministic PRNG (mulberry32)
+      let seed = 20260209;
+      const rand = () => {
+        seed |= 0;
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+
+      // ---- build the strand: 8 segments carrying impact beads ----
+      const strand = byId("strand");
+      const SEGS = 8;
+      const SEG_W = 240;
+      const segs = [];
+      for (let i = 0; i < SEGS; i++) {
+        const s = document.createElement("div");
+        s.className = ID + "-seg";
+        s.style.left = i * SEG_W - 2 + "px";
+        strand.appendChild(s);
+        segs.push(s);
+      }
+      // beads ride inside each segment's coordinate frame (wrapper not clipped)
+      const beadHosts = segs.map((s, i) => {
+        const h = document.createElement("div");
+        h.style.position = "absolute";
+        h.style.left = i * SEG_W - 2 + "px";
+        h.style.top = "593px";
+        h.style.width = "244px";
+        h.style.height = "14px";
+        h.style.transformOrigin = "50% 50%";
+        strand.appendChild(h);
+        return h;
+      });
+      const dots = [];
+      const DOTS = 40;
+      for (let k = 0; k < DOTS; k++) {
+        const segIdx = Math.floor(rand() * SEGS);
+        const d = document.createElement("div");
+        d.className = ID + "-dot";
+        d.style.left = 20 + rand() * 204 + "px";
+        beadHosts[segIdx].appendChild(d);
+        const fromAbove = rand() < 0.55;
+        dots.push({
+          el: d,
+          dy: (fromAbove ? -1 : 1) * (380 + rand() * 420),
+          dx: (rand() - 0.5) * 160,
+          t: (k / DOTS) * 1.5,
+        });
+      }
+      // shards at break points
+      const shards = [];
+      for (let k = 0; k < 18; k++) {
+        const b = 1 + (k % (SEGS - 1));
+        const sh = document.createElement("div");
+        sh.className = ID + "-shard";
+        sh.style.left = b * SEG_W - 17 + "px";
+        sh.style.top = "596px";
+        strand.appendChild(sh);
+        const ang = rand() * Math.PI * 2;
+        const dist = 90 + rand() * 220;
+        shards.push({
+          el: sh,
+          x: Math.cos(ang) * dist,
+          y: Math.sin(ang) * dist * 0.8,
+          r: (rand() - 0.5) * 540,
+          t: k < 9 ? 2.5 + k * 0.012 : 3.1 + (k - 9) * 0.012,
+        });
+      }
+
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- Scene 1 (0.0–0.7): strand present, dots slam in ----
+      dots.forEach((d) => {
+        tl.fromTo(
+          d.el,
+          { x: d.dx, y: d.dy, scaleX: 1, scaleY: 1, opacity: 1 },
+          { x: 0, y: 0, duration: 0.24, ease: "power3.in" },
+          d.t
+        );
+        tl.to(d.el, { scaleX: 1.5, scaleY: 0.55, duration: 0.07, ease: "power2.out" }, d.t + 0.24);
+      });
+
+      // segment state helpers
+      const segTo = (vals, t, dur, ease) => {
+        segs.forEach((s, i) => {
+          const v = vals[i];
+          tl.to([s, beadHosts[i]], { x: v[0], y: v[1], rotation: v[2], duration: dur, ease: ease }, t);
+        });
+      };
+      // establish rest state so seeking back to 0 is clean
+      tl.set(segs.concat(beadHosts), { x: 0, y: 0, rotation: 0 }, 0);
+
+      // ---- Scene 2 (0.7): strand kinks ----
+      segTo(
+        [
+          [0, 0, 0],
+          [0, 4, 2],
+          [0, -14, -5],
+          [0, 18, 7],
+          [0, -10, -4],
+          [0, 12, 5],
+          [0, -6, -2],
+          [0, 2, 1],
+        ],
+        0.7,
+        0.28,
+        "back.out(3)"
+      );
+
+      // ---- Scene 3 (1.6 rebase: wrench; 2.5 conflict: splits into frayed shards) ----
+      segTo(
+        [
+          [0, 6, 2],
+          [0, -10, -6],
+          [0, 22, 9],
+          [0, -24, -10],
+          [0, 20, 8],
+          [0, -14, -7],
+          [0, 10, 4],
+          [0, -4, -2],
+        ],
+        1.6,
+        0.3,
+        "back.out(2.5)"
+      );
+      segTo(
+        [
+          [-40, 30, 8],
+          [-24, -46, -16],
+          [-10, 60, 22],
+          [-6, -70, -28],
+          [10, 64, 24],
+          [18, -52, -18],
+          [30, 40, 14],
+          [44, -22, -8],
+        ],
+        2.5,
+        0.32,
+        "expo.out"
+      );
+      // ---- Scene 4 (3.1 force push): shards blown further apart ----
+      segTo(
+        [
+          [-90, 70, 18],
+          [-60, -110, -34],
+          [-30, 140, 40],
+          [-14, -150, -48],
+          [24, 130, 44],
+          [48, -120, -36],
+          [70, 96, 30],
+          [100, -60, -20],
+        ],
+        3.1,
+        0.35,
+        "expo.out"
+      );
+      shards.forEach((s) => {
+        tl.fromTo(
+          s.el,
+          { x: 0, y: 0, rotation: 0, opacity: 0 },
+          { x: s.x, y: s.y, rotation: s.r, opacity: 1, duration: 0.45, ease: "expo.out" },
+          s.t
+        );
+      });
+
+      // ---- toasts pile in from every edge on their VO cues ----
+      cls("toast").forEach((el) => {
+        const t = parseFloat(el.dataset.t);
+        const r = parseFloat(el.dataset.r);
+        if (el.dataset.slam) {
+          tl.fromTo(
+            el,
+            { scale: 1.9, rotation: r - 6, opacity: 0 },
+            { scale: 1, rotation: r, opacity: 1, duration: 0.16, ease: "power4.in" },
+            t
+          );
+        } else {
+          tl.fromTo(
+            el,
+            {
+              x: parseFloat(el.dataset.dx),
+              y: parseFloat(el.dataset.dy),
+              scale: 1.14,
+              rotation: r * 2.5,
+              opacity: 0,
+            },
+            { x: 0, y: 0, scale: 1, rotation: r, opacity: 1, duration: 0.2, ease: "power4.out" },
+            t
+          );
+        }
+      });
+
+      // ---- screen shakes: conflict (small), force push (hard) ----
+      const world = byId("world");
+      tl.set(world, { x: 0, y: 0 }, 0);
+      tl.to(
+        world,
+        {
+          keyframes: [
+            { x: -8, y: 5, duration: 0.05 },
+            { x: 6, y: -4, duration: 0.05 },
+            { x: -3, y: 2, duration: 0.05 },
+            { x: 0, y: 0, duration: 0.05 },
+          ],
+          ease: "none",
+        },
+        2.5
+      );
+      tl.to(
+        world,
+        {
+          keyframes: [
+            { x: -26, y: 14, duration: 0.05 },
+            { x: 22, y: -12, duration: 0.05 },
+            { x: -16, y: 9, duration: 0.05 },
+            { x: 11, y: -6, duration: 0.05 },
+            { x: -6, y: 3, duration: 0.05 },
+            { x: 0, y: 0, duration: 0.06 },
+          ],
+          ease: "none",
+        },
+        3.26
+      );
+
+      // ---- Scene 5 (4.2): headline punches in over the pile ----
+      tl.fromTo(byId("veil"), { opacity: 0 }, { opacity: 0.55, duration: 0.18, ease: "power2.out" }, 4.2);
+      tl.fromTo(
+        byId("headline"),
+        { scale: 1.45, opacity: 0, rotation: -2 },
+        { scale: 1, opacity: 1, rotation: -1, duration: 0.22, ease: "expo.out" },
+        4.2
+      );
+      tl.fromTo(byId("rule"), { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.2, ease: "power3.out" }, 4.3);
+      tl.to(
+        world,
+        {
+          keyframes: [
+            { x: -10, y: 6, duration: 0.04 },
+            { x: 7, y: -4, duration: 0.04 },
+            { x: 0, y: 0, duration: 0.05 },
+          ],
+          ease: "none",
+        },
+        4.38
+      );
+
+      // ---- hold the chaos: subtle jitter on pile + strand (onUpdate sine form) ----
+      const pile = byId("pile");
+      const top = byId("top");
+      const phase = { p: 0 };
+      const IDLE_START = 4.55;
+      const IDLE_DUR = DUR - IDLE_START;
+      const CYCLES = 3;
+      tl.fromTo(
+        phase,
+        { p: 0 },
+        {
+          p: Math.PI * 2 * CYCLES,
+          duration: IDLE_DUR,
+          ease: "none",
+          onUpdate: () => {
+            const p = phase.p;
+            const a = Math.sin(p * 2.3) * 2.5 + Math.sin(p * 5.1) * 1;
+            const b = Math.sin(p * 1.9) * 2 + Math.sin(p * 4.3) * 0.8;
+            pile.style.transform = "translate(" + a.toFixed(2) + "px," + b.toFixed(2) + "px)";
+            strand.style.transform = "translate(" + (-b).toFixed(2) + "px," + a.toFixed(2) + "px)";
+            top.style.transform = "translate(" + (Math.sin(p * 1.7) * 1.5).toFixed(2) + "px,0px)";
+          },
+        },
+        IDLE_START
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

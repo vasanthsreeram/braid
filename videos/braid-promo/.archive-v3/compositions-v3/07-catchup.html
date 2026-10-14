@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+@font-face { font-family: "Inter Tight"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-600.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-700.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-800.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-900.woff2") format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter Tight", sans-serif; color: #1f1a15; }
+#s07-ground { position: absolute; inset: 0; background: #faf7f2; }
+#root .svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+#root .hl { position: absolute; left: 192px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; white-space: nowrap; color: #1f1a15; }
+#root .em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #e8590c; font-size: 1.12em; line-height: 0.8; }
+#root .w { display: inline-block; }
+#root .sw { opacity: 0; }
+#root .proof { position: absolute; left: 192px; top: 948px; display: flex; align-items: center; gap: 22px; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 25px; letter-spacing: 0.1em; text-transform: uppercase; color: #5e5248; white-space: nowrap; opacity: 0; }
+#root .proof .tick { width: 40px; height: 3px; background: #e8590c; }
+#root .label { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 22px; letter-spacing: 0.08em; color: #5e5248; white-space: nowrap; }
+
+
+#s07-h0 { top: 150px; font-size: 140px; }
+#s07-h1 { top: 150px; font-size: 120px; }
+#s07-h2 { top: 272px; font-size: 120px; }
+#s07-timer { position: absolute; right: 192px; top: 150px; text-align: right; opacity: 0; }
+#s07-timer .v { font-weight: 800; font-size: 200px; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; color: #e8590c; }
+#s07-timer .u { font-weight: 700; font-size: 90px; letter-spacing: -0.03em; color: #e8590c; margin-left: 8px; }
+
+      </style>
+      <div id="root" data-composition-id="v3-07-catchup" data-width="1920" data-height="1080" data-duration="4.281">
+        <div id="s07-ground" class="clip" data-start="0" data-duration="4.281" data-track-index="0"></div>
+
+        <svg class="svg" viewBox="0 0 1920 1080"><path id="s07-main" d="M-20,760 L1940,760" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#1f1a15" stroke-width="9" stroke-linecap="round"/><circle id="s07-c0" cx="260" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s07-c1" cx="420" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s07-c2" cx="580" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s07-n0" cx="740" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s07-n1" cx="900" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s07-n2" cx="1060" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><g id="s07-br"><path id="s07-b" d="M420,760 C530,760 490,590 620,590 L940,590" pathLength="1" fill="none" stroke="#e8590c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1" /><circle id="s07-w0" cx="700" cy="590" r="12" fill="#e8590c" stroke="#faf7f2" stroke-width="4" /><circle id="s07-w1" cx="860" cy="590" r="12" fill="#e8590c" stroke="#faf7f2" stroke-width="4" /><text id="s07-stale" x="630" y="556" font-family="IBM Plex Mono" font-weight="600" font-size="24" letter-spacing="2" fill="#7a5c46" opacity="0">STALE</text><text id="s07-ok" x="630" y="556" font-family="IBM Plex Mono" font-weight="600" font-size="24" letter-spacing="2" fill="#e8590c" opacity="0">CAUGHT UP</text></g></svg>
+        <div id="s07-h0" class="hl sw">Fall <span class="em">behind?</span></div>
+        <div id="s07-h1" class="hl"><span class="w sw">Your</span> <span class="w sw">work</span></div>
+        <div id="s07-h2" class="hl"><span class="w sw">catches</span> <span class="w sw em">itself</span> <span class="w sw">up.</span></div>
+        <div id="s07-timer"><span id="s07-tv" class="v">0.0</span><span class="u">s</span></div>
+        <div id="s07-pf" class="proof"><span class="tick"></span>Fast catch-up &middot; rebased inside the Worker &middot; 2.4&ndash;2.9 s &middot; no container</div>
+
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        (function () {
+          const root = document.querySelector('[data-composition-id="v3-07-catchup"]');
+
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => root.querySelector(s);
+const $$ = (s) => Array.prototype.slice.call(root.querySelectorAll(s));
+function rise(el, t, dy, d) { tl.fromTo(el, { opacity: 0, y: dy == null ? 60 : dy }, { opacity: 1, y: 0, duration: d || 0.5, ease: "expo.out" }, t); }
+function show(el, t) { tl.set(el, { opacity: 1 }, t); }
+function hide(el, t) { tl.set(el, { opacity: 0 }, t); }
+function draw(el, t, d, ease) { tl.fromTo(el, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: ease || "power2.inOut" }, t); }
+function pop(el, t, d) { tl.fromTo(el, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: d || 0.4, ease: "back.out(2.6)" }, t); }
+function proof(el, t) { tl.fromTo(el, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, t); }
+function count(el, from, to, t, d, fmt, ease) { const o = { v: from }; tl.to(o, { v: to, duration: d, ease: ease || "power2.out", onUpdate: function () { el.textContent = fmt ? fmt(o.v) : String(Math.round(o.v)); } }, t); tl.call(function () { el.textContent = fmt ? fmt(from) : String(from); }, null, Math.max(0, t - 0.001)); }
+
+
+draw($("#s07-main"), 0, 0.4, "power3.out");
+[0, 1, 2].forEach(function (i) { pop($("#s07-c" + i), 0.05 + i * 0.05, 0.3); });
+draw($("#s07-b"), 0.12, 0.45, "power2.out"); pop($("#s07-w0"), 0.35, 0.3); pop($("#s07-w1"), 0.45, 0.3);
+rise($("#s07-h0"), 0.23, 40, 0.4);
+// main moves ahead -> strand goes stale
+[0, 1, 2].forEach(function (i) { pop($("#s07-n" + i), 0.63 + i * 0.13, 0.3); });
+tl.to($("#s07-b"), { opacity: 0.35, duration: 0.2 }, 0.9299999999999999);
+show($("#s07-stale"), 0.9299999999999999);
+hide($("#s07-h0"), 1.19);
+var h = $$("#s07-h1 .w, #s07-h2 .w"); var ht = [1.19, 1.43, 1.75, 2.23, 2.63];
+h.forEach(function (el, i) { rise(el, ht[i], 40, 0.4); });
+// catch up: slide branch base onto the new head (x +640)
+tl.to($("#s07-br"), { x: 640, duration: 0.55, ease: "expo.inOut" }, 1.75);
+tl.to($("#s07-b"), { opacity: 1, duration: 0.2 }, 2.2);
+hide($("#s07-stale"), 2.05); show($("#s07-ok"), 2.3);
+// timer
+show($("#s07-timer"), 1.75);
+count($("#s07-tv"), 0, 2.4, 1.75, 1.54, function (v) { return v.toFixed(1); }, "power1.out");
+tl.fromTo($("#s07-timer"), { scale: 1 }, { scale: 1.08, duration: 0.12, yoyo: true, repeat: 1, transformOrigin: "100% 50%" }, 3.29);
+proof($("#s07-pf"), 2.95);
+
+          window.__timelines["v3-07-catchup"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

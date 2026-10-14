@@ -1,0 +1,6 @@
+.thumbnails/
+.waveform-cache/
+.tts-test/
+.tts-test2/
+.build/
+node_modules/

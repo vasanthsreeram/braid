@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+@font-face { font-family: "Inter Tight"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-600.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-700.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-800.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-900.woff2") format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter Tight", sans-serif; color: #1f1a15; }
+#s06-ground { position: absolute; inset: 0; background: #faf7f2; }
+#root .svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+#root .hl { position: absolute; left: 192px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; white-space: nowrap; color: #1f1a15; }
+#root .em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #e8590c; font-size: 1.12em; line-height: 0.8; }
+#root .w { display: inline-block; }
+#root .sw { opacity: 0; }
+#root .proof { position: absolute; left: 192px; top: 948px; display: flex; align-items: center; gap: 22px; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 25px; letter-spacing: 0.1em; text-transform: uppercase; color: #5e5248; white-space: nowrap; opacity: 0; }
+#root .proof .tick { width: 40px; height: 3px; background: #e8590c; }
+#root .label { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 22px; letter-spacing: 0.08em; color: #5e5248; white-space: nowrap; }
+
+
+      </style>
+      <div id="root" data-composition-id="v3-06-clean" data-width="1920" data-height="1080" data-duration="5.987">
+        <div id="s06-ground" class="clip" data-start="0" data-duration="5.987" data-track-index="0"></div>
+
+        <svg class="svg" viewBox="0 0 1920 1080"><path d="M1000,760 L1940,760" stroke="#e2d9cc" stroke-width="5" stroke-dasharray="4 14" stroke-linecap="round" fill="none"/><path id="s06-main" d="M-20,760 L1000,760" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#1f1a15" stroke-width="9" stroke-linecap="round"/><path id="s06-lane" d="M1960,600 L1100,600 C1040,600 1000,660 1000,760" pathLength="1" fill="none" stroke="#c99a2e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1" /><rect id="s06-gate" x="1085" y="554" width="10" height="92" rx="5" fill="#1f1a15"/><circle id="s06-c0" cx="640" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s06-c1" cx="760" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s06-c2" cx="880" cy="760" r="13" fill="#1f1a15" stroke="#faf7f2" stroke-width="4" /><circle id="s06-q0" cx="1160" cy="600" r="14" fill="#e8590c" stroke="#faf7f2" stroke-width="4" /><circle id="s06-q1" cx="1280" cy="600" r="14" fill="#7a5c46" stroke="#faf7f2" stroke-width="4" /><circle id="s06-q2" cx="1400" cy="600" r="14" fill="#c99a2e" stroke="#faf7f2" stroke-width="4" /><circle id="s06-q3" cx="1520" cy="600" r="14" fill="#e8590c" stroke="#faf7f2" stroke-width="4" /><circle id="s06-q4" cx="1640" cy="600" r="14" fill="#7a5c46" stroke="#faf7f2" stroke-width="4" /></svg>
+<div id="s06-h0" class="hl sw" style="top:150px;font-size:130px">Changes line up.</div>
+<div id="s06-h1" class="hl sw" style="top:150px;font-size:130px">One at a time.</div>
+<div id="s06-h2" class="hl sw" style="top:150px;font-size:130px">Nothing gets <span class="em">overwritten.</span></div>
+<div id="s06-h3" class="hl sw" style="top:150px;font-size:130px">Main stays <span class="em">clean.</span></div>
+        <div class="label" style="position:absolute;left:192px;top:800px">main</div>
+        <div id="s06-pf" class="proof"><span class="tick"></span>Fenced merge &middot; 30 racing at once &rarr; exactly 1 lands, 29 catch up</div>
+
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        (function () {
+          const root = document.querySelector('[data-composition-id="v3-06-clean"]');
+
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => root.querySelector(s);
+const $$ = (s) => Array.prototype.slice.call(root.querySelectorAll(s));
+function rise(el, t, dy, d) { tl.fromTo(el, { opacity: 0, y: dy == null ? 60 : dy }, { opacity: 1, y: 0, duration: d || 0.5, ease: "expo.out" }, t); }
+function show(el, t) { tl.set(el, { opacity: 1 }, t); }
+function hide(el, t) { tl.set(el, { opacity: 0 }, t); }
+function draw(el, t, d, ease) { tl.fromTo(el, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: ease || "power2.inOut" }, t); }
+function pop(el, t, d) { tl.fromTo(el, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: d || 0.4, ease: "back.out(2.6)" }, t); }
+function proof(el, t) { tl.fromTo(el, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, t); }
+function count(el, from, to, t, d, fmt, ease) { const o = { v: from }; tl.to(o, { v: to, duration: d, ease: ease || "power2.out", onUpdate: function () { el.textContent = fmt ? fmt(o.v) : String(Math.round(o.v)); } }, t); tl.call(function () { el.textContent = fmt ? fmt(from) : String(from); }, null, Math.max(0, t - 0.001)); }
+
+
+var GX = 1000, MY = 760, LY = 600, QX = 1160, SP = 120;
+draw($("#s06-main"), 0, 0.45, "power3.out");
+draw($("#s06-lane"), 0.05, 0.5, "power3.out");
+[0, 1, 2].forEach(function (i) { pop($("#s06-c" + i), 0.1 + i * 0.06, 0.3); });
+pop($("#s06-gate"), 0.3, 0.3);
+for (var i = 0; i < 5; i++) pop($("#s06-q" + i), 0.35 + i * 0.07, 0.3);
+// headline swaps
+show($("#s06-h0"), 0.15); tl.fromTo($("#s06-h0"), { y: 40 }, { y: 0, duration: 0.4, ease: "expo.out" }, 0.15);
+hide($("#s06-h0"), 2.07); show($("#s06-h1"), 2.07);
+hide($("#s06-h1"), 3.11); show($("#s06-h2"), 3.11);
+hide($("#s06-h2"), 4.39); show($("#s06-h3"), 4.39);
+[1, 2, 3].forEach(function (k) { tl.fromTo($("#s06-h" + k), { y: 30 }, { y: 0, duration: 0.3, ease: "expo.out" }, [0, 2.07, 3.11, 4.39][k]); });
+// main commits: absolute positions over time
+var commits = ["#s06-c0", "#s06-c1", "#s06-c2"];
+function land(sel, t) {
+  // move along the lane into main at GX
+  tl.to($(sel), { attr: { cx: GX }, duration: 0.34, ease: "power1.out" }, t);
+  tl.to($(sel), { attr: { cy: MY }, duration: 0.34, ease: "power2.in" }, t);
+  // shift existing commits left
+  commits.forEach(function (c, j) { tl.to($(c), { attr: { cx: GX - (commits.length - j) * SP }, duration: 0.25, ease: "power2.out" }, t + 0.34); });
+  tl.fromTo($("#s06-gate"), { fill: "#e8590c" }, { fill: "#1f1a15", duration: 0.35 }, t + 0.1);
+  commits.push(sel);
+}
+function shiftQueue(idx, t) { for (var k = idx; k < 5; k++) tl.to($("#s06-q" + k), { attr: { cx: QX + (k - idx) * SP }, duration: 0.25, ease: "power2.out" }, t); }
+land("#s06-q0", 1.27); shiftQueue(1, 1.47);
+land("#s06-q1", 2.07); shiftQueue(2, 2.27);
+land("#s06-q2", 2.58); shiftQueue(3, 2.7800000000000002);
+// race: q4 rushes alongside q3, hits the gate, bounces back
+tl.to($("#s06-q4"), { attr: { cx: 1110 }, duration: 0.2, ease: "power2.in" }, 3.11);
+tl.to($("#s06-q4"), { attr: { cx: QX }, duration: 0.45, ease: "back.out(3)" }, 3.31);
+land("#s06-q3", 3.11);
+tl.fromTo($("#s06-gate"), { scaleY: 1.35, transformOrigin: "50% 50%" }, { scaleY: 1, duration: 0.4, ease: "elastic.out(1,0.4)" }, 3.31);
+land("#s06-q4", 4.489999999999999);
+proof($("#s06-pf"), 3.43);
+
+          window.__timelines["v3-06-clean"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
