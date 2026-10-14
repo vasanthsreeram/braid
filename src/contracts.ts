@@ -104,6 +104,7 @@ export interface Catalog {
   getTicket(id: string): Promise<Ticket | null>;
   propose(p: Proposal): Promise<void>;
   proposals(repo: string): Promise<Proposal[]>;
+  proposal(repo: string, id: string): Promise<Proposal | undefined>;
   review(
     repo: string,
     id: string,
@@ -170,9 +171,13 @@ export interface Services {
     swarm?(
       repo: Repo,
       actor: Principal,
-      body: { goal: string; tasks: import("./swarm.ts").SubTask[] },
+      body: { goal: string; tasks: import("./swarm.ts").SubTask[]; autoBraid?: boolean },
     ): Promise<{ swarmId: string; runs: string[] }>;
     swarms?(repo: Repo, id?: string): Promise<{ swarms: any[]; runs: any[] }>;
+    /** Something was braided in: stale agent proposals catch up, the braid queue moves on. */
+    landed?(repo: Repo): Promise<any>;
+    queue?(repo: Repo): Promise<any>;
+    enqueue?(repo: Repo, actor: Principal, body: { proposal: string; mode: "approved" }): Promise<any>;
   };
   store: ObjectStore;
   git: GitPlane;

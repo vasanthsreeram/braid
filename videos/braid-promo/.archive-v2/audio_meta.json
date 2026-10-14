@@ -1,0 +1,2093 @@
+{
+ "bgm": {
+  "path": "assets/bgm/bed.wav",
+  "volume": 0.32,
+  "query": "musicgen: high-energy electronic hackathon hype",
+  "duration_s": 86.5,
+  "source": "host"
+ },
+ "bgm_pending": false,
+ "voices": [
+  {
+   "frame": 1,
+   "path": "assets/vo/padded/vo-s1.wav",
+   "duration_s": 6.471,
+   "words": [
+    {
+     "id": "w01-0",
+     "text": "275",
+     "start": 0.32,
+     "end": 1.36
+    },
+    {
+     "id": "w01-1",
+     "text": "million",
+     "start": 1.52,
+     "end": 1.92
+    },
+    {
+     "id": "w01-2",
+     "text": "commits",
+     "start": 1.92,
+     "end": 2.48
+    },
+    {
+     "id": "w01-3",
+     "text": "per",
+     "start": 2.64,
+     "end": 2.88
+    },
+    {
+     "id": "w01-4",
+     "text": "week.",
+     "start": 2.88,
+     "end": 3.44
+    },
+    {
+     "id": "w01-5",
+     "text": "GitHub",
+     "start": 3.44,
+     "end": 4.0
+    },
+    {
+     "id": "w01-6",
+     "text": "is",
+     "start": 4.0,
+     "end": 4.08
+    },
+    {
+     "id": "w01-7",
+     "text": "on",
+     "start": 4.08,
+     "end": 4.24
+    },
+    {
+     "id": "w01-8",
+     "text": "pace",
+     "start": 4.24,
+     "end": 4.56
+    },
+    {
+     "id": "w01-9",
+     "text": "for",
+     "start": 4.56,
+     "end": 4.72
+    },
+    {
+     "id": "w01-10",
+     "text": "14",
+     "start": 4.72,
+     "end": 5.12
+    },
+    {
+     "id": "w01-11",
+     "text": "billion",
+     "start": 5.12,
+     "end": 5.44
+    },
+    {
+     "id": "w01-12",
+     "text": "this",
+     "start": 5.52,
+     "end": 5.68
+    },
+    {
+     "id": "w01-13",
+     "text": "year.",
+     "start": 5.68,
+     "end": 6.08
+    }
+   ]
+  },
+  {
+   "frame": 2,
+   "path": "assets/vo/padded/vo-s2.wav",
+   "duration_s": 4.758,
+   "words": [
+    {
+     "id": "w02-0",
+     "text": "So",
+     "start": 0.08,
+     "end": 0.16
+    },
+    {
+     "id": "w02-1",
+     "text": "Cloudflare",
+     "start": 0.24,
+     "end": 0.88
+    },
+    {
+     "id": "w02-2",
+     "text": "asked,",
+     "start": 0.96,
+     "end": 1.36
+    },
+    {
+     "id": "w02-3",
+     "text": "build",
+     "start": 1.36,
+     "end": 1.68
+    },
+    {
+     "id": "w02-4",
+     "text": "the",
+     "start": 1.68,
+     "end": 1.76
+    },
+    {
+     "id": "w02-5",
+     "text": "next",
+     "start": 1.76,
+     "end": 2.0
+    },
+    {
+     "id": "w02-6",
+     "text": "GitHub",
+     "start": 2.0,
+     "end": 2.56
+    },
+    {
+     "id": "w02-7",
+     "text": "for",
+     "start": 2.64,
+     "end": 2.8
+    },
+    {
+     "id": "w02-8",
+     "text": "hundreds",
+     "start": 2.8,
+     "end": 3.2
+    },
+    {
+     "id": "w02-9",
+     "text": "of",
+     "start": 3.2,
+     "end": 3.36
+    },
+    {
+     "id": "w02-10",
+     "text": "thousands",
+     "start": 3.36,
+     "end": 3.76
+    },
+    {
+     "id": "w02-11",
+     "text": "of",
+     "start": 3.76,
+     "end": 3.84
+    },
+    {
+     "id": "w02-12",
+     "text": "agents.",
+     "start": 3.84,
+     "end": 4.32
+    }
+   ]
+  },
+  {
+   "frame": 3,
+   "path": "assets/vo/padded/vo-hs.wav",
+   "duration_s": 8.008,
+   "words": [
+    {
+     "id": "w03-0",
+     "text": "Today's",
+     "start": 0.08,
+     "end": 0.56
+    },
+    {
+     "id": "w03-1",
+     "text": "tools",
+     "start": 0.56,
+     "end": 0.96
+    },
+    {
+     "id": "w03-2",
+     "text": "run",
+     "start": 0.96,
+     "end": 1.2
+    },
+    {
+     "id": "w03-3",
+     "text": "at",
+     "start": 1.2,
+     "end": 1.36
+    },
+    {
+     "id": "w03-4",
+     "text": "human",
+     "start": 1.36,
+     "end": 1.76
+    },
+    {
+     "id": "w03-5",
+     "text": "speed.",
+     "start": 1.76,
+     "end": 2.32
+    },
+    {
+     "id": "w03-6",
+     "text": "Agents",
+     "start": 2.32,
+     "end": 2.8
+    },
+    {
+     "id": "w03-7",
+     "text": "don't.",
+     "start": 2.8,
+     "end": 3.36
+    },
+    {
+     "id": "w03-8",
+     "text": "Review",
+     "start": 3.36,
+     "end": 3.84
+    },
+    {
+     "id": "w03-9",
+     "text": "queues",
+     "start": 3.84,
+     "end": 4.4
+    },
+    {
+     "id": "w03-10",
+     "text": "explode.",
+     "start": 4.4,
+     "end": 5.04
+    },
+    {
+     "id": "w03-11",
+     "text": "Merges",
+     "start": 5.04,
+     "end": 5.36
+    },
+    {
+     "id": "w03-12",
+     "text": "pile",
+     "start": 5.52,
+     "end": 5.84
+    },
+    {
+     "id": "w03-13",
+     "text": "up",
+     "start": 5.84,
+     "end": 6.0
+    },
+    {
+     "id": "w03-14",
+     "text": "and",
+     "start": 6.08,
+     "end": 6.24
+    },
+    {
+     "id": "w03-15",
+     "text": "nobody",
+     "start": 6.24,
+     "end": 6.56
+    },
+    {
+     "id": "w03-16",
+     "text": "triages",
+     "start": 6.56,
+     "end": 7.28
+    },
+    {
+     "id": "w03-17",
+     "text": "anything.",
+     "start": 7.28,
+     "end": 7.6
+    }
+   ]
+  },
+  {
+   "frame": 4,
+   "path": "assets/vo/padded/vo-03.wav",
+   "duration_s": 3.432,
+   "words": [
+    {
+     "id": "w04-0",
+     "text": "Meet",
+     "start": 0.08,
+     "end": 0.48
+    },
+    {
+     "id": "w04-1",
+     "text": "Braid,",
+     "start": 0.48,
+     "end": 1.04
+    },
+    {
+     "id": "w04-2",
+     "text": "where",
+     "start": 1.04,
+     "end": 1.28
+    },
+    {
+     "id": "w04-3",
+     "text": "parallel",
+     "start": 1.28,
+     "end": 1.76
+    },
+    {
+     "id": "w04-4",
+     "text": "work",
+     "start": 1.76,
+     "end": 2.0
+    },
+    {
+     "id": "w04-5",
+     "text": "comes",
+     "start": 2.0,
+     "end": 2.16
+    },
+    {
+     "id": "w04-6",
+     "text": "together.",
+     "start": 2.16,
+     "end": 2.56
+    }
+   ]
+  },
+  {
+   "frame": 5,
+   "path": "assets/vo/padded/vo-04.wav",
+   "duration_s": 7.527,
+   "words": [
+    {
+     "id": "w05-0",
+     "text": "Every",
+     "start": 0.08,
+     "end": 0.4
+    },
+    {
+     "id": "w05-1",
+     "text": "agent",
+     "start": 0.4,
+     "end": 0.8
+    },
+    {
+     "id": "w05-2",
+     "text": "gets",
+     "start": 0.8,
+     "end": 0.96
+    },
+    {
+     "id": "w05-3",
+     "text": "its",
+     "start": 0.96,
+     "end": 1.12
+    },
+    {
+     "id": "w05-4",
+     "text": "own",
+     "start": 1.12,
+     "end": 1.36
+    },
+    {
+     "id": "w05-5",
+     "text": "strand,",
+     "start": 1.36,
+     "end": 1.92
+    },
+    {
+     "id": "w05-6",
+     "text": "a",
+     "start": 1.92,
+     "end": 2.0
+    },
+    {
+     "id": "w05-7",
+     "text": "fork",
+     "start": 2.0,
+     "end": 2.32
+    },
+    {
+     "id": "w05-8",
+     "text": "in",
+     "start": 2.32,
+     "end": 2.48
+    },
+    {
+     "id": "w05-9",
+     "text": "Cloudflare",
+     "start": 2.48,
+     "end": 3.2
+    },
+    {
+     "id": "w05-10",
+     "text": "Artifacts,",
+     "start": 3.2,
+     "end": 3.84
+    },
+    {
+     "id": "w05-11",
+     "text": "pinned",
+     "start": 3.84,
+     "end": 4.16
+    },
+    {
+     "id": "w05-12",
+     "text": "to",
+     "start": 4.16,
+     "end": 4.32
+    },
+    {
+     "id": "w05-13",
+     "text": "an",
+     "start": 4.32,
+     "end": 4.4
+    },
+    {
+     "id": "w05-14",
+     "text": "exact",
+     "start": 4.4,
+     "end": 4.72
+    },
+    {
+     "id": "w05-15",
+     "text": "base",
+     "start": 4.72,
+     "end": 4.88
+    },
+    {
+     "id": "w05-16",
+     "text": "commit.",
+     "start": 5.12,
+     "end": 5.68
+    },
+    {
+     "id": "w05-17",
+     "text": "Nobody",
+     "start": 5.68,
+     "end": 6.08
+    },
+    {
+     "id": "w05-18",
+     "text": "fights",
+     "start": 6.08,
+     "end": 6.4
+    },
+    {
+     "id": "w05-19",
+     "text": "over",
+     "start": 6.4,
+     "end": 6.56
+    },
+    {
+     "id": "w05-20",
+     "text": "branches.",
+     "start": 6.56,
+     "end": 7.2
+    }
+   ]
+  },
+  {
+   "frame": 6,
+   "path": "assets/vo/padded/vo-05.wav",
+   "duration_s": 12.703,
+   "words": [
+    {
+     "id": "w06-0",
+     "text": "File",
+     "start": 0.08,
+     "end": 0.4
+    },
+    {
+     "id": "w06-1",
+     "text": "an",
+     "start": 0.4,
+     "end": 0.56
+    },
+    {
+     "id": "w06-2",
+     "text": "issue,",
+     "start": 0.56,
+     "end": 0.88
+    },
+    {
+     "id": "w06-3",
+     "text": "and",
+     "start": 0.88,
+     "end": 1.04
+    },
+    {
+     "id": "w06-4",
+     "text": "Clef,",
+     "start": 1.04,
+     "end": 1.76
+    },
+    {
+     "id": "w06-5",
+     "text": "Cloudflare's",
+     "start": 1.76,
+     "end": 2.56
+    },
+    {
+     "id": "w06-6",
+     "text": "decision",
+     "start": 2.56,
+     "end": 2.8
+    },
+    {
+     "id": "w06-7",
+     "text": "model,",
+     "start": 2.8,
+     "end": 3.2
+    },
+    {
+     "id": "w06-8",
+     "text": "triages",
+     "start": 3.2,
+     "end": 3.92
+    },
+    {
+     "id": "w06-9",
+     "text": "it",
+     "start": 3.92,
+     "end": 4.0
+    },
+    {
+     "id": "w06-10",
+     "text": "in",
+     "start": 4.0,
+     "end": 4.16
+    },
+    {
+     "id": "w06-11",
+     "text": "39",
+     "start": 4.16,
+     "end": 4.56
+    },
+    {
+     "id": "w06-12",
+     "text": "milliseconds.",
+     "start": 4.56,
+     "end": 5.44
+    },
+    {
+     "id": "w06-13",
+     "text": "Type,",
+     "start": 5.44,
+     "end": 5.92
+    },
+    {
+     "id": "w06-14",
+     "text": "priority,",
+     "start": 5.92,
+     "end": 6.56
+    },
+    {
+     "id": "w06-15",
+     "text": "owner,",
+     "start": 6.56,
+     "end": 7.2
+    },
+    {
+     "id": "w06-16",
+     "text": "every",
+     "start": 7.2,
+     "end": 7.52
+    },
+    {
+     "id": "w06-17",
+     "text": "call",
+     "start": 7.52,
+     "end": 7.76
+    },
+    {
+     "id": "w06-18",
+     "text": "with",
+     "start": 7.76,
+     "end": 7.92
+    },
+    {
+     "id": "w06-19",
+     "text": "a",
+     "start": 7.92,
+     "end": 8.08
+    },
+    {
+     "id": "w06-20",
+     "text": "probability,",
+     "start": 8.08,
+     "end": 8.72
+    },
+    {
+     "id": "w06-21",
+     "text": "an",
+     "start": 8.72,
+     "end": 8.88
+    },
+    {
+     "id": "w06-22",
+     "text": "agent",
+     "start": 8.88,
+     "end": 9.2
+    },
+    {
+     "id": "w06-23",
+     "text": "picks",
+     "start": 9.2,
+     "end": 9.52
+    },
+    {
+     "id": "w06-24",
+     "text": "it",
+     "start": 9.52,
+     "end": 9.6
+    },
+    {
+     "id": "w06-25",
+     "text": "up,",
+     "start": 9.6,
+     "end": 9.76
+    },
+    {
+     "id": "w06-26",
+     "text": "and",
+     "start": 9.76,
+     "end": 10.0
+    },
+    {
+     "id": "w06-27",
+     "text": "the",
+     "start": 10.0,
+     "end": 10.08
+    },
+    {
+     "id": "w06-28",
+     "text": "proposal",
+     "start": 10.08,
+     "end": 10.48
+    },
+    {
+     "id": "w06-29",
+     "text": "is",
+     "start": 10.48,
+     "end": 10.64
+    },
+    {
+     "id": "w06-30",
+     "text": "ready",
+     "start": 10.64,
+     "end": 10.96
+    },
+    {
+     "id": "w06-31",
+     "text": "before",
+     "start": 10.96,
+     "end": 11.2
+    },
+    {
+     "id": "w06-32",
+     "text": "you've",
+     "start": 11.2,
+     "end": 11.44
+    },
+    {
+     "id": "w06-33",
+     "text": "refilled",
+     "start": 11.44,
+     "end": 11.92
+    },
+    {
+     "id": "w06-34",
+     "text": "your",
+     "start": 11.92,
+     "end": 12.0
+    },
+    {
+     "id": "w06-35",
+     "text": "coffee.",
+     "start": 12.0,
+     "end": 12.32
+    }
+   ]
+  },
+  {
+   "frame": 7,
+   "path": "assets/vo/padded/vo-06.wav",
+   "duration_s": 4.578,
+   "words": [
+    {
+     "id": "w07-0",
+     "text": "Every",
+     "start": 0.08,
+     "end": 0.4
+    },
+    {
+     "id": "w07-1",
+     "text": "change",
+     "start": 0.4,
+     "end": 0.64
+    },
+    {
+     "id": "w07-2",
+     "text": "is",
+     "start": 0.64,
+     "end": 0.8
+    },
+    {
+     "id": "w07-3",
+     "text": "a",
+     "start": 0.8,
+     "end": 0.88
+    },
+    {
+     "id": "w07-4",
+     "text": "proposal,",
+     "start": 0.88,
+     "end": 1.6
+    },
+    {
+     "id": "w07-5",
+     "text": "exact",
+     "start": 1.6,
+     "end": 2.0
+    },
+    {
+     "id": "w07-6",
+     "text": "base,",
+     "start": 2.08,
+     "end": 2.56
+    },
+    {
+     "id": "w07-7",
+     "text": "exact",
+     "start": 2.56,
+     "end": 3.12
+    },
+    {
+     "id": "w07-8",
+     "text": "commit,",
+     "start": 3.12,
+     "end": 3.52
+    },
+    {
+     "id": "w07-9",
+     "text": "immutable.",
+     "start": 3.52,
+     "end": 4.24
+    }
+   ]
+  },
+  {
+   "frame": 8,
+   "path": "assets/vo/padded/vo-r7.wav",
+   "duration_s": 13.155,
+   "words": [
+    {
+     "id": "w08-0",
+     "text": "The",
+     "start": 0.08,
+     "end": 0.24
+    },
+    {
+     "id": "w08-1",
+     "text": "brain",
+     "start": 0.24,
+     "end": 0.48
+    },
+    {
+     "id": "w08-2",
+     "text": "is",
+     "start": 0.48,
+     "end": 0.64
+    },
+    {
+     "id": "w08-3",
+     "text": "Pi",
+     "start": 0.64,
+     "end": 0.96
+    },
+    {
+     "id": "w08-4",
+     "text": "Durable,",
+     "start": 1.12,
+     "end": 1.68
+    },
+    {
+     "id": "w08-5",
+     "text": "an",
+     "start": 1.68,
+     "end": 1.84
+    },
+    {
+     "id": "w08-6",
+     "text": "agent",
+     "start": 1.84,
+     "end": 2.16
+    },
+    {
+     "id": "w08-7",
+     "text": "harness",
+     "start": 2.16,
+     "end": 2.48
+    },
+    {
+     "id": "w08-8",
+     "text": "inside",
+     "start": 2.64,
+     "end": 2.88
+    },
+    {
+     "id": "w08-9",
+     "text": "a",
+     "start": 2.88,
+     "end": 3.04
+    },
+    {
+     "id": "w08-10",
+     "text": "Durable",
+     "start": 3.04,
+     "end": 3.44
+    },
+    {
+     "id": "w08-11",
+     "text": "Object,",
+     "start": 3.44,
+     "end": 3.92
+    },
+    {
+     "id": "w08-12",
+     "text": "journaling",
+     "start": 3.92,
+     "end": 4.56
+    },
+    {
+     "id": "w08-13",
+     "text": "every",
+     "start": 4.56,
+     "end": 4.8
+    },
+    {
+     "id": "w08-14",
+     "text": "step,",
+     "start": 4.8,
+     "end": 5.12
+    },
+    {
+     "id": "w08-15",
+     "text": "so",
+     "start": 5.12,
+     "end": 5.36
+    },
+    {
+     "id": "w08-16",
+     "text": "a",
+     "start": 5.36,
+     "end": 5.52
+    },
+    {
+     "id": "w08-17",
+     "text": "crash",
+     "start": 5.52,
+     "end": 5.92
+    },
+    {
+     "id": "w08-18",
+     "text": "never",
+     "start": 5.92,
+     "end": 6.16
+    },
+    {
+     "id": "w08-19",
+     "text": "loses",
+     "start": 6.16,
+     "end": 6.56
+    },
+    {
+     "id": "w08-20",
+     "text": "its",
+     "start": 6.56,
+     "end": 6.72
+    },
+    {
+     "id": "w08-21",
+     "text": "place.",
+     "start": 6.72,
+     "end": 7.2
+    },
+    {
+     "id": "w08-22",
+     "text": "It",
+     "start": 7.2,
+     "end": 7.44
+    },
+    {
+     "id": "w08-23",
+     "text": "reads",
+     "start": 7.44,
+     "end": 7.76
+    },
+    {
+     "id": "w08-24",
+     "text": "the",
+     "start": 7.76,
+     "end": 7.92
+    },
+    {
+     "id": "w08-25",
+     "text": "exact",
+     "start": 7.92,
+     "end": 8.32
+    },
+    {
+     "id": "w08-26",
+     "text": "commit,",
+     "start": 8.32,
+     "end": 8.96
+    },
+    {
+     "id": "w08-27",
+     "text": "cites",
+     "start": 8.96,
+     "end": 9.36
+    },
+    {
+     "id": "w08-28",
+     "text": "the",
+     "start": 9.36,
+     "end": 9.44
+    },
+    {
+     "id": "w08-29",
+     "text": "file,",
+     "start": 9.44,
+     "end": 9.84
+    },
+    {
+     "id": "w08-30",
+     "text": "the",
+     "start": 9.84,
+     "end": 9.92
+    },
+    {
+     "id": "w08-31",
+     "text": "line,",
+     "start": 9.92,
+     "end": 10.32
+    },
+    {
+     "id": "w08-32",
+     "text": "the",
+     "start": 10.32,
+     "end": 10.48
+    },
+    {
+     "id": "w08-33",
+     "text": "SHA,",
+     "start": 10.48,
+     "end": 11.12
+    },
+    {
+     "id": "w08-34",
+     "text": "and",
+     "start": 11.12,
+     "end": 11.28
+    },
+    {
+     "id": "w08-35",
+     "text": "files",
+     "start": 11.28,
+     "end": 11.68
+    },
+    {
+     "id": "w08-36",
+     "text": "the",
+     "start": 11.68,
+     "end": 11.76
+    },
+    {
+     "id": "w08-37",
+     "text": "finding",
+     "start": 11.76,
+     "end": 12.16
+    },
+    {
+     "id": "w08-38",
+     "text": "as",
+     "start": 12.16,
+     "end": 12.24
+    },
+    {
+     "id": "w08-39",
+     "text": "an",
+     "start": 12.24,
+     "end": 12.4
+    },
+    {
+     "id": "w08-40",
+     "text": "issue.",
+     "start": 12.4,
+     "end": 12.72
+    }
+   ]
+  },
+  {
+   "frame": 9,
+   "path": "assets/vo/padded/vo-08.wav",
+   "duration_s": 7.079,
+   "words": [
+    {
+     "id": "w09-0",
+     "text": "Then",
+     "start": 0.08,
+     "end": 0.24
+    },
+    {
+     "id": "w09-1",
+     "text": "the",
+     "start": 0.32,
+     "end": 0.4
+    },
+    {
+     "id": "w09-2",
+     "text": "fenced",
+     "start": 0.4,
+     "end": 0.8
+    },
+    {
+     "id": "w09-3",
+     "text": "merge.",
+     "start": 0.8,
+     "end": 1.28
+    },
+    {
+     "id": "w09-4",
+     "text": "One",
+     "start": 1.28,
+     "end": 1.52
+    },
+    {
+     "id": "w09-5",
+     "text": "publisher",
+     "start": 1.52,
+     "end": 1.92
+    },
+    {
+     "id": "w09-6",
+     "text": "at",
+     "start": 2.0,
+     "end": 2.16
+    },
+    {
+     "id": "w09-7",
+     "text": "a",
+     "start": 2.16,
+     "end": 2.24
+    },
+    {
+     "id": "w09-8",
+     "text": "time.",
+     "start": 2.24,
+     "end": 2.56
+    },
+    {
+     "id": "w09-9",
+     "text": "Compare",
+     "start": 2.56,
+     "end": 2.96
+    },
+    {
+     "id": "w09-10",
+     "text": "and",
+     "start": 2.96,
+     "end": 3.12
+    },
+    {
+     "id": "w09-11",
+     "text": "swap",
+     "start": 3.12,
+     "end": 3.52
+    },
+    {
+     "id": "w09-12",
+     "text": "on",
+     "start": 3.52,
+     "end": 3.6
+    },
+    {
+     "id": "w09-13",
+     "text": "the",
+     "start": 3.6,
+     "end": 3.68
+    },
+    {
+     "id": "w09-14",
+     "text": "ref.",
+     "start": 3.68,
+     "end": 4.32
+    },
+    {
+     "id": "w09-15",
+     "text": "Hundreds",
+     "start": 4.32,
+     "end": 4.8
+    },
+    {
+     "id": "w09-16",
+     "text": "racing,",
+     "start": 4.8,
+     "end": 5.36
+    },
+    {
+     "id": "w09-17",
+     "text": "zero",
+     "start": 5.36,
+     "end": 5.6
+    },
+    {
+     "id": "w09-18",
+     "text": "lost",
+     "start": 5.68,
+     "end": 6.0
+    },
+    {
+     "id": "w09-19",
+     "text": "writes.",
+     "start": 6.0,
+     "end": 6.32
+    }
+   ]
+  },
+  {
+   "frame": 10,
+   "path": "assets/vo/padded/vo-r9.wav",
+   "duration_s": 9.943,
+   "words": [
+    {
+     "id": "w10-0",
+     "text": "All",
+     "start": 0.08,
+     "end": 0.24
+    },
+    {
+     "id": "w10-1",
+     "text": "of",
+     "start": 0.24,
+     "end": 0.32
+    },
+    {
+     "id": "w10-2",
+     "text": "it",
+     "start": 0.32,
+     "end": 0.4
+    },
+    {
+     "id": "w10-3",
+     "text": "native",
+     "start": 0.56,
+     "end": 0.88
+    },
+    {
+     "id": "w10-4",
+     "text": "on",
+     "start": 0.88,
+     "end": 1.04
+    },
+    {
+     "id": "w10-5",
+     "text": "Cloudflare,",
+     "start": 1.04,
+     "end": 1.92
+    },
+    {
+     "id": "w10-6",
+     "text": "Workers,",
+     "start": 1.92,
+     "end": 2.4
+    },
+    {
+     "id": "w10-7",
+     "text": "Artifacts,",
+     "start": 2.4,
+     "end": 3.12
+    },
+    {
+     "id": "w10-8",
+     "text": "Durable",
+     "start": 3.12,
+     "end": 3.6
+    },
+    {
+     "id": "w10-9",
+     "text": "Objects,",
+     "start": 3.6,
+     "end": 4.08
+    },
+    {
+     "id": "w10-10",
+     "text": "D1,",
+     "start": 4.08,
+     "end": 4.64
+    },
+    {
+     "id": "w10-11",
+     "text": "and",
+     "start": 4.64,
+     "end": 4.8
+    },
+    {
+     "id": "w10-12",
+     "text": "Workers",
+     "start": 4.8,
+     "end": 5.04
+    },
+    {
+     "id": "w10-13",
+     "text": "AI.",
+     "start": 5.2,
+     "end": 5.84
+    },
+    {
+     "id": "w10-14",
+     "text": "And",
+     "start": 5.84,
+     "end": 6.0
+    },
+    {
+     "id": "w10-15",
+     "text": "the",
+     "start": 6.0,
+     "end": 6.16
+    },
+    {
+     "id": "w10-16",
+     "text": "agent",
+     "start": 6.16,
+     "end": 6.48
+    },
+    {
+     "id": "w10-17",
+     "text": "runtime",
+     "start": 6.48,
+     "end": 6.96
+    },
+    {
+     "id": "w10-18",
+     "text": "is",
+     "start": 6.96,
+     "end": 7.04
+    },
+    {
+     "id": "w10-19",
+     "text": "built",
+     "start": 7.04,
+     "end": 7.28
+    },
+    {
+     "id": "w10-20",
+     "text": "in,",
+     "start": 7.28,
+     "end": 7.6
+    },
+    {
+     "id": "w10-21",
+     "text": "so",
+     "start": 7.6,
+     "end": 7.76
+    },
+    {
+     "id": "w10-22",
+     "text": "there's",
+     "start": 7.76,
+     "end": 8.0
+    },
+    {
+     "id": "w10-23",
+     "text": "nothing",
+     "start": 8.0,
+     "end": 8.24
+    },
+    {
+     "id": "w10-24",
+     "text": "for",
+     "start": 8.24,
+     "end": 8.32
+    },
+    {
+     "id": "w10-25",
+     "text": "you",
+     "start": 8.32,
+     "end": 8.48
+    },
+    {
+     "id": "w10-26",
+     "text": "to",
+     "start": 8.48,
+     "end": 8.56
+    },
+    {
+     "id": "w10-27",
+     "text": "host.",
+     "start": 8.56,
+     "end": 9.12
+    },
+    {
+     "id": "w10-28",
+     "text": "Nothing.",
+     "start": 9.12,
+     "end": 9.6
+    }
+   ]
+  },
+  {
+   "frame": 11,
+   "path": "assets/vo/padded/vo-10.wav",
+   "duration_s": 7.988,
+   "words": [
+    {
+     "id": "w11-0",
+     "text": "Fork,",
+     "start": 0.16,
+     "end": 0.64
+    },
+    {
+     "id": "w11-1",
+     "text": "triage,",
+     "start": 0.64,
+     "end": 1.28
+    },
+    {
+     "id": "w11-2",
+     "text": "propose,",
+     "start": 1.28,
+     "end": 1.92
+    },
+    {
+     "id": "w11-3",
+     "text": "review,",
+     "start": 1.92,
+     "end": 2.48
+    },
+    {
+     "id": "w11-4",
+     "text": "merge.",
+     "start": 2.48,
+     "end": 3.12
+    },
+    {
+     "id": "w11-5",
+     "text": "Hundreds",
+     "start": 3.12,
+     "end": 3.6
+    },
+    {
+     "id": "w11-6",
+     "text": "of",
+     "start": 3.6,
+     "end": 3.76
+    },
+    {
+     "id": "w11-7",
+     "text": "agents.",
+     "start": 3.76,
+     "end": 4.32
+    },
+    {
+     "id": "w11-8",
+     "text": "One",
+     "start": 4.32,
+     "end": 4.56
+    },
+    {
+     "id": "w11-9",
+     "text": "clean",
+     "start": 4.56,
+     "end": 4.96
+    },
+    {
+     "id": "w11-10",
+     "text": "history.",
+     "start": 4.96,
+     "end": 5.52
+    },
+    {
+     "id": "w11-11",
+     "text": "This",
+     "start": 5.52,
+     "end": 5.6
+    },
+    {
+     "id": "w11-12",
+     "text": "is",
+     "start": 5.6,
+     "end": 5.76
+    },
+    {
+     "id": "w11-13",
+     "text": "Braid.",
+     "start": 5.76,
+     "end": 6.32
+    }
+   ]
+  }
+ ],
+ "sfx": [
+  {
+   "frame": 4,
+   "file": "assets/sfx/whoosh-big.wav",
+   "offset_s": 0.0,
+   "duration_s": 1.1,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 4,
+   "file": "assets/sfx/impact-boom.wav",
+   "offset_s": 0.5,
+   "duration_s": 1.2,
+   "volume": 0.6,
+   "source": "host"
+  },
+  {
+   "frame": 4,
+   "file": "assets/sfx/shimmer.wav",
+   "offset_s": 2.2,
+   "duration_s": 1.4,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 5,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 0.1,
+   "duration_s": 0.6,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 5,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 2.0,
+   "duration_s": 0.08,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 5,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 3.8,
+   "duration_s": 0.08,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 5,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 5.6,
+   "duration_s": 0.6,
+   "volume": 0.25,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/card-flick.wav",
+   "offset_s": 0.1,
+   "duration_s": 0.18,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 1.0,
+   "duration_s": 0.6,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 3.2,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/ding.wav",
+   "offset_s": 4.2,
+   "duration_s": 1.0,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 5.4,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 5.9,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 6.6,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/stamp-thud.wav",
+   "offset_s": 8.7,
+   "duration_s": 0.5,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 9.2,
+   "duration_s": 0.6,
+   "volume": 0.25,
+   "source": "host"
+  },
+  {
+   "frame": 6,
+   "file": "assets/sfx/success-chime.wav",
+   "offset_s": 10.5,
+   "duration_s": 1.1,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 7,
+   "file": "assets/sfx/card-flick.wav",
+   "offset_s": 0.1,
+   "duration_s": 0.18,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 7,
+   "file": "assets/sfx/card-flick.wav",
+   "offset_s": 0.9,
+   "duration_s": 0.18,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 7,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 1.6,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 7,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 2.6,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 7,
+   "file": "assets/sfx/stamp-thud.wav",
+   "offset_s": 3.5,
+   "duration_s": 0.5,
+   "volume": 0.6,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/whoosh-big.wav",
+   "offset_s": 0.0,
+   "duration_s": 1.1,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/clack.wav",
+   "offset_s": 0.5,
+   "duration_s": 0.12,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/clack.wav",
+   "offset_s": 1.5,
+   "duration_s": 0.12,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 2.6,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/bonk.wav",
+   "offset_s": 3.4,
+   "duration_s": 0.3,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/clack.wav",
+   "offset_s": 4.3,
+   "duration_s": 0.12,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/clack.wav",
+   "offset_s": 4.6,
+   "duration_s": 0.12,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/clack.wav",
+   "offset_s": 4.9,
+   "duration_s": 0.12,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 9,
+   "file": "assets/sfx/impact-boom.wav",
+   "offset_s": 5.4,
+   "duration_s": 1.2,
+   "volume": 0.55,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 0.2,
+   "duration_s": 0.4,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 0.6,
+   "duration_s": 0.4,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 1.3,
+   "duration_s": 0.4,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 1.9,
+   "duration_s": 0.4,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 2.5,
+   "duration_s": 0.4,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/riser-short.wav",
+   "offset_s": 4.4,
+   "duration_s": 1.2,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/impact-boom.wav",
+   "offset_s": 5.6,
+   "duration_s": 1.2,
+   "volume": 0.65,
+   "source": "host"
+  },
+  {
+   "frame": 11,
+   "file": "assets/sfx/shimmer.wav",
+   "offset_s": 5.8,
+   "duration_s": 1.4,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/riser-short.wav",
+   "offset_s": 0.0,
+   "duration_s": 1.2,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 0.3,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/impact-boom.wav",
+   "offset_s": 1.48,
+   "duration_s": 1.2,
+   "volume": 0.55,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 2.68,
+   "duration_s": 0.4,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 3.4,
+   "duration_s": 0.6,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 4.68,
+   "duration_s": 0.4,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 1,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 5.1,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 2,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 0.2,
+   "duration_s": 0.6,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 2,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 1.38,
+   "duration_s": 0.4,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 2,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 1.68,
+   "duration_s": 0.4,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 2,
+   "file": "assets/sfx/impact-boom.wav",
+   "offset_s": 1.98,
+   "duration_s": 1.2,
+   "volume": 0.55,
+   "source": "host"
+  },
+  {
+   "frame": 2,
+   "file": "assets/sfx/card-flick.wav",
+   "offset_s": 2.7,
+   "duration_s": 0.18,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 2,
+   "file": "assets/sfx/shimmer.wav",
+   "offset_s": 3.88,
+   "duration_s": 1.4,
+   "volume": 0.25,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 0.28,
+   "duration_s": 0.6,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 1.88,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 3.08,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 3.9,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 4.3,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/glitch-hit.wav",
+   "offset_s": 5.48,
+   "duration_s": 0.25,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/ding.wav",
+   "offset_s": 5.95,
+   "duration_s": 1.0,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/scan-sweep.wav",
+   "offset_s": 7.48,
+   "duration_s": 1.3,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 9.48,
+   "duration_s": 0.12,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 9.88,
+   "duration_s": 0.12,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 10.48,
+   "duration_s": 0.12,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 8,
+   "file": "assets/sfx/card-flick.wav",
+   "offset_s": 11.3,
+   "duration_s": 0.18,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 1.88,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 2.38,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 3.08,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 4.08,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/pop.wav",
+   "offset_s": 4.78,
+   "duration_s": 0.12,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/stamp-thud.wav",
+   "offset_s": 6.2,
+   "duration_s": 0.5,
+   "volume": 0.6,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 7.98,
+   "duration_s": 0.08,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 8.2,
+   "duration_s": 0.08,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 8.45,
+   "duration_s": 0.08,
+   "volume": 0.35,
+   "source": "host"
+  },
+  {
+   "frame": 10,
+   "file": "assets/sfx/whoosh-big.wav",
+   "offset_s": 9.0,
+   "duration_s": 1.1,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/whoosh-short.wav",
+   "offset_s": 0.1,
+   "duration_s": 0.6,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/tick.wav",
+   "offset_s": 1.36,
+   "duration_s": 0.08,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/riser-short.wav",
+   "offset_s": 2.0,
+   "duration_s": 1.2,
+   "volume": 0.3,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/error-buzz.wav",
+   "offset_s": 3.4,
+   "duration_s": 0.35,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 4.4,
+   "duration_s": 0.4,
+   "volume": 0.5,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/error-buzz.wav",
+   "offset_s": 5.04,
+   "duration_s": 0.35,
+   "volume": 0.4,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/impact-thud.wav",
+   "offset_s": 5.5,
+   "duration_s": 0.4,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/glitch-hit.wav",
+   "offset_s": 6.56,
+   "duration_s": 0.25,
+   "volume": 0.45,
+   "source": "host"
+  },
+  {
+   "frame": 3,
+   "file": "assets/sfx/impact-boom.wav",
+   "offset_s": 7.28,
+   "duration_s": 1.2,
+   "volume": 0.5,
+   "source": "host"
+  }
+ ]
+}

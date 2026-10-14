@@ -1,0 +1,10 @@
+base/
+base.sha
+seed-task
+*.json
+out-*.txt
+run-*.js
+q-*.js
+race-*.js
+nr.js
+sb.js

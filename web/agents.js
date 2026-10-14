@@ -26,6 +26,7 @@ const TASK_LABEL = {
 };
 const TASK_BUSY = ["planning", "working", "catching_up"];
 let swarms = [];
+let queue = { entries: [], recent: [] };
 let runs = [];
 let selectedRun;
 let detail;
@@ -78,7 +79,7 @@ function build() {
         { class: "form-actions" },
         el("span", {
           class: "hint",
-          text: "Up to 15 model steps and 20 minutes. Up to 3 agents at a time per repository.",
+          text: "Up to 15 model steps and 20 minutes. Up to 6 agents at a time per repository.",
         }),
         el("button", { class: "btn btn-primary", text: "Start agent" }),
       ),
@@ -104,7 +105,8 @@ function build() {
       class: "muted",
       text:
         "A planner splits one goal into separate parts and starts an agent on each, at the same time, each on its own strand. " +
-        "Every part comes back as its own proposal. If one is braided in first, the others can catch up onto it.",
+        "Every part comes back as its own proposal. When one is braided in, the others catch up onto it automatically. " +
+        "With auto-braid on, clean parts that stay inside their files are braided in one at a time without a click.",
     }),
   );
   if (canWrite()) {
@@ -134,10 +136,17 @@ function build() {
           el(
             "select",
             { name: "agents" },
-            el("option", { value: "2", text: "2" }),
-            el("option", { value: "3", text: "3", selected: true }),
+            ...[2, 3, 4, 5, 6].map((n) => el("option", { value: String(n), text: String(n), ...(n === 3 ? { selected: true } : {}) })),
           ),
         ),
+        app().isAdmin()
+          ? el(
+              "label",
+              { class: "agent-auto", title: "Braid in each clean part automatically, in order, catching it up first if needed" },
+              el("input", { type: "checkbox", name: "autoBraid", checked: true }),
+              el("span", { text: "Auto-braid clean parts" }),
+            )
+          : null,
         el("span", { id: "swarm-status", class: "hint", role: "status" }),
         el("button", { class: "btn btn-primary", text: "Plan and start" }),
       ),
@@ -151,7 +160,11 @@ function build() {
       button.disabled = true;
       status.textContent = "Planning the parts…";
       try {
-        const r = await app().api(app().repoAPI("swarms"), { goal, agents: Number(f.elements.agents.value) });
+        const r = await app().api(app().repoAPI("swarms"), {
+          goal,
+          agents: Number(f.elements.agents.value),
+          ...(f.elements.autoBraid ? { autoBraid: f.elements.autoBraid.checked } : {}),
+        });
         f.reset();
         status.textContent = `Started ${r.swarm?.tasks?.length ?? ""} agents.`;
       } catch (err) {
@@ -244,6 +257,7 @@ function renderSwarms() {
           "div",
           { class: "card-head" },
           el("h2", { class: "agent-swarm-goal", text: "Swarm: " + sw.goal.split("\n")[0] }),
+          sw.autoBraid ? el("span", { class: "badge badge-queue", text: "Auto-braid on" }) : null,
           el("span", { class: "muted", text: when(sw.created) }),
         ),
         el(
@@ -264,18 +278,42 @@ function renderSwarms() {
                 }),
                 el("span", {
                   class: "row-sub",
-                  text: [t.strand, t.files?.length ? t.files.join(", ") : null, t.error ?? t.last]
+                  text: [t.strand, t.files?.length ? t.files.join(", ") : null, queueNote(t) ?? t.error ?? t.last]
                     .filter(Boolean)
                     .join(" · "),
                 }),
               ),
-              el("div", { class: "row-side" }, statusBadge(t.status, TASK_LABEL)),
+              el("div", { class: "row-side" }, queueBadge(t), statusBadge(t.status, TASK_LABEL)),
             ),
           ),
         ),
       ),
     ),
   );
+}
+
+/** Braid queue state for a swarm part: waiting position, or why it was held. */
+function queueEntry(t) {
+  return queue.entries.find((e) => e.run === t.run);
+}
+function queueNote(t) {
+  const e = queueEntry(t);
+  if (e) return e.note;
+  const o = queue.recent.find((x) => x.run === t.run);
+  if (!o) return null;
+  // A braided part reports how it landed; anything else says why it is waiting on a person.
+  return o.outcome === "braided" ? (t.status === "braided" ? o.note : null) : o.note;
+}
+function queueBadge(t) {
+  const e = queueEntry(t);
+  if (e)
+    return app().el("span", {
+      class: "badge badge-queue",
+      text: e.position === 1 ? "Braid queue · next" : `Braid queue · #${e.position}`,
+    });
+  const o = queue.recent.find((x) => x.run === t.run);
+  if (o?.outcome === "held") return app().el("span", { class: "badge badge-held", text: "Needs review" });
+  return null;
 }
 
 function renderDetail() {
@@ -371,13 +409,15 @@ async function select(id) {
 
 async function refresh() {
   const current = repoId;
-  const [v, sw] = await Promise.all([
+  const [v, sw, q] = await Promise.all([
     app().api(app().repoAPI("agent-runs")),
     app().api(app().repoAPI("swarms")).catch(() => ({ swarms: [] })),
+    app().api(app().repoAPI("queue")).catch(() => ({ entries: [], recent: [] })),
   ]);
   if (current !== repoId) return;
   runs = v.runs ?? [];
   swarms = sw.swarms ?? [];
+  queue = { entries: q.entries ?? [], recent: q.recent ?? [] };
   if (!selectedRun && runs.length) selectedRun = runs[0].id;
   if (selectedRun && runs.some((r) => r.id === selectedRun))
     detail = await app().api(app().repoAPI("agent-runs/" + selectedRun));
@@ -393,7 +433,8 @@ function schedule() {
   clearTimeout(timer);
   const busy =
     runs.some((r) => !DONE.includes(r.status)) ||
-    swarms.some((sw) => sw.tasks.some((t) => TASK_BUSY.includes(t.status)));
+    swarms.some((sw) => sw.tasks.some((t) => TASK_BUSY.includes(t.status))) ||
+    queue.entries.length > 0;
   if (!busy) return;
   timer = setTimeout(async () => {
     if (!app().isActive() || document.hidden || app().repo()?.id !== repoId) return;
@@ -412,6 +453,7 @@ async function show() {
     repoId = repo.id;
     runs = [];
     swarms = [];
+    queue = { entries: [], recent: [] };
     detail = selectedRun = undefined;
   }
   build();

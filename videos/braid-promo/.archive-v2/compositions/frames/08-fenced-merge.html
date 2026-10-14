@@ -1,0 +1,604 @@
+<template>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      color: #fffdf8;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    [id="08-fenced-merge-bg"] {
+      position: absolute;
+      inset: 0;
+      background: #2a2823;
+    }
+    [id="08-fenced-merge-stage"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: 1100px 480px;
+    }
+    [class~="08-fenced-merge-mono"] {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    /* kicker */
+    [id="08-fenced-merge-kicker"] {
+      position: absolute;
+      left: 104px;
+      top: 104px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #ff681e;
+      font-size: 20px;
+    }
+    [id="08-fenced-merge-kicker"] i {
+      display: block;
+      width: 36px;
+      height: 2px;
+      background: #ff681e;
+    }
+    /* feed lane + strand */
+    [id="08-fenced-merge-lane"] {
+      position: absolute;
+      left: 0;
+      top: 520px;
+      width: 740px;
+      height: 0;
+      border-top: 1px dashed #504b48;
+    }
+    [id="08-fenced-merge-strand"] {
+      position: absolute;
+      left: 900px;
+      top: 519px;
+      width: 940px;
+      height: 2px;
+      background: #504b48;
+    }
+    [id="08-fenced-merge-strand-fill"] {
+      position: absolute;
+      left: 900px;
+      top: 518px;
+      width: 940px;
+      height: 4px;
+      background: #ff681e;
+      transform-origin: 0 50%;
+    }
+    [id="08-fenced-merge-ref"] {
+      position: absolute;
+      left: 940px;
+      top: 556px;
+      font-size: 17px;
+      color: #b8b0a3;
+    }
+    [id="08-fenced-merge-dots"] {
+      position: absolute;
+      left: 940px;
+      top: 520px;
+      width: 0;
+      height: 0;
+    }
+    [class~="08-fenced-merge-dot"] {
+      position: absolute;
+      top: -10px;
+      width: 20px;
+      height: 20px;
+      margin-left: -10px;
+      border-radius: 50%;
+      background: #ff681e;
+      border: 4px solid #2a2823;
+      box-sizing: border-box;
+    }
+    /* gate */
+    [id="08-fenced-merge-gate"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      z-index: 5;
+    }
+    [class~="08-fenced-merge-post"] {
+      position: absolute;
+      top: 360px;
+      width: 30px;
+      height: 320px;
+      background: #ff681e;
+      transform-origin: 50% 100%;
+    }
+    [id="08-fenced-merge-bar"] {
+      position: absolute;
+      left: 726px;
+      top: 509px;
+      width: 148px;
+      height: 22px;
+      background: #ff681e;
+      border: 3px solid #2a2823;
+      box-sizing: border-box;
+    }
+    [id="08-fenced-merge-label"] {
+      position: absolute;
+      left: 500px;
+      top: 318px;
+      width: 600px;
+      text-align: center;
+      font-size: 20px;
+      color: #ff681e;
+    }
+    /* CAS readout */
+    [id="08-fenced-merge-readout"] {
+      position: absolute;
+      left: 380px;
+      top: 248px;
+      width: 840px;
+      height: 34px;
+    }
+    [class~="08-fenced-merge-cas"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 840px;
+      text-align: center;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-weight: 500;
+      font-size: 23px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      color: #fffdf8;
+      opacity: 0;
+    }
+    [class~="08-fenced-merge-cas"] b {
+      font-weight: 500;
+      color: #b8b0a3;
+    }
+    [class~="08-fenced-merge-cas"] em {
+      font-style: normal;
+      color: #ff681e;
+    }
+    [class~="08-fenced-merge-cas"] svg {
+      display: inline-block;
+      vertical-align: -3px;
+      margin-left: 10px;
+    }
+    /* proposal cards */
+    [id="08-fenced-merge-cards"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      z-index: 3;
+    }
+    [class~="08-fenced-merge-card"] {
+      position: absolute;
+      left: 0;
+      top: 490px;
+      width: 130px;
+      height: 60px;
+      background: #1a1918;
+      border: 1px solid #504b48;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 14px;
+      font-size: 15px;
+      color: #fffdf8;
+      opacity: 0;
+    }
+    [class~="08-fenced-merge-card"] i {
+      display: block;
+      width: 4px;
+      height: 28px;
+      background: #ff681e;
+    }
+    [class~="08-fenced-merge-card"][data-stale="1"] {
+      border-color: #ff681e;
+    }
+    [class~="08-fenced-merge-card"][data-stale="1"] i {
+      background: #b8b0a3;
+    }
+    /* held chip */
+    [id="08-fenced-merge-chip"] {
+      position: absolute;
+      left: 330px;
+      top: 718px;
+      padding: 12px 18px;
+      border: 1px solid #ff681e;
+      background: #2a2823;
+      font-size: 17px;
+      color: #ff681e;
+      transform-origin: 0 0;
+      z-index: 4;
+    }
+    /* stat cards */
+    [id="08-fenced-merge-stats"] {
+      position: absolute;
+      left: 1250px;
+      top: 104px;
+      width: 590px;
+      height: 200px;
+    }
+    [class~="08-fenced-merge-stat"] {
+      position: absolute;
+      top: 0;
+      width: 270px;
+      height: 196px;
+      border-top: 1px solid #504b48;
+      padding-top: 20px;
+      box-sizing: border-box;
+    }
+    [class~="08-fenced-merge-stat-rule"] {
+      position: absolute;
+      left: 0;
+      top: -1px;
+      width: 270px;
+      height: 2px;
+      background: #ff681e;
+      transform-origin: 0 50%;
+    }
+    [class~="08-fenced-merge-stat-label"] {
+      font-size: 17px;
+      color: #b8b0a3;
+    }
+    [class~="08-fenced-merge-stat-value"] {
+      margin-top: 14px;
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      font-family: "Barlow", sans-serif;
+      font-weight: 900;
+      font-size: 120px;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      color: #ff681e;
+    }
+    [class~="08-fenced-merge-num"] {
+      display: inline-block;
+      transform-origin: 0 100%;
+    }
+    [id="08-fenced-merge-plus"] {
+      display: inline-block;
+      margin-left: 4px;
+    }
+  </style>
+
+  <div data-hf-id="hf-3bt7" id="root" data-composition-id="08-fenced-merge" data-start="0" data-duration="7.679" data-width="1920" data-height="1080">
+    <div data-hf-id="hf-tame" id="08-fenced-merge-bg" class="clip" data-start="0" data-duration="7.679" data-track-index="0"></div>
+
+    <div data-hf-id="hf-qhfs" id="08-fenced-merge-stage" class="clip" data-start="0" data-duration="7.679" data-track-index="1">
+      <div data-hf-id="hf-eppo" id="08-fenced-merge-kicker" class="08-fenced-merge-mono"><i data-hf-id="hf-wt6k"></i><span data-hf-id="hf-qg1a">fenced merge</span></div>
+
+      <div data-hf-id="hf-xe13" id="08-fenced-merge-lane"></div>
+      <div data-hf-id="hf-lsk5" id="08-fenced-merge-strand"></div>
+      <div data-hf-id="hf-idvt" id="08-fenced-merge-strand-fill"></div>
+      <div data-hf-id="hf-n31g" id="08-fenced-merge-ref" class="08-fenced-merge-mono">refs/heads/main</div>
+      <div data-hf-id="hf-0oyp" id="08-fenced-merge-dots"></div>
+
+      <div data-hf-id="hf-0xvj" id="08-fenced-merge-readout"></div>
+
+      <div data-hf-id="hf-b3wa" id="08-fenced-merge-cards"></div>
+
+      <div data-hf-id="hf-foq0" id="08-fenced-merge-gate">
+        <div data-hf-id="hf-qdyu" id="08-fenced-merge-label" class="08-fenced-merge-mono">fence · 1 publisher</div>
+        <div data-hf-id="hf-2qqn" class="08-fenced-merge-post" style="left: 712px"></div>
+        <div data-hf-id="hf-ooce" class="08-fenced-merge-post" style="left: 858px"></div>
+        <div data-hf-id="hf-vta8" id="08-fenced-merge-bar"></div>
+      </div>
+
+      <div data-hf-id="hf-ant9" id="08-fenced-merge-chip" class="08-fenced-merge-mono">base moved · held, never rewritten</div>
+
+      <div data-hf-id="hf-un12" id="08-fenced-merge-stats">
+        <div data-hf-id="hf-yzps" class="08-fenced-merge-stat" id="08-fenced-merge-stat-merged" style="left: 0">
+          <div data-hf-id="hf-fwlp" class="08-fenced-merge-stat-rule"></div>
+          <div data-hf-id="hf-jhu4" class="08-fenced-merge-stat-label 08-fenced-merge-mono">merged</div>
+          <div data-hf-id="hf-dfhu" class="08-fenced-merge-stat-value">
+            <span data-hf-id="hf-1tnf" class="08-fenced-merge-num" id="08-fenced-merge-merged">4</span><span data-hf-id="hf-q62r" id="08-fenced-merge-plus">+</span>
+          </div>
+        </div>
+        <div data-hf-id="hf-by1f" class="08-fenced-merge-stat" id="08-fenced-merge-stat-lost" style="left: 320px">
+          <div data-hf-id="hf-oay8" class="08-fenced-merge-stat-rule" id="08-fenced-merge-lost-rule"></div>
+          <div data-hf-id="hf-pu7y" class="08-fenced-merge-stat-label 08-fenced-merge-mono">lost writes</div>
+          <div data-hf-id="hf-q7hy" class="08-fenced-merge-stat-value">
+            <span data-hf-id="hf-o229" class="08-fenced-merge-num" id="08-fenced-merge-lost">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      var FID = "08-fenced-merge";
+      var root = document.querySelector('[data-composition-id="' + FID + '"]');
+      var $ = function (id) {
+        return root.querySelector('[id="' + FID + "-" + id + '"]');
+      };
+      var DUR = 7.079;
+      var tl = gsap.timeline({ paused: true });
+
+      var stage = $("stage");
+      var gate = $("gate");
+      var bar = $("bar");
+      var posts = root.querySelectorAll('[class~="08-fenced-merge-post"]');
+      var label = $("label");
+      var kicker = $("kicker");
+      var cardsLayer = $("cards");
+      var dotsLayer = $("dots");
+      var fill = $("strand-fill");
+      var readout = $("readout");
+      var chip = $("chip");
+
+      // ---- geometry ----
+      var GATE_X = 800; // card center at gate
+      var CARD_HALF = 65;
+      var SLOTS = [640, 480, 320, 160, 0]; // queue slots (card centers), slot 0 = front
+      var DOT_X0 = 940;
+      var DOT_GAP = 44;
+      var STRAND_L = 900;
+      var STRAND_W = 940;
+
+      // ---- event schedule: one publisher at a time ----
+      // kind: "pass" = CAS succeeds, card merges; "stale" = base moved, card held
+      var EVENTS = [
+        { t: 1.75, kind: "pass" }, // "one publisher at a time"
+        { t: 2.72, kind: "pass" }, // "compare and swap"
+        { t: 3.18, kind: "stale" }, // stale base bounces
+        { t: 3.62, kind: "pass" },
+        { t: 4.0, kind: "pass" },
+      ];
+      // "hundreds racing" — torrent, rapid one-at-a-time cadence
+      var TORRENT_START = 4.36;
+      var TORRENT_GAP = 0.094;
+      var TORRENT_N = 16;
+      for (var k = 0; k < TORRENT_N; k++) {
+        EVENTS.push({ t: +(TORRENT_START + k * TORRENT_GAP).toFixed(3), kind: "pass", fast: true });
+      }
+      var NE = EVENTS.length;
+      var NCARDS = NE + SLOTS.length; // queue keeps refilling — race never stops
+
+      // deterministic hash chain
+      var seed = 0x5eed08;
+      function hex7() {
+        seed = (seed * 1103515245 + 12345) >>> 0;
+        var a = seed.toString(16);
+        seed = (seed * 1103515245 + 12345) >>> 0;
+        return (a + seed.toString(16) + "0000000").slice(0, 7);
+      }
+      var head = "a1f3c9e";
+      var firstNew = "7e2d10b";
+
+      var CHECK =
+        '<svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 11.5 L9 17 L19 5" fill="none" stroke="#ff681e" stroke-width="3.2" stroke-linecap="square"/></svg>';
+      var CROSS =
+        '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 3 L17 17 M17 3 L3 17" fill="none" stroke="#ff681e" stroke-width="3.2" stroke-linecap="square"/></svg>';
+
+      // ---- build cards ----
+      var cards = [];
+      for (var c = 0; c < NCARDS; c++) {
+        var el = document.createElement("div");
+        el.className = "08-fenced-merge-card 08-fenced-merge-mono";
+        var stale = c < NE && EVENTS[c].kind === "stale";
+        if (stale) el.setAttribute("data-stale", "1");
+        el.innerHTML = "<i></i><span>p-" + String(142 + c * 7).padStart(4, "0") + "</span>";
+        cardsLayer.appendChild(el);
+        cards.push(el);
+      }
+
+      // ---- build readout states + dots ----
+      var casEls = [];
+      var dots = [];
+      var passIdx = 0;
+      for (var e = 0; e < NE; e++) {
+        var ev = EVENTS[e];
+        var s = document.createElement("div");
+        s.className = "08-fenced-merge-cas";
+        if (ev.kind === "pass") {
+          var nw = passIdx === 1 ? firstNew : hex7();
+          if (passIdx === 0) nw = head; // first commit establishes head a1f3c9e
+          if (passIdx === 0) {
+            s.innerHTML = "<b>CAS</b> refs/heads/main&nbsp;&nbsp;0000000 → " + nw + CHECK;
+          } else {
+            s.innerHTML = "<b>CAS</b> refs/heads/main&nbsp;&nbsp;" + head + " → " + nw + CHECK;
+          }
+          head = nw;
+          ev.dot = passIdx;
+          var d = document.createElement("div");
+          d.className = "08-fenced-merge-dot";
+          d.style.left = passIdx * DOT_GAP + "px";
+          dotsLayer.appendChild(d);
+          dots.push(d);
+          passIdx++;
+        } else {
+          s.innerHTML = "<b>CAS</b> refs/heads/main&nbsp;&nbsp;<em>c40be71 ≠ " + head + "</em>" + CROSS;
+        }
+        readout.appendChild(s);
+        casEls.push(s);
+      }
+
+      // ---- static initial states ----
+      gsap.set(cards, { x: -200 - CARD_HALF, opacity: 0 });
+      gsap.set(dots, { scale: 0 });
+      gsap.set(casEls, { opacity: 0 });
+
+      // ---- camera: one slow push across the shot ----
+      tl.fromTo(stage, { scale: 1 }, { scale: 1.035, duration: DUR, ease: "sine.inOut" }, 0);
+
+      // ---- Scene 1: gate + strand present, gate locks shut on "fenced merge" ----
+      tl.fromTo(posts, { scaleY: 0.4, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.36, ease: "power3.out", stagger: 0.06 }, 0.02);
+      tl.fromTo(fill, { scaleX: 0 }, { scaleX: 0, duration: 0.01 }, 0);
+      tl.fromTo(kicker, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 0.1);
+      tl.fromTo($("strand"), { scaleX: 0.2, opacity: 0, transformOrigin: "0 50%" }, { scaleX: 1, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.08);
+      tl.fromTo($("lane"), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.2);
+      tl.fromTo($("ref"), { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 0.3);
+      // the lock: bar slams down between the posts
+      tl.fromTo(bar, { y: -240, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power4.in" }, 0.42);
+      // clack: gate shudder
+      tl.fromTo(gate, { x: 0 }, { x: 7, duration: 0.035, ease: "none" }, 0.72);
+      tl.fromTo(gate, { x: 7 }, { x: -5, duration: 0.05, ease: "none", immediateRender: false }, 0.755);
+      tl.fromTo(gate, { x: -5 }, { x: 0, duration: 0.08, ease: "power2.out", immediateRender: false }, 0.805);
+      tl.fromTo(label, { opacity: 0, y: 10, scaleX: 1.25 }, { opacity: 1, y: 0, scaleX: 1, duration: 0.45, ease: "power3.out" }, 0.74);
+
+      // ---- queue mechanics ----
+      function slotX(i) {
+        return SLOTS[i] - CARD_HALF;
+      }
+      // initial queue streams in on "one publisher" (1.3s)
+      for (var q = 0; q < SLOTS.length; q++) {
+        tl.fromTo(
+          cards[q],
+          { x: -220 - CARD_HALF, opacity: 0 },
+          { x: slotX(q), opacity: 1, duration: 0.35, ease: "power3.out", immediateRender: false },
+          1.28 + q * 0.05
+        );
+      }
+
+      var holdIdx = -1;
+      var fillPrev = 0;
+      for (var m = 0; m < NE; m++) {
+        var E = EVENTS[m];
+        var fast = !!E.fast;
+        var advD = fast ? 0.07 : 0.2;
+        var front = cards[m];
+
+        // everyone behind advances one slot
+        for (var cc = m + 1; cc <= m + SLOTS.length - 1 && cc < NCARDS; cc++) {
+          var from = cc - m; // slot index before
+          tl.fromTo(
+            cards[cc],
+            { x: slotX(from) },
+            { x: slotX(from - 1), duration: advD, ease: "power2.out", immediateRender: false },
+            E.t + (fast ? 0.02 : 0.08)
+          );
+        }
+        // a new card enters the back slot
+        var nc = m + SLOTS.length;
+        if (nc < NCARDS) {
+          tl.fromTo(
+            cards[nc],
+            { x: -220 - CARD_HALF, opacity: 0 },
+            { x: slotX(SLOTS.length - 1), opacity: 1, duration: fast ? 0.09 : 0.3, ease: "power2.out", immediateRender: false },
+            E.t + (fast ? 0.02 : 0.1)
+          );
+        }
+
+        // readout swaps to this CAS (discrete state)
+        var showAt = m === 0 ? 2.56 : E.t;
+        tl.set(casEls, { opacity: 0 }, showAt);
+        tl.set(casEls[m], { opacity: 1 }, showAt);
+        if (m === 0) {
+          tl.fromTo(readout, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: "power3.out" }, 2.56);
+        }
+
+        if (E.kind === "pass") {
+          var passD = fast ? 0.075 : 0.26;
+          var liftUp = fast ? 0.025 : 0.08;
+          var liftDn = fast ? 0.045 : 0.12;
+          var dnAt = fast ? E.t + 0.035 : E.t + passD * 0.8;
+          // gate opens for exactly one
+          tl.fromTo(bar, { y: 0 }, { y: -74, duration: liftUp, ease: "power2.out", immediateRender: false }, E.t - 0.01);
+          tl.fromTo(bar, { y: -74 }, { y: 0, duration: liftDn, ease: "power3.in", immediateRender: false }, dnAt);
+          // card goes through and collapses into a commit
+          tl.fromTo(
+            front,
+            { x: slotX(0), scale: 1, opacity: 1 },
+            { x: GATE_X + 70 - CARD_HALF, scale: 0.15, opacity: 0, duration: passD, ease: "power2.in", immediateRender: false },
+            E.t
+          );
+          // commit dot snaps onto the straight strand
+          var dt = E.t + passD * 0.85;
+          tl.fromTo(dots[E.dot], { scale: 0 }, { scale: 1, duration: fast ? 0.12 : 0.3, ease: "back.out(3)", immediateRender: false }, dt);
+          var headX = DOT_X0 + E.dot * DOT_GAP;
+          var nextFill = (headX - STRAND_L) / STRAND_W;
+          tl.fromTo(fill, { scaleX: fillPrev }, { scaleX: nextFill, duration: fast ? 0.08 : 0.24, ease: "power2.out", immediateRender: false }, dt);
+          fillPrev = nextFill;
+        } else {
+          // stale base: hits the fence, bounces back, held on a shelf
+          holdIdx = m;
+          tl.fromTo(front, { x: slotX(0) }, { x: slotX(0) + 18, duration: 0.07, ease: "power2.in", immediateRender: false }, E.t);
+          tl.fromTo(gate, { x: 0 }, { x: 6, duration: 0.03, ease: "none", immediateRender: false }, E.t + 0.07);
+          tl.fromTo(gate, { x: 6 }, { x: 0, duration: 0.12, ease: "power2.out", immediateRender: false }, E.t + 0.1);
+          tl.fromTo(
+            front,
+            { x: slotX(0) + 18, y: 0, rotation: 0 },
+            { x: 400 - CARD_HALF, y: 150, rotation: -7, duration: 0.55, ease: "power3.out", immediateRender: false },
+            E.t + 0.07
+          );
+          tl.fromTo(
+            chip,
+            { opacity: 0, scale: 0.6, y: -12 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.36, ease: "back.out(2.2)" },
+            E.t + 0.22
+          );
+        }
+      }
+
+      // ---- Scene 4: stat cards + counters ----
+      var stats = [$("stat-merged"), $("stat-lost")];
+      tl.fromTo(stats, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.1 }, 4.28);
+      var rules = root.querySelectorAll('[class~="08-fenced-merge-stat-rule"]');
+      tl.fromTo(rules, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out", stagger: 0.1 }, 4.32);
+
+      var mergedEl = $("merged");
+      var state = { v: 4 };
+      tl.fromTo(
+        state,
+        { v: 4 },
+        {
+          v: 100,
+          duration: 1.6,
+          ease: "power2.in",
+          onUpdate: function () {
+            mergedEl.textContent = String(Math.round(state.v));
+          },
+        },
+        4.36
+      );
+      tl.fromTo($("plus"), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.8)" }, 5.96);
+
+      // "zero lost writes" — the 0 slams
+      var lost = $("lost");
+      tl.fromTo(lost, { color: "#504b48" }, { color: "#504b48", duration: 0.01 }, 4.28);
+      tl.fromTo(lost, { scale: 2.1, color: "#ff681e" }, { scale: 1, duration: 0.3, ease: "power4.in", immediateRender: false }, 5.28);
+      tl.fromTo(stage, { x: 0, y: 0 }, { x: -6, y: 4, duration: 0.04, ease: "none", immediateRender: false }, 5.58);
+      tl.fromTo(stage, { x: -6, y: 4 }, { x: 4, y: -3, duration: 0.05, ease: "none", immediateRender: false }, 5.62);
+      tl.fromTo(stage, { x: 4, y: -3 }, { x: 0, y: 0, duration: 0.12, ease: "power2.out", immediateRender: false }, 5.67);
+      tl.fromTo($("lost-rule"), { scaleY: 1 }, { scaleY: 3, duration: 0.08, ease: "power2.out", immediateRender: false }, 5.58);
+      tl.fromTo($("lost-rule"), { scaleY: 3 }, { scaleY: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, 5.66);
+
+      // ---- Scene 5: hold — subtle jitter on the waiting queue only ----
+      var waiting = cards.slice(NE, NCARDS);
+      for (var j = 0; j < 3; j++) {
+        var jt = 6.1 + j * 0.32;
+        tl.fromTo(
+          waiting,
+          { y: j % 2 === 0 ? 0 : -2 },
+          { y: j % 2 === 0 ? -2 : 0, duration: 0.2, ease: "sine.inOut", stagger: 0.03, immediateRender: false },
+          jt
+        );
+      }
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FID] = tl;
+    })();
+  </script>
+</template>

@@ -151,23 +151,7 @@ async function transferHTTP(
       },
     });
     const pushed = await call(target, "git-receive-pack", body);
-    const reply = dec.decode(await readBytes(pushed.body!, 64 * 1024));
-    // Exact packet payloads are required; HTTP 200 alone does not mean a merge succeeded.
-    const lines: string[] = [];
-    for (let pos = 0; pos < reply.length; ) {
-      const h = reply.slice(pos, pos + 4);
-      check(/^[a-f0-9]{4}$/.test(h), 502, "Malformed push receipt");
-      const n = parseInt(h, 16);
-      pos += 4;
-      if (!n) break;
-      check(
-        n >= 4 && pos + n - 4 <= reply.length,
-        502,
-        "Truncated push receipt",
-      );
-      lines.push(reply.slice(pos, pos + n - 4));
-      pos += n - 4;
-    }
+    const lines = receipt(dec.decode(await readBytes(pushed.body!, 64 * 1024)));
     check(
       lines.includes("unpack ok\n") &&
         updates.every((u) => lines.includes(`ok ${u.ref}\n`)),
@@ -178,6 +162,67 @@ async function transferHTTP(
   } finally {
     await reader.cancel().catch(() => {});
   }
+}
+
+/** Exact packet payloads of a receive-pack reply; HTTP 200 alone does not mean a push succeeded. */
+function receipt(reply: string) {
+  const lines: string[] = [];
+  for (let pos = 0; pos < reply.length; ) {
+    const h = reply.slice(pos, pos + 4);
+    check(/^[a-f0-9]{4}$/.test(h), 502, "Malformed push receipt");
+    const n = parseInt(h, 16);
+    pos += 4;
+    if (!n) break;
+    check(n >= 4 && pos + n - 4 <= reply.length, 502, "Truncated push receipt");
+    lines.push(reply.slice(pos, pos + n - 4));
+    pos += n - 4;
+  }
+  return lines;
+}
+/** Push a pack built in the Worker (fast catch-up) as one ref update. */
+export async function pushPackHTTP(
+  target: GitCredential,
+  ref: string,
+  base: string,
+  candidate: string,
+  pack: Uint8Array,
+  request = fetch,
+) {
+  check(SHA.test(base) && SHA.test(candidate) && validRef(ref), 422, "Invalid push");
+  const prefix = enc.encode(pkt(`${base} ${candidate} ${ref}\0report-status`) + "0000");
+  const body = new Uint8Array(prefix.length + pack.length);
+  body.set(prefix);
+  body.set(pack, prefix.length);
+  const r = await request(target.remote + "/git-receive-pack", {
+    method: "POST",
+    redirect: "manual",
+    signal: AbortSignal.timeout(60000),
+    headers: {
+      ...(target.plaintext ? { authorization: "Bearer " + target.plaintext } : {}),
+      "content-type": "application/x-git-receive-pack-request",
+      accept: "application/x-git-receive-pack-result",
+    },
+    body,
+  });
+  check(r.ok && r.body, 502, `Git push failed (${r.status})`);
+  const lines = receipt(dec.decode(await readBytes(r.body!, 64 * 1024)));
+  check(
+    lines.includes("unpack ok\n") && lines.includes(`ok ${ref}\n`),
+    409,
+    "Push rejected: " + lines.join(" ").trim().slice(0, 200),
+  );
+  return { packBytes: pack.length };
+}
+/** Copy one commit (and everything it needs) from source into a new target ref. */
+export function copyTipHTTP(
+  source: GitCredential,
+  target: GitCredential,
+  ref: string,
+  have: string,
+  sha: string,
+  request = fetch,
+) {
+  return transferHTTP(source, target, [{ ref, base: ZERO, candidate: sha }], have, 64 * 1024 * 1024, request);
 }
 
 export function validRef(ref: string) {

@@ -1,0 +1,383 @@
+<template>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      color: #fffdf8;
+      font-family: "Barlow", sans-serif;
+    }
+    .fa-surge-bg {
+      position: absolute;
+      inset: 0;
+      background: #2a2823;
+    }
+    .fa-surge-camera {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: 700px 440px;
+    }
+    .fa-surge-jitter {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+    }
+    .fa-surge-kicker {
+      position: absolute;
+      left: 106px;
+      top: 92px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 20px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #ff681e;
+      white-space: nowrap;
+    }
+    .fa-surge-stub {
+      width: 36px;
+      height: 2px;
+      background: #ff681e;
+    }
+    .fa-surge-stat {
+      position: absolute;
+      left: 92px;
+      top: 138px;
+      display: flex;
+      align-items: baseline;
+      white-space: nowrap;
+    }
+    .fa-surge-count {
+      display: inline-block;
+      font-family: "Barlow", sans-serif;
+      font-weight: 900;
+      font-size: 400px;
+      line-height: 0.86;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      color: #fffdf8;
+      transform-origin: 0% 85%;
+    }
+    .fa-surge-mega {
+      display: inline-block;
+      font-family: "Barlow", sans-serif;
+      font-weight: 900;
+      font-size: 400px;
+      line-height: 0.86;
+      letter-spacing: -0.04em;
+      color: #ff681e;
+      margin-left: 6px;
+      transform-origin: 50% 80%;
+    }
+    .fa-surge-lead {
+      position: absolute;
+      left: 104px;
+      top: 500px;
+      display: flex;
+      align-items: baseline;
+      gap: 26px;
+      font-family: "Barlow", sans-serif;
+      font-weight: 700;
+      font-size: 92px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .fa-surge-commits { display: inline-block; color: #fffdf8; }
+    .fa-surge-week { display: inline-block; color: #b8b0a3; transform-origin: 0% 70%; }
+    .fa-surge-week-slash { color: #ff681e; }
+
+    .fa-surge-card {
+      position: absolute;
+      left: 1244px;
+      top: 132px;
+      width: 576px;
+    }
+    .fa-surge-card-rule {
+      width: 576px;
+      height: 1px;
+      background: #b8b0a3;
+      transform-origin: 0% 50%;
+    }
+    .fa-surge-qmark {
+      font-family: "Barlow", sans-serif;
+      font-weight: 900;
+      font-size: 150px;
+      line-height: 0.6;
+      color: #ff681e;
+      margin-top: 44px;
+      height: 64px;
+    }
+    .fa-surge-quote {
+      font-family: "Barlow", sans-serif;
+      font-weight: 700;
+      font-size: 38px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: #fffdf8;
+      margin-top: 8px;
+    }
+    .fa-surge-hot { color: #ff681e; }
+    .fa-surge-attr {
+      margin-top: 30px;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #b8b0a3;
+      white-space: nowrap;
+    }
+    .fa-surge-handle {
+      margin-top: 10px;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      color: #ff681e;
+      white-space: nowrap;
+    }
+
+    .fa-surge-stat2 {
+      position: absolute;
+      left: 104px;
+      top: 650px;
+      width: 1040px;
+    }
+    .fa-surge-stat2-rule {
+      width: 1040px;
+      height: 1px;
+      background: #504b48;
+      transform-origin: 0% 50%;
+    }
+    .fa-surge-stat2-row {
+      display: flex;
+      align-items: baseline;
+      gap: 34px;
+      margin-top: 26px;
+      white-space: nowrap;
+    }
+    .fa-surge-stat2-num {
+      display: flex;
+      align-items: baseline;
+      font-family: "Barlow", sans-serif;
+      font-weight: 900;
+      font-size: 168px;
+      line-height: 0.86;
+      letter-spacing: -0.04em;
+      color: #ff681e;
+    }
+    .fa-surge-count2 {
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+      transform-origin: 0% 85%;
+    }
+    .fa-surge-bil { display: inline-block; transform-origin: 30% 80%; }
+    .fa-surge-stat2-label {
+      font-family: "Barlow", sans-serif;
+      font-weight: 700;
+      font-size: 64px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #fffdf8;
+    }
+    .fa-surge-chip {
+      position: absolute;
+      left: 1244px;
+      top: 790px;
+      height: 52px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid #504b48;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fffdf8;
+      white-space: nowrap;
+      transform-origin: 0% 50%;
+    }
+    .fa-surge-chip-dot {
+      width: 8px;
+      height: 8px;
+      background: #ff681e;
+    }
+    .fa-surge-chip-text { min-width: 330px; }
+  </style>
+
+  <div id="root" data-composition-id="00a-surge" data-width="1920" data-height="1080" data-start="0" data-duration="6.871">
+    <div class="clip fa-surge-bg" data-start="0" data-duration="6.871" data-track-index="0"></div>
+
+    <div class="fa-surge-camera">
+      <div class="fa-surge-jitter">
+        <div class="fa-surge-kicker"><span class="fa-surge-stub"></span><span>Commits / week · GitHub</span></div>
+
+        <div class="fa-surge-stat">
+          <span class="fa-surge-count" id="fa-surge-count">0</span><span class="fa-surge-mega">M</span>
+        </div>
+
+        <div class="fa-surge-lead">
+          <span class="fa-surge-commits">commits</span>
+          <span class="fa-surge-week"><span class="fa-surge-week-slash">/</span> week</span>
+        </div>
+
+        <div class="fa-surge-stat2">
+          <div class="fa-surge-stat2-rule"></div>
+          <div class="fa-surge-stat2-row">
+            <div class="fa-surge-stat2-num"><span class="fa-surge-count2" id="fa-surge-count2">0</span><span class="fa-surge-bil">B</span></div>
+            <div class="fa-surge-stat2-label">this year</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fa-surge-card">
+        <div class="fa-surge-card-rule"></div>
+        <div class="fa-surge-qmark">&ldquo;</div>
+        <div class="fa-surge-quote">Yup, platform activity is surging. There were 1 billion commits in 2025. Now, it's <span class="fa-surge-hot">275 million per week</span>, on pace for <span class="fa-surge-hot">14 billion</span> this year</div>
+        <div class="fa-surge-attr">&mdash; Kyle Daigle, GitHub · 4 Apr 2026</div>
+        <div class="fa-surge-handle">@kdaigle</div>
+      </div>
+
+      <div class="fa-surge-chip">
+        <span class="fa-surge-chip-dot"></span><span class="fa-surge-chip-text" id="fa-surge-chip-text">Actions · 2.1B min / week</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const ID = "00a-surge";
+      const DUR = 6.471;
+      const root = document.querySelector('[data-composition-id="' + ID + '"]');
+      const $ = (sel) => root.querySelector(sel);
+      const $$ = (sel) => Array.from(root.querySelectorAll(sel));
+
+      const counter = $("#fa-surge-count");
+      const counter2 = $("#fa-surge-count2");
+      const chipText = $("#fa-surge-chip-text");
+      const CHIP_FULL = "Actions · 2.1B min / week";
+
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- Camera: slow continuous lean-in underneath the whole shot ----
+      tl.fromTo($(".fa-surge-camera"), { scale: 1 }, { scale: 1.04, duration: DUR, ease: "none" }, 0);
+
+      // ---- Scene 1 (0.0–1.4s): dark open, kicker, count-up 0 → 275 with dynamic scale ----
+      tl.fromTo($(".fa-surge-kicker"), { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, 0.05);
+      tl.fromTo($(".fa-surge-stub"), { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out", transformOrigin: "0% 50%" }, 0.05);
+
+      const COUNT_AT = 0.3;
+      const COUNT_DUR = 1.18; // lands on "million" (1.52s)
+      const START_SCALE = 0.48;
+      const state = { v: 0 };
+      tl.fromTo(counter, { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power1.out" }, 0.12);
+      tl.fromTo(
+        state,
+        { v: 0 },
+        {
+          v: 275,
+          duration: COUNT_DUR,
+          ease: "power3.out",
+          onUpdate: () => { counter.textContent = String(Math.round(state.v)); },
+        },
+        COUNT_AT,
+      );
+      tl.fromTo(counter, { scale: START_SCALE }, { scale: 1, duration: COUNT_DUR, ease: "power3.out" }, COUNT_AT);
+
+      // ---- Scene 2 (1.4–2.9s): orange "M" slams, "commits" lead, "/ week" thud ----
+      const M_AT = 1.5;
+      tl.fromTo($(".fa-surge-mega"), { opacity: 0, scale: 2.4, y: -60 }, { opacity: 1, scale: 1, y: 0, duration: 0.2, ease: "power4.in" }, M_AT);
+      // impact: the whole stat block takes the hit
+      tl.fromTo($(".fa-surge-stat"), { y: 0 }, { y: 14, duration: 0.06, ease: "power2.out" }, M_AT + 0.2);
+      tl.to($(".fa-surge-stat"), { y: 0, duration: 0.35, ease: "back.out(2.2)" }, M_AT + 0.26);
+
+      tl.fromTo($(".fa-surge-commits"), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 1.92);
+
+      const WEEK_AT = 2.66;
+      tl.fromTo($(".fa-surge-week"), { opacity: 0, scale: 1.9, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.18, ease: "power4.in" }, WEEK_AT);
+      tl.fromTo($(".fa-surge-lead"), { y: 0 }, { y: 8, duration: 0.05, ease: "power2.out" }, WEEK_AT + 0.18);
+      tl.to($(".fa-surge-lead"), { y: 0, duration: 0.3, ease: "back.out(2)" }, WEEK_AT + 0.23);
+
+      // ---- Scene 3 (2.9–4.6s): attributed quote card slides in from the right on "GitHub" ----
+      const Q_AT = 3.44;
+      tl.fromTo($(".fa-surge-card"), { opacity: 0, x: 180 }, { opacity: 1, x: 0, duration: 0.7, ease: "expo.out" }, Q_AT);
+      tl.fromTo($(".fa-surge-card-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.out" }, Q_AT + 0.05);
+      tl.fromTo($(".fa-surge-qmark"), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, Q_AT + 0.12);
+      tl.fromTo($(".fa-surge-quote"), { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, Q_AT + 0.2);
+      tl.fromTo($$(".fa-surge-hot"), { opacity: 0.35 }, { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.25 }, Q_AT + 0.55);
+      tl.fromTo($(".fa-surge-attr"), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, Q_AT + 0.45);
+      tl.fromTo($(".fa-surge-handle"), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, Q_AT + 0.6);
+
+      // ---- Scene 4 (4.6–6.47s): second stat 14B counts up, chip ticks in, hold w/ jitter ----
+      const S2_AT = 4.6;
+      tl.fromTo($(".fa-surge-stat2-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.out" }, S2_AT - 0.1);
+      const state2 = { v: 0 };
+      const C2_DUR = 0.52; // lands on "billion" (5.12s)
+      tl.fromTo(counter2, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "power1.out" }, S2_AT);
+      tl.fromTo(
+        state2,
+        { v: 0 },
+        {
+          v: 14,
+          duration: C2_DUR,
+          ease: "power3.out",
+          onUpdate: () => { counter2.textContent = String(Math.round(state2.v)); },
+        },
+        S2_AT,
+      );
+      tl.fromTo(counter2, { scale: 0.55 }, { scale: 1, duration: C2_DUR, ease: "power3.out" }, S2_AT);
+      tl.fromTo($(".fa-surge-bil"), { opacity: 0, y: 30, scale: 1.4 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.7)" }, 5.12);
+      tl.fromTo($(".fa-surge-stat2-label"), { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 5.5);
+
+      // chip ticks in: box first, then characters advance in discrete steps
+      const CHIP_AT = 5.1;
+      tl.fromTo($(".fa-surge-chip"), { opacity: 0, scaleX: 0.2 }, { opacity: 1, scaleX: 1, duration: 0.22, ease: "power3.out" }, CHIP_AT);
+      const chipState = { n: 0 };
+      tl.fromTo(
+        chipState,
+        { n: 0 },
+        {
+          n: CHIP_FULL.length,
+          duration: 0.55,
+          ease: "none",
+          onUpdate: () => { chipText.textContent = CHIP_FULL.slice(0, Math.round(chipState.n)); },
+        },
+        CHIP_AT + 0.12,
+      );
+
+      // subtle deterministic jitter on the numbers during the hold (no repeat/yoyo)
+      const jitter = $(".fa-surge-jitter");
+      const J = [[1.5, -1], [-1, 1.5], [1, 1], [-1.5, -0.5], [0.5, -1.5], [-0.5, 1], [1, -0.5], [0, 0]];
+      let jt = 5.66;
+      J.forEach(([jx, jy]) => {
+        tl.to(jitter, { x: jx, y: jy, duration: 0.09, ease: "sine.inOut" }, jt);
+        jt += 0.09;
+      });
+
+      // pad timeline to full duration
+      tl.set({}, {}, DUR);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

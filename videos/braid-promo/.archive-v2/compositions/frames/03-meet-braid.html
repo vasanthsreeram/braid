@@ -1,0 +1,261 @@
+<template>
+  <div data-hf-id="hf-eaum" id="root" data-composition-id="03-meet-braid" data-width="1920" data-height="1080" data-duration="3.932">
+    <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+      [id="03-meet-braid-ground"] {
+        position: absolute;
+        inset: 0;
+        background: #ff681e;
+      }
+      [id="03-meet-braid-strands"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      [id="03-meet-braid-strands"] .h {
+        fill: none;
+        stroke: #ff681e;
+        stroke-linecap: butt;
+        stroke-linejoin: round;
+      }
+      [id="03-meet-braid-strands"] .k {
+        fill: none;
+        stroke: #2a2823;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      [id="03-meet-braid-wordmark"] {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 136px;
+        text-align: center;
+        font-family: "Barlow", sans-serif;
+        font-weight: 900;
+        font-size: 480px;
+        line-height: 0.88;
+        letter-spacing: -0.04em;
+        text-transform: lowercase;
+        color: #2a2823;
+        transform-origin: 50% 60%;
+      }
+      [id="03-meet-braid-tagline"] {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 712px;
+        text-align: center;
+        font-family: "Barlow", sans-serif;
+        font-weight: 400;
+        font-size: 54px;
+        line-height: 1.3;
+        color: #2a2823;
+        text-transform: lowercase;
+      }
+      [id="03-meet-braid-tagline"] .w {
+        display: inline-block;
+        margin: 0 0.13em;
+      }
+      [id="03-meet-braid-tagline"] .w.em {
+        font-weight: 700;
+      }
+      [id="03-meet-braid-kicker"] {
+        position: absolute;
+        left: 105px;
+        top: 96px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 500;
+        font-size: 22px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(17, 17, 17, 0.55);
+      }
+      [id="03-meet-braid-kicker"] .stub {
+        width: 36px;
+        height: 2px;
+        background: #2a2823;
+      }
+    </style>
+
+    <div data-hf-id="hf-c2yv" id="03-meet-braid-ground" class="clip" data-start="0" data-duration="3.932" data-track-index="0"></div>
+
+    <svg data-hf-id="hf-6828" id="03-meet-braid-strands" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" />
+
+    <div data-hf-id="hf-2bsj" id="03-meet-braid-wordmark">braid</div>
+
+    <div data-hf-id="hf-3jdy" id="03-meet-braid-tagline">
+      <span data-hf-id="hf-py37" class="w">where</span><span data-hf-id="hf-wzvr" class="w">parallel</span><span data-hf-id="hf-35et" class="w">work</span><span data-hf-id="hf-7dih" class="w">comes</span><span data-hf-id="hf-ig8w" class="w em">together</span>
+    </div>
+
+    <div data-hf-id="hf-9stn" id="03-meet-braid-kicker">
+      <span data-hf-id="hf-ynnx" class="stub"></span><span data-hf-id="hf-wpq6">Cloudflare-native git</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const FRAME_ID = "03-meet-braid";
+        const DUR = 3.432;
+        const root = document.querySelector('[data-composition-id="03-meet-braid"]');
+        const $ = (id) => root.querySelector('[id="' + FRAME_ID + "-" + id + '"]');
+
+        const svg = $("strands");
+        const wordmark = $("wordmark");
+        const kicker = $("kicker");
+        const words = Array.prototype.slice.call($("tagline").querySelectorAll(".w"));
+
+        const tl = gsap.timeline({ paused: true });
+
+        // ---------- Braid strands: one pure function of time (seek-safe) ----------
+        const P2O = gsap.parseEase("power2.out");
+        const P3IO = gsap.parseEase("power3.inOut");
+        const P3O = gsap.parseEase("power3.out");
+        const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+        const seg = (t, a, d, ease) => ease(clamp01((t - a) / d));
+        const lerp = (a, b, u) => a + (b - a) * u;
+        const smooth = (u) => {
+          u = clamp01(u);
+          return u * u * (3 - 2 * u);
+        };
+
+        const CX = 960;
+        const STEP = 8;
+        const PHASES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
+
+        function render(t) {
+          // Scene 1 — three parallel strands draw in from the left edge (pen trace, staggered ~70%).
+          // Scene 2 — on "Braid" they twist into a tight braid at center, then settle beneath the wordmark.
+          // Scene 4 — on "together" the braid tightens one notch.
+          const twist = seg(t, 0.42, 0.36, P3IO);
+          const settle = seg(t, 0.66, 0.52, P3IO);
+          const tight = seg(t, 2.16, 0.42, P3O);
+
+          const gap = lerp(66, 0, twist);
+          const baseY = lerp(380, 640, settle);
+          const amp = twist * lerp(70, lerp(22, 18, tight), settle);
+          const lambda = lerp(320, lerp(124, 96, tight), settle);
+          const k = (2 * Math.PI) / lambda;
+          const halfW = lerp(760, 520, settle);
+          const fall = lerp(300, 60, settle);
+          const xa = lerp(0, 440, settle);
+          const xb = lerp(1920, 1480, settle);
+          const sw = lerp(16, 11, settle);
+          const spin = t * 1.15 + tight * ((2 * Math.PI) / 3);
+
+          const segs = [];
+          for (let i = 0; i < 3; i++) {
+            const draw = seg(t, 0.04 + 0.08 * i, 0.4, P2O);
+            if (draw <= 0) continue;
+            const xEnd = xa + (xb - xa) * draw;
+            const pts = [];
+            for (let x = xa; x < xEnd; x += STEP) pts.push(x);
+            pts.push(xEnd);
+            const ys = pts.map((x) => {
+              const env = smooth((halfW - Math.abs(x - CX)) / fall);
+              return (
+                baseY +
+                (1 - env * twist) * (i - 1) * gap +
+                amp * env * Math.sin(k * (x - CX) + PHASES[i] + spin)
+              );
+            });
+            for (let s = 0; s + 1 < pts.length; s += 2) {
+              const e = Math.min(s + 2, pts.length - 1);
+              let d = "M" + pts[s].toFixed(1) + " " + ys[s].toFixed(1);
+              for (let j = s + 1; j <= e; j++) d += "L" + pts[j].toFixed(1) + " " + ys[j].toFixed(1);
+              const xm = pts[s + 1];
+              const env = smooth((halfW - Math.abs(xm - CX)) / fall);
+              const depth = Math.cos(k * (xm - CX) + PHASES[i] + spin) * env * twist;
+              segs.push({ d: d, depth: depth, order: segs.length });
+            }
+          }
+          segs.sort((a, b) => a.depth - b.depth || a.order - b.order);
+          let html = "";
+          const hw = (sw + 9).toFixed(1);
+          const kw = sw.toFixed(1);
+          for (let n = 0; n < segs.length; n++) {
+            html +=
+              '<path class="h" stroke-width="' + hw + '" d="' + segs[n].d + '"/>' +
+              '<path class="k" stroke-width="' + kw + '" d="' + segs[n].d + '"/>';
+          }
+          svg.innerHTML = html;
+        }
+
+        const driver = { t: 0 };
+        render(0);
+        tl.fromTo(
+          driver,
+          { t: 0 },
+          { t: DUR, duration: DUR, ease: "none", onUpdate: () => render(driver.t) },
+          0,
+        );
+
+        // ---------- Scene 2 — wordmark slams in over the braid (on "Braid", 0.48s) ----------
+        tl.fromTo(
+          wordmark,
+          { opacity: 0, scale: 1.55, filter: "blur(14px)" },
+          { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.42, ease: "back.out(2.2)" },
+          0.62,
+        );
+
+        // ---------- Scene 3 — tagline per word on its spoken cue (dynamic-content-sequencing) ----------
+        // Cues are the real VO word starts for vo-03 (padded): where 1.04, parallel 1.28,
+        // work 1.76, comes 2.00, together 2.16. Pre-computed once into a flat TIMELINE.
+        const CONTENT = [
+          { word: "where", cue: 1.04 },
+          { word: "parallel", cue: 1.28 },
+          { word: "work", cue: 1.76 },
+          { word: "comes", cue: 2.0 },
+          { word: "together", cue: 2.16 },
+        ];
+        const LEAD = 0.04;
+        const TIMELINE = CONTENT.map((entry, i) => {
+          const start = Math.max(0, entry.cue - LEAD);
+          const next = CONTENT[i + 1];
+          const end = next ? next.cue - LEAD : DUR;
+          return { word: entry.word, start: start, end: end, el: words[i] };
+        });
+        TIMELINE.forEach((entry) => {
+          const dur = Math.min(0.34, Math.max(0.22, entry.end - entry.start));
+          tl.fromTo(
+            entry.el,
+            { opacity: 0, y: 26, color: "rgba(17,17,17,0.40)" },
+            { opacity: 1, y: 0, color: "#2a2823", duration: dur, ease: "power3.out" },
+            entry.start,
+          );
+        });
+
+        // ---------- Scene 4 — on "together" (2.16s): kicker fades in top-left; lockup holds ----------
+        tl.fromTo(
+          kicker,
+          { opacity: 0, x: -24 },
+          { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" },
+          2.18,
+        );
+        // Quiet life in the hold: near-imperceptible settle on the wordmark (no exit).
+        tl.fromTo(wordmark, { y: 0 }, { y: -4, duration: DUR - 1.1, ease: "none" }, 1.1);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["03-meet-braid"] = tl;
+      })();
+    </script>
+  </div>
+</template>

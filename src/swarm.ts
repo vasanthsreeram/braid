@@ -7,7 +7,7 @@ import { TERMINAL } from "./agents.ts";
 
 export const SWARM = {
   minAgents: 2,
-  maxAgents: 3,
+  maxAgents: 6,
   titleChars: 80,
   subGoalChars: 1500,
   files: 12,
@@ -26,7 +26,8 @@ export function swarmRequest(b: any) {
     422,
     `Choose between ${SWARM.minAgents} and ${SWARM.maxAgents} agents`,
   );
-  return { agents: agents as number };
+  check(b?.autoBraid === undefined || typeof b.autoBraid === "boolean", 422, "autoBraid must be true or false");
+  return { agents: agents as number, autoBraid: b?.autoBraid === true };
 }
 
 /* ---------------- planner ---------------- */
@@ -194,6 +195,8 @@ export interface SwarmRecord {
   created: number;
   model: string;
   tasks: (SubTask & { n: number; run: string; strand: string })[];
+  /** Clean proposals go to the braid queue and are braided in without a click. */
+  autoBraid?: boolean;
 }
 export type SubTaskStatus =
   | "working"
@@ -251,6 +254,7 @@ export function swarmView(
     goal: swarm.goal,
     actor: swarm.actor,
     created: swarm.created,
+    autoBraid: !!swarm.autoBraid,
     status: done ? "done" : "active",
     tasks,
   };

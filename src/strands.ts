@@ -91,6 +91,25 @@ export async function strands(
             strand.proposals.some((p) => p.candidate === log[0].sha)
           )
             strand.ahead = 0;
+          // A run that caught up before it ever proposed: its tip is the one commit that a
+          // braided (rebased) proposal was made from, so the same message and author.
+          else if (fork === 1) {
+            const braided = strand.proposals.filter((p) => p.braided).at(-1);
+            if (braided) {
+              const [tip, landed] = await Promise.all([
+                s.git.commit(child!.physical, log[0].sha).catch(() => null),
+                s.git.commit(repo.physical, braided.candidate).catch(() => null),
+              ]);
+              if (
+                tip &&
+                landed &&
+                tip.message === landed.message &&
+                tip.author?.email === landed.author?.email &&
+                tip.authoredAt === landed.authoredAt
+              )
+                strand.ahead = 0;
+            }
+          }
         } else {
           strand.ahead = 0;
           if (!order.length) strand.base = ZERO;

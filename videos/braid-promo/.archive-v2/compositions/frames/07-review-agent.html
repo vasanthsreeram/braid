@@ -1,0 +1,470 @@
+<template>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      container-type: size;
+      color: #fffdf8;
+      font-family: "Barlow", sans-serif;
+    }
+    #root * { box-sizing: border-box; }
+
+    [id="07-review-agent-bg"] { position: absolute; inset: 0; background: #2a2823; }
+
+    [id="07-review-agent-kicker"] {
+      position: absolute; left: 96px; top: 92px;
+      display: flex; align-items: center; gap: 18px;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 15px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #ff681e;
+    }
+    [id="07-review-agent-kicker"] i { display: block; width: 36px; height: 2px; background: #ff681e; }
+
+    /* ---------- brain stage (shake wrapper) ---------- */
+    [id="07-review-agent-shake"] { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+
+    /* Durable Object frame + core */
+    [id="07-review-agent-do"] {
+      position: absolute; left: 1180px; top: 200px; width: 560px; height: 560px; transform-origin: 0% 0%;
+    }
+    [class~="07-review-agent-side"] { position: absolute; background: #b8b0a3; }
+    [id="07-review-agent-sT"] { left: 0; top: 0; width: 560px; height: 1px; transform-origin: 0% 50%; }
+    [id="07-review-agent-sR"] { left: 559px; top: 0; width: 1px; height: 560px; transform-origin: 50% 0%; }
+    [id="07-review-agent-sB"] { left: 0; top: 559px; width: 560px; height: 1px; transform-origin: 100% 50%; }
+    [id="07-review-agent-sL"] { left: 0; top: 0; width: 1px; height: 560px; transform-origin: 50% 100%; }
+    [id="07-review-agent-dolbl"] {
+      position: absolute; left: 28px; top: -12px; padding: 0 12px; background: #2a2823;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 18px; line-height: 24px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #fffdf8;
+    }
+    [id="07-review-agent-model"] {
+      position: absolute; right: 28px; top: 538px; height: 44px; padding: 0 14px;
+      display: flex; align-items: center; background: #2a2823; border: 1px solid #ff681e;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 17px;
+      letter-spacing: 0.1em; color: #ff681e; transform-origin: 100% 50%;
+    }
+    [id="07-review-agent-core"] {
+      position: absolute; left: 60px; top: 60px; width: 440px; height: 440px;
+      background: #ff681e; color: #2a2823; padding: 40px 40px 36px 40px;
+    }
+    [id="07-review-agent-corename"] {
+      font-weight: 900; font-size: 108px; line-height: 0.86; letter-spacing: -0.04em; text-transform: lowercase;
+    }
+    [id="07-review-agent-corelbl"] {
+      position: absolute; left: 40px; bottom: 40px;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 17px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: rgba(17,17,17,0.75); white-space: nowrap;
+    }
+    [id="07-review-agent-harness"] { position: relative; color: #111; }
+    [id="07-review-agent-uline"] {
+      position: absolute; left: 0; right: 0; bottom: -8px; height: 3px; background: #2a2823; transform-origin: 0% 50%;
+    }
+    [id="07-review-agent-crashtag"] {
+      position: absolute; left: 60px; top: 60px; width: 440px; height: 440px;
+      border: 1px dashed #504B48; display: flex; align-items: center; justify-content: center;
+      font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 22px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #ff681e;
+    }
+
+    /* journal */
+    [id="07-review-agent-journal"] {
+      position: absolute; left: 96px; top: 360px; width: 660px; transform-origin: 0% 0%;
+    }
+    [id="07-review-agent-jhead"] {
+      display: flex; align-items: center; gap: 18px; height: 40px;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 15px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #b8b0a3;
+    }
+    [id="07-review-agent-jhead"] i { display: block; width: 36px; height: 2px; background: #ff681e; }
+    [class~="07-review-agent-jrow"] {
+      position: relative; height: 68px; display: flex; align-items: center; gap: 20px;
+      border-top: 1px solid #504B48; padding-left: 14px;
+      font-family: "IBM Plex Mono", monospace; font-weight: 400; font-size: 28px; color: #fffdf8; white-space: pre;
+    }
+    [class~="07-review-agent-jn"] { color: #ff681e; font-weight: 500; position: relative; }
+    [class~="07-review-agent-jt"] { position: relative; }
+    [class~="07-review-agent-ck"] {
+      position: relative; width: 28px; height: 28px; display: block;
+    }
+    [class~="07-review-agent-ck"] i {
+      position: absolute; left: 8px; top: 1px; width: 11px; height: 20px;
+      border-right: 3px solid #ff681e; border-bottom: 3px solid #ff681e; transform: rotate(45deg);
+    }
+    [id="07-review-agent-j3hl"] {
+      position: absolute; left: 0; top: 0; width: 660px; height: 68px;
+      background: rgba(255, 104, 30, 0.16); transform-origin: 0% 50%;
+    }
+    [id="07-review-agent-j3bar"] {
+      position: absolute; left: 0; top: 0; width: 4px; height: 68px; background: #ff681e; transform-origin: 50% 0%;
+    }
+    [id="07-review-agent-j3s"] { color: #b8b0a3; position: relative; margin-left: -20px; }
+    [id="07-review-agent-j3tag"] {
+      position: relative; padding: 4px 10px; background: #ff681e; color: #2a2823;
+      font-weight: 600; font-size: 16px; letter-spacing: 0.14em; text-transform: uppercase; transform-origin: 0% 50%;
+    }
+
+    /* glitch strips */
+    [class~="07-review-agent-gl"] { position: absolute; background: #ff681e; }
+
+    /* ---------- diff surface (left) ---------- */
+    [id="07-review-agent-diff"] {
+      position: absolute; left: 96px; top: 150px; width: 1020px; height: 710px;
+      background: #1A1918; border-top: 1px solid #504B48;
+    }
+    [id="07-review-agent-diffhead"] {
+      position: absolute; left: 0; top: 0; right: 0; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px 0 24px; border-bottom: 1px solid #504B48;
+    }
+    [id="07-review-agent-file"] {
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 22px; color: #fffdf8;
+    }
+    [id="07-review-agent-file"] span { color: #b8b0a3; font-size: 14px; letter-spacing: 0.14em; margin-left: 16px; }
+    [id="07-review-agent-pin"] {
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 20px;
+      color: #ff681e; border: 1px solid #ff681e; padding: 6px 14px; transform-origin: 100% 50%;
+    }
+    [id="07-review-agent-view"] {
+      position: absolute; left: 0; top: 64px; width: 1020px; height: 646px; overflow: hidden;
+    }
+    [id="07-review-agent-page"] { position: absolute; left: 0; top: 0; width: 1020px; height: 1258px; }
+    [class~="07-review-agent-row"] {
+      position: relative; height: 34px; display: flex; align-items: center;
+      font-family: "IBM Plex Mono", monospace; font-weight: 400; font-size: 23px;
+      white-space: pre; color: #fffdf8;
+    }
+    [class~="07-review-agent-ln"] { width: 72px; text-align: right; padding-right: 16px; color: #504B48; font-size: 18px; }
+    [class~="07-review-agent-sg"] { width: 32px; text-align: center; color: #504B48; }
+    [class~="07-review-agent-cmt"] [class~="07-review-agent-cd"] { color: #b8b0a3; }
+    [class~="07-review-agent-del"] [class~="07-review-agent-cd"] { color: #b8b0a3; opacity: 0.55; text-decoration: line-through; text-decoration-color: #504B48; }
+    [class~="07-review-agent-del"] [class~="07-review-agent-sg"] { color: #b8b0a3; }
+    [class~="07-review-agent-add"] [class~="07-review-agent-sg"] { color: #ff681e; font-weight: 500; }
+    [class~="07-review-agent-add"] [class~="07-review-agent-ln"] { color: #ff681e; }
+
+    [id="07-review-agent-hl"] {
+      position: absolute; left: 0; top: 748px; width: 1020px; height: 238px;
+      background: rgba(255, 104, 30, 0.13); transform-origin: 0% 50%;
+    }
+    [id="07-review-agent-hlbar"] {
+      position: absolute; left: 0; top: 748px; width: 4px; height: 238px;
+      background: #ff681e; transform-origin: 50% 0%;
+    }
+    [id="07-review-agent-rows"] { position: relative; }
+
+    [id="07-review-agent-scan"] {
+      position: absolute; left: 0; top: 0; width: 1020px; height: 2px; background: #ff681e;
+    }
+    [id="07-review-agent-scan"] i {
+      position: absolute; left: 0; bottom: 2px; width: 1020px; height: 90px;
+      background: rgba(255, 104, 30, 0.07);
+    }
+
+    /* ---------- issue card ---------- */
+    [id="07-review-agent-card"] {
+      position: absolute; left: 1196px; top: 490px; width: 628px; height: 370px;
+      background: #1A1918;
+    }
+    [id="07-review-agent-cardtop"] {
+      position: absolute; left: 0; top: 0; width: 628px; height: 2px; background: #ff681e; transform-origin: 0% 50%;
+    }
+    [id="07-review-agent-num"] {
+      position: absolute; left: 36px; top: 24px;
+      font-weight: 900; font-size: 96px; line-height: 1; letter-spacing: -0.04em; color: #ff681e;
+      transform-origin: 0% 100%;
+    }
+    [id="07-review-agent-open"] {
+      position: absolute; right: 36px; top: 40px;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 15px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #fffdf8;
+      border: 1px solid #504B48; padding: 7px 11px;
+    }
+    [id="07-review-agent-title"] {
+      position: absolute; left: 36px; top: 136px; width: 556px;
+      font-weight: 700; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em;
+      text-transform: lowercase; color: #fffdf8;
+    }
+    [id="07-review-agent-foot"] {
+      position: absolute; left: 36px; right: 36px; top: 314px; padding-top: 14px;
+      border-top: 1px solid #504B48;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 15px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #b8b0a3;
+    }
+    [id="07-review-agent-foot"] b { color: #ff681e; font-weight: 500; }
+
+    /* ---------- finding chip (focal of the back half) ---------- */
+    [id="07-review-agent-link"] {
+      position: absolute; left: 160px; top: 724px; width: 2px; height: 22px; background: #ff681e; transform-origin: 50% 0%;
+    }
+    [id="07-review-agent-chip"] {
+      position: absolute; left: 136px; top: 744px; height: 60px;
+      display: flex; align-items: center; white-space: pre;
+      padding: 0 20px; background: #2a2823; border: 2px solid #ff681e;
+      font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 30px; color: #fffdf8;
+      transform-origin: 0% 0%;
+    }
+    [id="07-review-agent-chip"] b { font-weight: 500; color: #ff681e; }
+    [id="07-review-agent-caret"] { display: inline-block; width: 16px; height: 32px; background: #ff681e; margin-left: 4px; }
+  </style>
+
+  <div data-hf-id="hf-vfup" id="root" data-composition-id="07-review-agent" data-width="1920" data-height="1080" data-start="0" data-duration="13.555">
+    <div data-hf-id="hf-n5s4" id="07-review-agent-bg" class="clip" data-start="0" data-duration="13.555" data-track-index="0"></div>
+
+    <div data-hf-id="hf-t9h0" id="07-review-agent-kicker"><i data-hf-id="hf-wt6k"></i>No. 09 / built-in agent runtime</div>
+
+    <div data-hf-id="hf-s0v5" id="07-review-agent-diff">
+      <div data-hf-id="hf-s5ar" id="07-review-agent-diffhead">
+        <div data-hf-id="hf-d4yu" id="07-review-agent-file">src/auth.ts<span data-hf-id="hf-3mym">DIFF</span></div>
+        <div data-hf-id="hf-7wqo" id="07-review-agent-pin">@ 7e2d10b</div>
+      </div>
+      <div data-hf-id="hf-9bp3" id="07-review-agent-view">
+        <div data-hf-id="hf-erbg" id="07-review-agent-page" data-layout-allow-overflow="">
+          <div data-hf-id="hf-4cv4" id="07-review-agent-hl"></div>
+          <div data-hf-id="hf-sz67" id="07-review-agent-hlbar"></div>
+          <div data-hf-id="hf-iawb" id="07-review-agent-rows">
+            <div data-hf-id="hf-en3f" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-r4ve" class="07-review-agent-ln">66</span><span data-hf-id="hf-ebqy" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-8cmu" class="07-review-agent-cd">import { redirect } from "./http";</span></div>
+            <div data-hf-id="hf-2bt7" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-qqkd" class="07-review-agent-ln">67</span><span data-hf-id="hf-pqce" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-7ku7" class="07-review-agent-cd">import { readSession, refreshSession } from "./session";</span></div>
+            <div data-hf-id="hf-1xi6" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-wp5s" class="07-review-agent-ln">68</span><span data-hf-id="hf-q4nf" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-ek49" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-1j75" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-waur" class="07-review-agent-ln">69</span><span data-hf-id="hf-qiyg" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-8lkz" class="07-review-agent-cd">export async function requireAuth(req: Request) {</span></div>
+            <div data-hf-id="hf-14w4" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-uadd" class="07-review-agent-ln">70</span><span data-hf-id="hf-nqt9" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-xba9" class="07-review-agent-cd">  const session = await readSession(req);</span></div>
+            <div data-hf-id="hf-0ql3" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-uooe" class="07-review-agent-ln">71</span><span data-hf-id="hf-o54a" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-1n5v" class="07-review-agent-cd">  if (!session) {</span></div>
+            <div data-hf-id="hf-0ca2" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-v2zf" class="07-review-agent-ln">72</span><span data-hf-id="hf-ojfb" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-jcdh" class="07-review-agent-cd">    return redirect("/login");</span></div>
+            <div data-hf-id="hf-zxz1" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-vhag" class="07-review-agent-ln">73</span><span data-hf-id="hf-oxqc" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-67cc" class="07-review-agent-cd">  }</span></div>
+            <div data-hf-id="hf-5wkg" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-sp59" class="07-review-agent-ln">74</span><span data-hf-id="hf-sihl" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-w8x9" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-5i9f" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-t3ga" class="07-review-agent-ln">75</span><span data-hf-id="hf-swsm" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-yled" class="07-review-agent-cd">  const now = Date.now();</span></div>
+            <div data-hf-id="hf-p3tt" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-thrb" class="07-review-agent-ln">76</span><span data-hf-id="hf-mpka" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-y7aw" class="07-review-agent-cd">  const ttl = session.expiresAt - now;</span></div>
+            <div data-hf-id="hf-pi4u" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-tw2c" class="07-review-agent-ln">77</span><span data-hf-id="hf-mb99" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-xfuc" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-pwfv" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-xgtl" class="07-review-agent-ln">78</span><span data-hf-id="hf-ni6c" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-6rq1" class="07-review-agent-cd">  if (ttl &gt; REFRESH_WINDOW_MS) {</span></div>
+            <div data-hf-id="hf-qaqw" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-xv4m" class="07-review-agent-ln">79</span><span data-hf-id="hf-n3vb" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-8mn4" class="07-review-agent-cd">    return session;</span></div>
+            <div data-hf-id="hf-nilp" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-awkm" class="07-review-agent-ln">80</span><span data-hf-id="hf-oase" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-x2ro" class="07-review-agent-cd">  }</span></div>
+            <div data-hf-id="hf-nwwq" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-ai9l" class="07-review-agent-ln">81</span><span data-hf-id="hf-nwhd" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-x1jb" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-f9q8" class="07-review-agent-row 07-review-agent-ctx 07-review-agent-cmt"><span data-hf-id="hf-bp6o" class="07-review-agent-ln">82</span><span data-hf-id="hf-p3eg" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-qxmk" class="07-review-agent-cd">  // near expiry: try a silent refresh</span></div>
+            <div data-hf-id="hf-ob7r" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-bavn" class="07-review-agent-ln">83</span><span data-hf-id="hf-op3f" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-c0jd" class="07-review-agent-cd">  const next = await refreshSession(session);</span></div>
+            <div data-hf-id="hf-opis" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-9bci" class="07-review-agent-ln">84</span><span data-hf-id="hf-pw0i" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-5ygl" class="07-review-agent-cd">  if (next.ok) {</span></div>
+            <div data-hf-id="hf-saa1" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-8x1h" class="07-review-agent-ln">85</span><span data-hf-id="hf-phph" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-mhfv" class="07-review-agent-cd">    return next.session;</span></div>
+            <div data-hf-id="hf-sol2" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-a3yk" class="07-review-agent-ln">86</span><span data-hf-id="hf-lxwh" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-vvul" class="07-review-agent-cd">  }</span></div>
+            <div data-hf-id="hf-pvhm" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-9pnj" class="07-review-agent-ln">87</span><span data-hf-id="hf-mc7i" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-y8ge" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-ruur" class="07-review-agent-row 07-review-agent-del"><span data-hf-id="hf-7q4e" class="07-review-agent-ln">88</span><span data-hf-id="hf-bzat" class="07-review-agent-sg">-</span><span data-hf-id="hf-83eh" class="07-review-agent-cd">  if (ttl &lt;= 0) {</span></div>
+            <div data-hf-id="hf-4bbn" class="07-review-agent-row 07-review-agent-del"><span data-hf-id="hf-7btd" class="07-review-agent-ln">89</span><span data-hf-id="hf-f9ux" class="07-review-agent-sg">-</span><span data-hf-id="hf-4p22" class="07-review-agent-cd">    return redirect("/login?next=" + req.url);</span></div>
+            <div data-hf-id="hf-3x0m" class="07-review-agent-row 07-review-agent-del"><span data-hf-id="hf-sr1r" class="07-review-agent-ln">90</span><span data-hf-id="hf-ggs0" class="07-review-agent-sg">-</span><span data-hf-id="hf-wa5m" class="07-review-agent-cd">  }</span></div>
+            <div data-hf-id="hf-ej91" class="07-review-agent-row 07-review-agent-add"><span data-hf-id="hf-t5cs" class="07-review-agent-ln">91</span><span data-hf-id="hf-ed4z" class="07-review-agent-sg">+</span><span data-hf-id="hf-2ozx" class="07-review-agent-cd">  if (ttl &lt;= 0) {</span></div>
+            <div data-hf-id="hf-a8rq" class="07-review-agent-row 07-review-agent-add 07-review-agent-cmt"><span data-hf-id="hf-ryfp" class="07-review-agent-ln">92</span><span data-hf-id="hf-wozn" class="07-review-agent-sg">+</span><span data-hf-id="hf-5e1s" class="07-review-agent-cd">    // stale cookie kept: /login bounces back</span></div>
+            <div data-hf-id="hf-fe3t" class="07-review-agent-row 07-review-agent-add"><span data-hf-id="hf-scqq" class="07-review-agent-ln">93</span><span data-hf-id="hf-waom" class="07-review-agent-sg">+</span><span data-hf-id="hf-765i" class="07-review-agent-cd">    return redirect(req.url);</span></div>
+            <div data-hf-id="hf-gl0w" class="07-review-agent-row 07-review-agent-add"><span data-hf-id="hf-uc9v" class="07-review-agent-ln">94</span><span data-hf-id="hf-vwdl" class="07-review-agent-sg">+</span><span data-hf-id="hf-y9or" class="07-review-agent-cd">  }</span></div>
+            <div data-hf-id="hf-ph6l" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-uqkw" class="07-review-agent-ln">95</span><span data-hf-id="hf-mqij" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-xu5d" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-qo3o" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-tjnt" class="07-review-agent-ln">96</span><span data-hf-id="hf-n4tk" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-1r4o" class="07-review-agent-cd">  return session;</span></div>
+            <div data-hf-id="hf-q9sn" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-txyu" class="07-review-agent-ln">97</span><span data-hf-id="hf-kcod" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-ynzs" class="07-review-agent-cd">}</span></div>
+            <div data-hf-id="hf-rgpq" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-pklj" class="07-review-agent-ln">98</span><span data-hf-id="hf-kqze" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-331k" class="07-review-agent-cd">&#160;</span></div>
+            <div data-hf-id="hf-r2ep" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-pywk" class="07-review-agent-ln">99</span><span data-hf-id="hf-l5af" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-e9gz" class="07-review-agent-cd">export function clearSession(res: Response) {</span></div>
+            <div data-hf-id="hf-s9bs" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-jb1h" class="07-review-agent-ln">100</span><span data-hf-id="hf-ljlg" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-x0d5" class="07-review-agent-cd">  res.headers.append("Set-Cookie", EXPIRED);</span></div>
+            <div data-hf-id="hf-rv0r" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-jpci" class="07-review-agent-ln">101</span><span data-hf-id="hf-p4cp" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-mm6q" class="07-review-agent-cd">  return res;</span></div>
+            <div data-hf-id="hf-t1xu" class="07-review-agent-row 07-review-agent-ctx"><span data-hf-id="hf-k3nj" class="07-review-agent-ln">102</span><span data-hf-id="hf-pinq" class="07-review-agent-sg">&#160;</span><span data-hf-id="hf-xh2p" class="07-review-agent-cd">}</span></div>
+          </div>
+        </div>
+        <div data-hf-id="hf-p0e7" id="07-review-agent-scan"><i data-hf-id="hf-zeb8"></i></div>
+      </div>
+    </div>
+
+    <div data-hf-id="hf-k1sh" id="07-review-agent-shake">
+      <div data-hf-id="hf-k1do" id="07-review-agent-do">
+        <div data-hf-id="hf-k1st" class="07-review-agent-side" id="07-review-agent-sT"></div>
+        <div data-hf-id="hf-k1sr" class="07-review-agent-side" id="07-review-agent-sR"></div>
+        <div data-hf-id="hf-k1sb" class="07-review-agent-side" id="07-review-agent-sB"></div>
+        <div data-hf-id="hf-k1sl" class="07-review-agent-side" id="07-review-agent-sL"></div>
+        <div data-hf-id="hf-k1ct" id="07-review-agent-crashtag">Crash</div>
+        <div data-hf-id="hf-k1co" id="07-review-agent-core">
+          <div data-hf-id="hf-k1cn" id="07-review-agent-corename">pi<br>durable</div>
+          <div data-hf-id="hf-k1cl" id="07-review-agent-corelbl">The brain · <span data-hf-id="hf-k1ha" id="07-review-agent-harness">Agent harness<i data-hf-id="hf-k1ul" id="07-review-agent-uline"></i></span></div>
+        </div>
+        <div data-hf-id="hf-k1dl" id="07-review-agent-dolbl">Durable Object</div>
+        <div data-hf-id="hf-k1md" id="07-review-agent-model">gpt-oss-120b · WORKERS AI</div>
+      </div>
+
+      <div data-hf-id="hf-k1jo" id="07-review-agent-journal">
+        <div data-hf-id="hf-k1jh" id="07-review-agent-jhead"><i data-hf-id="hf-k1ji"></i>Journal / durable</div>
+        <div data-hf-id="hf-k1r1" class="07-review-agent-jrow" id="07-review-agent-j1"><span data-hf-id="hf-k1n1" class="07-review-agent-jn">01</span><span data-hf-id="hf-k1t1" class="07-review-agent-jt">read src/auth.ts @ 7e2d10b</span><span data-hf-id="hf-k1c1" class="07-review-agent-ck" id="07-review-agent-ck1"><i data-hf-id="hf-k1c1i"></i></span></div>
+        <div data-hf-id="hf-k1r2" class="07-review-agent-jrow" id="07-review-agent-j2"><span data-hf-id="hf-k1n2" class="07-review-agent-jn">02</span><span data-hf-id="hf-k1t2" class="07-review-agent-jt">diff a1f3c9e..7e2d10b</span><span data-hf-id="hf-k1c2" class="07-review-agent-ck" id="07-review-agent-ck2"><i data-hf-id="hf-k1c2i"></i></span></div>
+        <div data-hf-id="hf-k1r3" class="07-review-agent-jrow" id="07-review-agent-j3"><div data-hf-id="hf-k1h3" id="07-review-agent-j3hl"></div><div data-hf-id="hf-k1b3" id="07-review-agent-j3bar"></div><span data-hf-id="hf-k1n3" class="07-review-agent-jn">03</span><span data-hf-id="hf-k1t3" class="07-review-agent-jt">check session refresh</span><span data-hf-id="hf-k1s3" id="07-review-agent-j3s"></span><span data-hf-id="hf-k1g3" id="07-review-agent-j3tag">Resumed</span><span data-hf-id="hf-k1c3" class="07-review-agent-ck" id="07-review-agent-ck3"><i data-hf-id="hf-k1c3i"></i></span></div>
+      </div>
+
+      <div data-hf-id="hf-k1g1" class="07-review-agent-gl" id="07-review-agent-g1" style="left: 960px; top: 268px; width: 900px; height: 10px;"></div>
+      <div data-hf-id="hf-k1g2" class="07-review-agent-gl" id="07-review-agent-g2" style="left: 60px; top: 412px; width: 1300px; height: 4px;"></div>
+      <div data-hf-id="hf-k1g3" class="07-review-agent-gl" id="07-review-agent-g3" style="left: 1120px; top: 486px; width: 700px; height: 26px;"></div>
+      <div data-hf-id="hf-k1g4" class="07-review-agent-gl" id="07-review-agent-g4" style="left: 300px; top: 560px; width: 1500px; height: 6px;"></div>
+      <div data-hf-id="hf-k1g5" class="07-review-agent-gl" id="07-review-agent-g5" style="left: 1240px; top: 672px; width: 420px; height: 14px;"></div>
+    </div>
+
+    <div data-hf-id="hf-4d1i" id="07-review-agent-card">
+      <div data-hf-id="hf-n7nz" id="07-review-agent-cardtop"></div>
+      <div data-hf-id="hf-hr29" id="07-review-agent-num">#143</div>
+      <div data-hf-id="hf-vnj6" id="07-review-agent-open">Issue · open</div>
+      <div data-hf-id="hf-hhxc" id="07-review-agent-title">redirect loop on expired session</div>
+      <div data-hf-id="hf-ya0x" id="07-review-agent-foot">Found by <b data-hf-id="hf-qqg0">Pi Durable</b> review</div>
+    </div>
+
+    <div data-hf-id="hf-lbes" id="07-review-agent-link"></div>
+    <div data-hf-id="hf-knqa" id="07-review-agent-chip"><span data-hf-id="hf-zkbn" id="07-review-agent-chiptxt"></span><span data-hf-id="hf-1fyk" id="07-review-agent-caret"></span></div>
+  </div>
+
+  <script>
+    (function () {
+      const FID = "07-review-agent";
+      const root = document.querySelector('[data-composition-id="' + FID + '"]');
+      const $ = (name) => root.querySelector('[id="' + FID + "-" + name + '"]');
+      const DUR = 13.155;
+      const tl = gsap.timeline({ paused: true });
+
+      const kicker = $("kicker"), shake = $("shake"), doBox = $("do"), core = $("core"), corename = $("corename"), corelbl = $("corelbl");
+      const uline = $("uline"), dolbl = $("dolbl"), model = $("model"), crashtag = $("crashtag");
+      const sT = $("sT"), sR = $("sR"), sB = $("sB"), sL = $("sL");
+      const journal = $("journal"), jhead = $("jhead"), j1 = $("j1"), j2 = $("j2"), j3 = $("j3");
+      const ck1 = $("ck1"), ck2 = $("ck2"), ck3 = $("ck3"), j3hl = $("j3hl"), j3bar = $("j3bar"), j3s = $("j3s"), j3tag = $("j3tag");
+      const gl = [$("g1"), $("g2"), $("g3"), $("g4"), $("g5")];
+      const diff = $("diff"), page = $("page"), scan = $("scan"), pin = $("pin"), hl = $("hl"), hlbar = $("hlbar");
+      const card = $("card"), cardtop = $("cardtop"), num = $("num"), openTag = $("open"), title = $("title"), foot = $("foot");
+      const link = $("link"), chip = $("chip"), chipTxt = $("chiptxt"), caret = $("caret");
+      const ctxRows = root.querySelectorAll('[class~="' + FID + '-ctx"]');
+
+      // ---- initial hidden states for later reveals (seek-safe, set at t=0) ----
+      tl.fromTo(diff, { opacity: 0, x: -120 }, { opacity: 0, x: -120, duration: 0.01 }, 0);
+      tl.fromTo(pin, { opacity: 0, scale: 0 }, { opacity: 0, scale: 0, duration: 0.01 }, 0);
+      tl.fromTo(scan, { opacity: 0, y: 0 }, { opacity: 0, y: 0, duration: 0.01 }, 0);
+      tl.fromTo(hl, { scaleX: 0 }, { scaleX: 0, duration: 0.01 }, 0);
+      tl.fromTo(hlbar, { scaleY: 0 }, { scaleY: 0, duration: 0.01 }, 0);
+      tl.fromTo(card, { opacity: 0, y: 30 }, { opacity: 0, y: 30, duration: 0.01 }, 0);
+      tl.fromTo(chip, { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.fromTo(link, { scaleY: 0 }, { scaleY: 0, duration: 0.01 }, 0);
+      tl.fromTo(gl, { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.fromTo(crashtag, { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.fromTo(j3tag, { opacity: 0, scale: 0.4 }, { opacity: 0, scale: 0.4, duration: 0.01 }, 0);
+      tl.fromTo(j3hl, { scaleX: 0 }, { scaleX: 0, duration: 0.01 }, 0);
+      tl.fromTo(j3bar, { scaleY: 0 }, { scaleY: 0, duration: 0.01 }, 0);
+      tl.fromTo(ck3, { opacity: 0, scale: 0 }, { opacity: 0, scale: 0, duration: 0.01 }, 0);
+
+      // ---- Scene 1 (0.0–1.6): DARK; core springs in on "brain" ----
+      tl.fromTo(kicker, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 0.05);
+      tl.fromTo(core, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 0.28);
+      tl.fromTo(corename, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.5);
+      tl.fromTo(corelbl, { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 1.12);
+
+      // ---- Scene 2 (1.6–3.8): "agent harness" underlines; "Durable Object" frame draws ----
+      tl.fromTo(uline, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 1.88);
+      tl.fromTo(sT, { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "power1.in" }, 3.04);
+      tl.fromTo(sR, { scaleY: 0 }, { scaleY: 1, duration: 0.18, ease: "none" }, 3.24);
+      tl.fromTo(sB, { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: "none" }, 3.42);
+      tl.fromTo(sL, { scaleY: 0 }, { scaleY: 1, duration: 0.18, ease: "power1.out" }, 3.62);
+      tl.fromTo(dolbl, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.35, ease: "expo.out" }, 3.1);
+      tl.fromTo(model, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, 3.48);
+
+      // ---- Scene 3 (3.8–7.1): journal stacks; crash glitch; resume ----
+      tl.fromTo(jhead, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 3.88);
+      tl.fromTo(j1, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 3.96);
+      tl.fromTo(ck1, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 4.28);
+      tl.fromTo(j2, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 4.4);
+      tl.fromTo(ck2, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 4.7);
+      tl.fromTo(j3, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 4.84);
+
+      // crash (5.52): short orange tear, core blinks out
+      const G = [
+        [5.50, [1, 0, 1, 0, 1], 22, 1, 0.3],
+        [5.56, [0, 1, 0, 1, 0], -18, 1, 1],
+        [5.62, [1, 1, 0, 0, 1], 12, 0, 0.2],
+        [5.68, [0, 0, 1, 1, 0], -8, 0, 0],
+        [5.74, [1, 0, 0, 1, 0], 4, 0, 0],
+        [5.80, [0, 0, 0, 0, 0], 0, 0, 0],
+      ];
+      G.forEach(([t, g, sx, coreOp]) => {
+        gl.forEach((el, i) => tl.set(el, { opacity: g[i] }, t));
+        tl.set(shake, { x: sx }, t);
+        tl.set(core, { opacity: coreOp }, t);
+      });
+      tl.set(crashtag, { opacity: 1 }, 5.64);
+      tl.fromTo(j3, { opacity: 1 }, { opacity: 0.35, duration: 0.12, ease: "none", immediateRender: false }, 5.56);
+      // "never loses its place": core snaps back, step 03 resumes
+      tl.set(crashtag, { opacity: 0 }, 5.92);
+      tl.fromTo(core, { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.28, ease: "power3.out", immediateRender: false }, 5.92);
+      tl.fromTo([j1, j2], { opacity: 0.5 }, { opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, 6.0);
+      tl.fromTo(j3, { opacity: 0.35 }, { opacity: 1, duration: 0.2, ease: "none", immediateRender: false }, 6.16);
+      tl.fromTo(j3hl, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, 6.16);
+      tl.fromTo(j3bar, { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: "power3.out", immediateRender: false }, 6.16);
+      tl.fromTo(j3tag, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)", immediateRender: false }, 6.3);
+      tl.fromTo(ck3, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, 6.9);
+
+      // ---- Scene 4 (7.1–8.9): brain docks right third; diff slides in; scan + SHA pin ----
+      tl.fromTo(doBox, { x: 0, y: 0, scale: 1 }, { x: 16, y: -20, scale: 0.5, duration: 0.7, ease: "power3.inOut", immediateRender: false }, 7.1);
+      tl.fromTo(journal, { x: 0, y: 0, scale: 1 }, { x: 1398, y: -160, scale: 0.5, duration: 0.42, ease: "power3.inOut", immediateRender: false }, 7.12);
+      tl.fromTo(diff, { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.38, ease: "power3.out", immediateRender: false }, 7.42);
+      tl.fromTo(scan, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: "none", immediateRender: false }, 7.44);
+      tl.fromTo(scan, { y: 0 }, { y: 644, duration: 0.9, ease: "power1.inOut", immediateRender: false }, 7.48);
+      tl.fromTo(page, { y: 0 }, { y: -476, duration: 1.3, ease: "power3.out" }, 7.55);
+      tl.fromTo(pin, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)", immediateRender: false }, 7.96);
+      tl.fromTo(scan, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "power1.out", immediateRender: false }, 8.38);
+
+      // ---- Scene 5 (8.9–11.0): lines 88–94 highlight; chip builds file → line → SHA ----
+      tl.fromTo(hl, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out", immediateRender: false }, 8.96);
+      tl.fromTo(hlbar, { scaleY: 0 }, { scaleY: 1, duration: 0.35, ease: "power3.out", immediateRender: false }, 8.96);
+      tl.fromTo(ctxRows, { opacity: 1 }, { opacity: 0.38, duration: 0.5, ease: "power2.out" }, 9.05);
+      tl.fromTo(link, { scaleY: 0 }, { scaleY: 1, duration: 0.18, ease: "power2.out", immediateRender: false }, 9.24);
+      tl.fromTo(chip, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)", immediateRender: false }, 9.3);
+
+      // ---- Scene 6 (11.0–13.16): chip flies into issue card #143; hold ----
+      tl.fromTo(link, { opacity: 1 }, { opacity: 0, duration: 0.15, ease: "none" }, 11.28);
+      tl.fromTo(chip, { x: 0, y: 0, scale: 1 }, { x: 1096, y: -14, scale: 0.9, duration: 0.62, ease: "power3.inOut", immediateRender: false }, 11.3);
+      tl.fromTo(card, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, 11.36);
+      tl.fromTo(cardtop, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 11.42);
+      tl.fromTo(num, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 11.7);
+      tl.fromTo(openTag, { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.3, ease: "expo.out" }, 11.8);
+      tl.fromTo(title, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4, ease: "expo.out" }, 11.9);
+      tl.fromTo(foot, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 12.4);
+
+      // ---- Discrete text states (chip build, journal step 03 suffix, caret), seek-safe ----
+      const CHIP = [
+        { t: 0, f: "", l: "", s: "" },
+        { t: 9.44, f: "src/", l: "", s: "" },
+        { t: 9.52, f: "src/auth", l: "", s: "" },
+        { t: 9.6, f: "src/auth.ts", l: "", s: "" },
+        { t: 9.92, f: "src/auth.ts", l: ":88", s: "" },
+        { t: 10.0, f: "src/auth.ts", l: ":88–94", s: "" },
+        { t: 10.48, f: "src/auth.ts", l: ":88–94", s: " @" },
+        { t: 10.56, f: "src/auth.ts", l: ":88–94", s: " @ 7e2d" },
+        { t: 10.64, f: "src/auth.ts", l: ":88–94", s: " @ 7e2d10b" },
+      ];
+      const at = (arr, t) => { for (let i = arr.length - 1; i >= 0; i--) if (t >= arr[i].t) return arr[i]; return arr[0]; };
+      let lastChip = null, lastSuffix = null;
+      function suffix(t) {
+        if (t < 4.84 || t >= 6.9) return "";
+        if (t >= 5.52 && t < 5.92) return "...";
+        const base = t < 5.52 ? 4.84 : 5.92;
+        return ".".repeat((Math.floor((t - base) * 6) % 3) + 1);
+      }
+      function render(t) {
+        const c = at(CHIP, t);
+        if (c !== lastChip) {
+          lastChip = c;
+          chipTxt.innerHTML = c.f + (c.l ? "<b>" + c.l + "</b>" : "") + (c.s ? "<b>" + c.s + "</b>" : "");
+        }
+        const sfx = suffix(t);
+        if (sfx !== lastSuffix) { lastSuffix = sfx; j3s.textContent = sfx; }
+        const typing = t < 11.28;
+        caret.style.display = typing ? "inline-block" : "none";
+        caret.style.opacity = typing && t > 10.7 && Math.floor(t * 4) % 2 === 1 ? "0" : "1";
+      }
+      tl.fromTo({ p: 0 }, { p: 0 }, { p: 1, duration: DUR, ease: "none", onUpdate: function () { render(tl.time()); } }, 0);
+      render(0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FID] = tl;
+    })();
+  </script>
+</template>

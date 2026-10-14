@@ -1,0 +1,157 @@
+<template>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+@font-face { font-family: "Barlow"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/barlow-800.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/barlow-900.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+    #root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; container-type: size; color: #2a2823; font-family: "Barlow", sans-serif; }
+    #p06-proposals-bg { position: absolute; inset: 0; background: #ff681e; }
+    #p06-proposals-cam { position: absolute; inset: 0; transform-origin: 960px 500px; }
+    #p06-proposals-chrome { position: absolute; left: 106px; right: 106px; top: 62px; height: 40px; display: flex; justify-content: space-between; align-items: center; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 14px; letter-spacing: 0.14em; color: rgba(17,17,17,0.8); }
+    #p06-proposals-kick { display: flex; align-items: center; gap: 16px; }
+    #p06-proposals-rule { width: 36px; height: 2px; background: #2a2823; display: inline-block; }
+    #p06-proposals-chromeline { position: absolute; left: 106px; right: 106px; top: 110px; height: 1px; background: rgba(17,17,17,0.20); transform-origin: left center; }
+    .p06-proposals-card { position: absolute; width: 409px; height: 232px; border-top: 2px solid #2a2823; padding-top: 16px; transform-origin: 0 0; }
+    .p06-proposals-hero { z-index: 5; }
+    .p06-proposals-head { display: flex; justify-content: space-between; align-items: center; height: 26px; }
+    .p06-proposals-lab { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 14px; letter-spacing: 0.14em; color: rgba(17,17,17,0.8); }
+    .p06-proposals-lock { display: block; transform-origin: 50% 60%; }
+    .p06-proposals-num { font-weight: 900; font-size: 64px; line-height: 1; letter-spacing: -0.04em; margin-top: 6px; color: #2a2823; }
+    .p06-proposals-lines { margin-top: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .p06-proposals-hl { position: relative; display: inline-flex; align-items: baseline; gap: 12px; padding: 3px 8px; margin-left: -8px; font-family: "IBM Plex Mono", monospace; font-size: 18px; line-height: 1.3; }
+    .p06-proposals-bar { position: absolute; inset: 0; background: #2a2823; transform-origin: left center; }
+    .p06-proposals-k { position: relative; font-weight: 500; font-size: 13px; letter-spacing: 0.14em; color: rgba(17,17,17,0.85); }
+    .p06-proposals-t { position: relative; font-weight: 600; color: #2a2823; }
+    .p06-proposals-full .p06-proposals-t { font-size: 17px; line-height: 1.25; }
+    #p06-proposals-stampwrap { position: absolute; left: 0; right: 0; top: 140px; height: 740px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 20; }
+    #p06-proposals-stamp { background: #2a2823; color: #ff681e; font-weight: 900; font-size: 230px; line-height: 0.88; letter-spacing: -0.04em; padding: 22px 64px 46px; outline: 2px solid #2a2823; outline-offset: 12px; }
+  </style>
+  <div data-hf-id="hf-rg1r" id="root" data-composition-id="06-proposals" data-width="1920" data-height="1080" data-duration="5.078">
+    <div data-hf-id="hf-ro66" id="p06-proposals-bg" class="clip" data-start="0" data-duration="5.078" data-track-index="0"></div>
+    <div data-hf-id="hf-sxdl" id="p06-proposals-cam">
+      <div data-hf-id="hf-w3eq" id="p06-proposals-chrome"><span data-hf-id="hf-5m1w" id="p06-proposals-kick"><i data-hf-id="hf-h12y" id="p06-proposals-rule"></i>PROPOSALS</span><span data-hf-id="hf-d6yy" id="p06-proposals-meta">BASE → CANDIDATE</span></div>
+      <div data-hf-id="hf-anr0" id="p06-proposals-chromeline"></div>
+      <div data-hf-id="hf-t8is" id="p06-proposals-grid">
+        <div data-hf-id="hf-tmyb" class="p06-proposals-card p06-proposals-hero" id="p06-proposals-card-0" style="left:106px;top:140px">
+          <div data-hf-id="hf-sme3" class="p06-proposals-head"><span data-hf-id="hf-1xqj" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-8trg" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-zsa3" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-e3w3" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-0jdw" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-w0zk" class="p06-proposals-num">#318</div>
+          <div data-hf-id="hf-0qoy" class="p06-proposals-lines"><span data-hf-id="hf-rr84" class="p06-proposals-hl p06-proposals-base p06-proposals-full"><i data-hf-id="hf-u86o" class="p06-proposals-bar"></i><b data-hf-id="hf-qeoe" class="p06-proposals-k">BASE</b><span data-hf-id="hf-448o" class="p06-proposals-t">a1f3c9e3b7d04c1f9e2a<br data-hf-id="hf-x5px">6b8d0c5f7a1e2b3c4d58</span></span><span data-hf-id="hf-tpob" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-l6fc" class="p06-proposals-bar"></i><b data-hf-id="hf-rxcn" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-zujf" class="p06-proposals-t">7e2d10b…</span></span></div>
+        </div>
+        <div data-hf-id="hf-wc1v" class="p06-proposals-card" id="p06-proposals-card-1" style="left:539px;top:140px">
+          <div data-hf-id="hf-4ql7" class="p06-proposals-head"><span data-hf-id="hf-4vhn" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-mt6s" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-gqmj" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-4fpv" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-n464" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-q2e5" class="p06-proposals-num">#317</div>
+          <div data-hf-id="hf-cuti" class="p06-proposals-lines"><span data-hf-id="hf-d57u" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-jzi9" class="p06-proposals-bar"></i><b data-hf-id="hf-sonm" class="p06-proposals-k">BASE</b><span data-hf-id="hf-e0fe" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-tvy3" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-kdta" class="p06-proposals-bar"></i><b data-hf-id="hf-fd07" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-zkvf" class="p06-proposals-t">c4a9f02…</span></span></div>
+        </div>
+        <div data-hf-id="hf-o8qp" class="p06-proposals-card" id="p06-proposals-card-2" style="left:972px;top:140px">
+          <div data-hf-id="hf-4ca6" class="p06-proposals-head"><span data-hf-id="hf-4h6m" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-lm9p" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-gcbi" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-41eu" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-lx91" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-qgp6" class="p06-proposals-num">#316</div>
+          <div data-hf-id="hf-d94j" class="p06-proposals-lines"><span data-hf-id="hf-sdpq" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-j6w7" class="p06-proposals-bar"></i><b data-hf-id="hf-t2yn" class="p06-proposals-k">BASE</b><span data-hf-id="hf-zre6" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-thn2" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-jl78" class="p06-proposals-bar"></i><b data-hf-id="hf-eyp6" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-bmy5" class="p06-proposals-t">19be7d3…</span></span></div>
+        </div>
+        <div data-hf-id="hf-8fzw" class="p06-proposals-card" id="p06-proposals-card-3" style="left:1405px;top:140px">
+          <div data-hf-id="hf-3xz5" class="p06-proposals-head"><span data-hf-id="hf-42vl" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-m0kq" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-fy0h" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-3n3t" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-mbk2" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-qv07" class="p06-proposals-num">#315</div>
+          <div data-hf-id="hf-dnfk" class="p06-proposals-lines"><span data-hf-id="hf-ss0r" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-iea5" class="p06-proposals-bar"></i><b data-hf-id="hf-th9o" class="p06-proposals-k">BASE</b><span data-hf-id="hf-05p7" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-t3c1" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-isl6" class="p06-proposals-bar"></i><b data-hf-id="hf-eke5" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-swhi" class="p06-proposals-t">e05c6a8…</span></span></div>
+        </div>
+        <div data-hf-id="hf-b1mn" class="p06-proposals-card" id="p06-proposals-card-4" style="left:106px;top:394px">
+          <div data-hf-id="hf-3jo4" class="p06-proposals-head"><span data-hf-id="hf-3okk" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-o03v" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-fjpg" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-38ss" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-ob37" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-r9b8" class="p06-proposals-num">#314</div>
+          <div data-hf-id="hf-avad" class="p06-proposals-lines"><span data-hf-id="hf-t6bs" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-nykj" class="p06-proposals-bar"></i><b data-hf-id="hf-tvkp" class="p06-proposals-k">BASE</b><span data-hf-id="hf-0k08" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-sp10" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-ocvk" class="p06-proposals-bar"></i><b data-hf-id="hf-hcjc" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-yrdv" class="p06-proposals-t">3fd81c4…</span></span></div>
+        </div>
+        <div data-hf-id="hf-3whm" class="p06-proposals-card" id="p06-proposals-card-5" style="left:539px;top:394px">
+          <div data-hf-id="hf-35d3" class="p06-proposals-head"><span data-hf-id="hf-3a9j" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-oeew" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-f5ef" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-2uhr" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-ope8" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-rnm9" class="p06-proposals-num">#313</div>
+          <div data-hf-id="hf-b9le" class="p06-proposals-lines"><span data-hf-id="hf-qe6l" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-nq7c" class="p06-proposals-bar"></i><b data-hf-id="hf-u9vq" class="p06-proposals-k">BASE</b><span data-hf-id="hf-xrv1" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-sapz" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-nbwb" class="p06-proposals-bar"></i><b data-hf-id="hf-gy8b" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-yick" class="p06-proposals-t">b7a2e90…</span></span></div>
+        </div>
+        <div data-hf-id="hf-whqc" class="p06-proposals-card" id="p06-proposals-card-6" style="left:972px;top:394px">
+          <div data-hf-id="hf-2r22" class="p06-proposals-head"><span data-hf-id="hf-2vyi" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-n7ht" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-er3e" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-2g6q" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-nih5" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-s1xa" class="p06-proposals-num">#312</div>
+          <div data-hf-id="hf-bnwf" class="p06-proposals-lines"><span data-hf-id="hf-qshm" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-mxla" class="p06-proposals-bar"></i><b data-hf-id="hf-uo6r" class="p06-proposals-k">BASE</b><span data-hf-id="hf-y662" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-rwey" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-mja9" class="p06-proposals-bar"></i><b data-hf-id="hf-gjxa" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-jh51" class="p06-proposals-t">58c0d1f…</span></span></div>
+        </div>
+        <div data-hf-id="hf-x2hh" class="p06-proposals-card" id="p06-proposals-card-7" style="left:1405px;top:394px">
+          <div data-hf-id="hf-2cr1" class="p06-proposals-head"><span data-hf-id="hf-2hnh" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-nlsu" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-ecsd" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-21vp" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-nws6" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-sg8b" class="p06-proposals-num">#311</div>
+          <div data-hf-id="hf-c27g" class="p06-proposals-lines"><span data-hf-id="hf-r6sn" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-m4z8" class="p06-proposals-bar"></i><b data-hf-id="hf-v2hs" class="p06-proposals-k">BASE</b><span data-hf-id="hf-ykh3" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-ri3x" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-lqo7" class="p06-proposals-bar"></i><b data-hf-id="hf-g5m9" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-8o2d" class="p06-proposals-t">d9e4b36…</span></span></div>
+        </div>
+        <div data-hf-id="hf-2t1x" class="p06-proposals-card" id="p06-proposals-card-8" style="left:106px;top:648px">
+          <div data-hf-id="hf-8bcg" class="p06-proposals-head"><span data-hf-id="hf-8g8w" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-plbz" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-kbds" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-1nko" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-jjev" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-sujc" class="p06-proposals-num">#310</div>
+          <div data-hf-id="hf-9a29" class="p06-proposals-lines"><span data-hf-id="hf-rl3o" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-lcd6" class="p06-proposals-bar"></i><b data-hf-id="hf-p3wd" class="p06-proposals-k">BASE</b><span data-hf-id="hf-yys4" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-xgpc" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-ky25" class="p06-proposals-bar"></i><b data-hf-id="hf-ixrg" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-64dg" class="p06-proposals-t">2a6f7c1…</span></span></div>
+        </div>
+        <div data-hf-id="hf-da18" class="p06-proposals-card" id="p06-proposals-card-9" style="left:539px;top:648px">
+          <div data-hf-id="hf-7x1f" class="p06-proposals-head"><span data-hf-id="hf-81xv" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-pzn0" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-jx2r" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-199n" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-jxpw" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-e9rq" class="p06-proposals-num">#309</div>
+          <div data-hf-id="hf-9oda" class="p06-proposals-lines"><span data-hf-id="hf-v5ux" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-qwnk" class="p06-proposals-bar"></i><b data-hf-id="hf-pi7e" class="p06-proposals-k">BASE</b><span data-hf-id="hf-2jjd" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-x2eb" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-qicj" class="p06-proposals-bar"></i><b data-hf-id="hf-ijgf" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-op30" class="p06-proposals-t">f13b0e5…</span></span></div>
+        </div>
+        <div data-hf-id="hf-ycwz" class="p06-proposals-card" id="p06-proposals-card-10" style="left:972px;top:648px">
+          <div data-hf-id="hf-3kmp" class="p06-proposals-head"><span data-hf-id="hf-2tdt" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-qljw" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-6iw1" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-q9w9" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-4ays" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-dvgp" class="p06-proposals-num">#308</div>
+          <div data-hf-id="hf-vl6q" class="p06-proposals-lines"><span data-hf-id="hf-vk5y" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-jtsz" class="p06-proposals-bar"></i><b data-hf-id="hf-2i12" class="p06-proposals-k">BASE</b><span data-hf-id="hf-2xue" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-alch" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-k840" class="p06-proposals-bar"></i><b data-hf-id="hf-bg11" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-9y78" class="p06-proposals-t">846da2c…</span></span></div>
+        </div>
+        <div data-hf-id="hf-683w" class="p06-proposals-card" id="p06-proposals-card-11" style="left:1405px;top:648px">
+          <div data-hf-id="hf-3yxq" class="p06-proposals-head"><span data-hf-id="hf-37ou" class="p06-proposals-lab">PROPOSAL</span><svg data-hf-id="hf-q78v" class="p06-proposals-lock" viewBox="0 0 22 26" width="22" height="26" aria-hidden="true"><rect data-hf-id="hf-6x72" x="1" y="11" width="20" height="14" fill="#2a2823" /><path data-hf-id="hf-qo7a" d="M5.5 11V7.5a5.5 5.5 0 0 1 11 0V11" fill="none" stroke="#2a2823" stroke-width="2.6" /><rect data-hf-id="hf-3wnr" x="9.6" y="15.5" width="2.8" height="5" fill="#ff681e" /></svg></div>
+          <div data-hf-id="hf-aapg" class="p06-proposals-num">#307</div>
+          <div data-hf-id="hf-v6vp" class="p06-proposals-lines"><span data-hf-id="hf-n56i" class="p06-proposals-hl p06-proposals-base"><i data-hf-id="hf-j16x" class="p06-proposals-bar"></i><b data-hf-id="hf-23q1" class="p06-proposals-k">BASE</b><span data-hf-id="hf-543e" class="p06-proposals-t">a1f3c9e…</span></span><span data-hf-id="hf-azni" class="p06-proposals-hl p06-proposals-cand"><i data-hf-id="hf-jfhy" class="p06-proposals-bar"></i><b data-hf-id="hf-buc2" class="p06-proposals-k">→ CAND</b><span data-hf-id="hf-vajr" class="p06-proposals-t">0cb95e7…</span></span></div>
+        </div>
+      </div>
+      <div data-hf-id="hf-rmfd" id="p06-proposals-stampwrap"><div data-hf-id="hf-0ntv" id="p06-proposals-stamp">immutable</div></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var ID = "06-proposals";
+      var P = "p06-proposals";
+      var root = document.querySelector('[data-composition-id="' + ID + '"]');
+      var q = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+      var INK = "#2a2823", FIRE = "#ff681e";
+      var hero = root.querySelector("#" + P + "-card-0");
+      var others = q("." + P + "-card:not(." + P + "-hero)");
+      var cards = q("." + P + "-card");
+      var tl = gsap.timeline({ paused: true });
+
+      // Scene 1 — hero proposal lands at center, large (slot is 409x232 at 106,140; 2.4x centred on 960,500)
+      var S = 2.4, HX = 960 - 106 - (409 * S) / 2, HY = 500 - 140 - (232 * S) / 2;
+      tl.fromTo(hero, { x: HX, y: HY + 60, scale: S, opacity: 0 }, { x: HX, y: HY, scale: S, opacity: 1, duration: 0.45, ease: "power3.out" }, 0.1);
+
+      // Scene 2 — hero shrinks into top-left slot; grid cascades in (index stagger)
+      tl.to(hero, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "power3.inOut" }, 0.9);
+      tl.fromTo(others, { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out", stagger: 0.035 }, 1.0);
+      tl.fromTo("#" + P + "-chrome", { y: -12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 0.95);
+      tl.fromTo("#" + P + "-chromeline", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.out" }, 0.95);
+
+      // slow camera push underneath the hold
+      tl.fromTo("#" + P + "-cam", { scale: 1 }, { scale: 1.025, duration: 3.0, ease: "none" }, 1.578);
+
+      // "exact base" — base line highlights on every card (index waterfall)
+      var baseBars = q("." + P + "-base ." + P + "-bar"), baseT = q("." + P + "-base ." + P + "-t"), baseK = q("." + P + "-base ." + P + "-k");
+      tl.fromTo(baseBars, { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: "power3.out", stagger: 0.03 }, 1.6);
+      tl.fromTo(baseT, { color: INK }, { color: FIRE, duration: 0.14, ease: "none", stagger: 0.03 }, 1.66);
+      tl.fromTo(baseK, { color: "rgba(17,17,17,0.8)" }, { color: "rgba(255,104,30,0.7)", duration: 0.14, ease: "none", stagger: 0.03 }, 1.66);
+
+      // "exact commit" — candidate line highlights in a waterfall
+      var candBars = q("." + P + "-cand ." + P + "-bar"), candT = q("." + P + "-cand ." + P + "-t"), candK = q("." + P + "-cand ." + P + "-k");
+      tl.fromTo(candBars, { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: "power3.out", stagger: 0.045 }, 2.6);
+      tl.fromTo(candT, { color: INK }, { color: FIRE, duration: 0.14, ease: "none", stagger: 0.045 }, 2.66);
+      tl.fromTo(candK, { color: "rgba(17,17,17,0.8)" }, { color: "rgba(255,104,30,0.7)", duration: 0.14, ease: "none", stagger: 0.045 }, 2.66);
+
+      // "immutable" — stamp slams diagonally across the grid, grid jolts, locks waterfall in
+      tl.fromTo("#" + P + "-stamp", { scale: 2.3, rotation: -14, opacity: 0 }, { scale: 1, rotation: -8, opacity: 1, duration: 0.16, ease: "power4.in" }, 3.5);
+      tl.to("#" + P + "-stamp", { scale: 1.035, duration: 0.07, ease: "power2.out" }, 3.66);
+      tl.to("#" + P + "-stamp", { scale: 1, duration: 0.3, ease: "back.out(2.5)" }, 3.73);
+      var grid = "#" + P + "-grid";
+      tl.to(grid, { x: -7, y: 5, duration: 0.04, ease: "none" }, 3.66);
+      tl.to(grid, { x: 5, y: -3, duration: 0.05, ease: "none" }, 3.70);
+      tl.to(grid, { x: -2, y: 1, duration: 0.05, ease: "none" }, 3.75);
+      tl.to(grid, { x: 0, y: 0, duration: 0.08, ease: "power2.out" }, 3.80);
+      tl.fromTo(q("." + P + "-lock"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(3)", stagger: 0.04 }, 3.7);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

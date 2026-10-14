@@ -33,24 +33,25 @@ const fault = (fn: () => unknown, status: number, re?: RegExp) =>
 
 /* ---------------- concurrency ---------------- */
 
-test("admission: up to 3 concurrent runs per repository, checked for a whole swarm at once", () => {
+test("admission: up to 6 concurrent runs per repository, checked for a whole swarm at once", () => {
   const now = Date.now();
   const active = (n: number) => Array.from({ length: n }, () => ({ status: "working", created: now - 1000 }));
-  assert.equal(AGENT_LIMITS.perRepoConcurrent, 3);
-  admitRun(active(2), now);
-  fault(() => admitRun(active(3), now), 409, /3 agents are already working/);
-  // A swarm of 3 needs 3 free slots; with one busy only 2 remain.
-  admitRun([], now, 3);
-  fault(() => admitRun(active(1), now, 3), 409, /Only 2 of 3 agent slots/);
+  const L = AGENT_LIMITS.perRepoConcurrent;
+  assert.equal(L, 6);
+  admitRun(active(L - 1), now);
+  fault(() => admitRun(active(L), now), 409, /6 agents are already working/);
+  // A swarm of L needs L free slots; with one busy only L-1 remain.
+  admitRun([], now, L);
+  fault(() => admitRun(active(1), now, L), 409, /Only 5 of 6 agent slots/);
   // Catching up counts as active; a long-dead run (no update past the wall budget) does not.
-  fault(() => admitRun([...active(2), { status: "catching_up", created: now - 1000 }], now), 409);
+  fault(() => admitRun([...active(L - 1), { status: "catching_up", created: now - 1000 }], now), 409);
   admitRun(
-    [...active(2), { status: "working", created: now - 3_600_000, updated: now - AGENT_LIMITS.wallMs - 6 * 60_000 }],
+    [...active(L - 1), { status: "working", created: now - 3_600_000, updated: now - AGENT_LIMITS.wallMs - 6 * 60_000 }],
     now,
   );
   // A run that started yesterday but is active again (catching up) still counts.
   fault(
-    () => admitRun([...active(2), { status: "catching_up", created: now - 3_600_000, updated: now - 1000 }], now),
+    () => admitRun([...active(L - 1), { status: "catching_up", created: now - 3_600_000, updated: now - 1000 }], now),
     409,
   );
   // Daily cap includes the whole swarm.
@@ -129,9 +130,11 @@ test("swarm naming, sub-goal and request validation", () => {
   const goal = subGoal("Write guides", { title: "Install", goal: "Write docs/install.md", files: ["docs/install.md"] }, 1, 3);
   assert.match(goal, /agent 1 of 3/);
   assert.match(goal, /Do not change any other file/);
-  assert.deepEqual(swarmRequest({ agents: 2 }), { agents: 2 });
-  assert.deepEqual(swarmRequest({}), { agents: 3 });
-  for (const agents of [1, 4, 2.5, "3"]) fault(() => swarmRequest({ agents }), 422);
+  assert.deepEqual(swarmRequest({ agents: 2 }), { agents: 2, autoBraid: false });
+  assert.deepEqual(swarmRequest({}), { agents: 3, autoBraid: false });
+  assert.deepEqual(swarmRequest({ agents: 6, autoBraid: true }), { agents: 6, autoBraid: true });
+  for (const agents of [1, 7, 2.5, "3"]) fault(() => swarmRequest({ agents }), 422);
+  fault(() => swarmRequest({ agents: 2, autoBraid: "yes" }), 422);
 });
 
 test("swarm view: plain status per sub-task", () => {
@@ -229,7 +232,7 @@ test("swarms API: 401 without a session, reader may watch, writer starts; planne
     assert.equal((await h.call("outsider", prefix)).status, 404);
     assert.deepEqual(await (await h.call("reader", prefix)).json(), { swarms: [] });
     assert.equal((await h.call("reader", prefix, { goal: "Write guides", agents: 2 })).status, 404);
-    for (const body of [{}, { goal: "Write guides", agents: 4 }, { goal: "Write guides", agents: 1 }, { goal: "x" }])
+    for (const body of [{}, { goal: "Write guides", agents: 7 }, { goal: "Write guides", agents: 1 }, { goal: "x" }])
       assert.equal((await h.call("writer", prefix, body)).status, 422, JSON.stringify(body));
     assert.ok(!calls.length, "validation happens before the planner");
     capacity = { active: 2, limit: 3 };
@@ -250,7 +253,14 @@ test("swarms API: 401 without a session, reader may watch, writer starts; planne
     const v = (await started.json()) as any;
     assert.equal(v.swarmId, "sw-1");
     assert.deepEqual(v.swarm.tasks.map((t: any) => [t.title, t.status]), [["Install", "working"], ["Usage", "working"]]);
-    assert.deepEqual(calls.find((c) => c.op === "swarm"), { op: "swarm", actor: "writer", body: { goal: "Write guides", tasks: planned } });
+    assert.deepEqual(calls.find((c) => c.op === "swarm"), {
+      op: "swarm",
+      actor: "writer",
+      body: { goal: "Write guides", tasks: planned, autoBraid: false },
+    });
+    // Auto-braid braids in without a click, so it needs the admin role.
+    const auto = await h.call("writer", prefix, { goal: "Write guides", agents: 2, autoBraid: true });
+    assert.ok(auto.status === 403 || auto.status === 404, String(auto.status));
     assert.equal((await h.call("reader", prefix + "/sw-1")).status, 200);
     assert.equal((await h.call("reader", prefix + "/sw-2")).status, 404);
     assert.equal((await h.call("reader", prefix + "/bad%21")).status, 404);
@@ -507,9 +517,60 @@ test("catch-up: a run whose proposal is refused as stale catches up in place ins
 
 test("catch-up attempts are bounded", () => {
   const r: any = { events: [], catchupCount: AGENT_LIMITS.catchUps };
-  fault(() => startCatchUp(r, "again"), 409, /Caught up 4 times/);
+  fault(() => startCatchUp(r, "again"), 409, /Caught up 6 times/);
   const ok: any = { events: [] };
   startCatchUp(ok, "first", "p-1");
   assert.deepEqual([ok.status, ok.catchup.n, ok.catchup.from], ["catching_up", 1, "p-1"]);
   void readFile;
+});
+
+test("braid queue API: admin queues (approving an open proposal); a braid-in notifies landed", async () => {
+  const h = await api();
+  try {
+    const { base, strand } = await seeded(h);
+    const a = await strand("first", "a.md", "a\n");
+    const b = await strand("second", "b.md", "b\n");
+    const propose = async (x: any) =>
+      (await (await h.call("owner", `/api/repos/${h.repo.id}/proposals`, { task: x.task.id, base, candidate: x.candidate })).json()) as any;
+    const pa = await propose(a),
+      pb = await propose(b);
+    const queued: any[] = [];
+    let landed = 0;
+    h.l.s.runs = {
+      start: async () => ({}),
+      list: async () => [],
+      get: async () => ({}),
+      cancel: async () => ({}),
+      queue: async () => ({ entries: queued.map((q, i) => ({ position: i + 1, proposal: q.proposal })), recent: [] }),
+      enqueue: async (_r, actor, body) => {
+        queued.push({ actor: actor.id, ...body });
+        return { entries: queued.map((q, i) => ({ position: i + 1, proposal: q.proposal })), recent: [] };
+      },
+      landed: async () => {
+        landed++;
+      },
+    };
+    const url = `/api/repos/${h.repo.id}/queue`;
+    assert.equal((await h.call(null, url)).status, 401);
+    assert.equal((await h.call("outsider", url)).status, 404);
+    assert.equal((await h.call("reader", url)).status, 200);
+    // Queuing braids in later without another click, so it is an admin action.
+    assert.equal((await h.call("writer", url, { proposal: pb.id })).status, 404);
+    assert.equal((await h.call("owner", url, { proposal: "nope" })).status, 409);
+    const q = await h.call("owner", url, { proposal: pb.id });
+    assert.equal(q.status, 202);
+    assert.deepEqual(queued, [{ actor: h.l.principal.id, proposal: pb.id, mode: "approved" }]);
+    const proposals = (await (await h.call("owner", `/api/repos/${h.repo.id}/proposals`)).json()) as any[];
+    assert.equal(proposals.find((p) => p.id === pb.id).status, "approved");
+    // A manual braid-in tells the runtime something landed.
+    await h.call("owner", `/api/repos/${h.repo.id}/review`, { id: pa.id, status: "approved" });
+    assert.equal((await h.call("owner", `/api/repos/${h.repo.id}/merge`, { id: pa.id })).status, 200);
+    assert.equal(landed, 1);
+    // The fence still holds for the now-stale proposal; the queue is the way through.
+    const stale = await h.call("owner", `/api/repos/${h.repo.id}/merge`, { id: pb.id });
+    assert.equal(stale.status, 409);
+    assert.equal(landed, 1);
+  } finally {
+    await h.close();
+  }
 });

@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+@font-face { font-family: "Inter Tight"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-600.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-700.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-800.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-weight: 900; font-style: normal; font-display: block; src: url("assets/fonts/inter-tight-900.woff2") format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/ibm-plex-mono-600.woff2") format("woff2"); }
+
+#root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter Tight", sans-serif; color: #1f1a15; }
+#s08-ground { position: absolute; inset: 0; background: #faf7f2; }
+#root .svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+#root .hl { position: absolute; left: 192px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; white-space: nowrap; color: #1f1a15; }
+#root .em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #e8590c; font-size: 1.12em; line-height: 0.8; }
+#root .w { display: inline-block; }
+#root .sw { opacity: 0; }
+#root .proof { position: absolute; left: 192px; top: 948px; display: flex; align-items: center; gap: 22px; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 25px; letter-spacing: 0.1em; text-transform: uppercase; color: #5e5248; white-space: nowrap; opacity: 0; }
+#root .proof .tick { width: 40px; height: 3px; background: #e8590c; }
+#root .label { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 22px; letter-spacing: 0.08em; color: #5e5248; white-space: nowrap; }
+#root .mono { font-family: "IBM Plex Mono", monospace; }
+#root .card { position: absolute; background: #ffffff; border: 3px solid #1f1a15; border-radius: 18px; }
+#root .pill { display: inline-block; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 20px; letter-spacing: 0.06em; border-radius: 99px; padding: 4px 14px; white-space: nowrap; }
+#root .pill.o { color: #e8590c; border: 2px solid #e8590c; }
+#root .pill.i { color: #faf7f2; background: #1f1a15; border: 2px solid #1f1a15; }
+#root .pill.u { color: #7a5c46; border: 2px solid #7a5c46; }
+#root .tech { position: absolute; right: 96px; top: 64px; display: flex; align-items: center; gap: 12px; opacity: 0; }
+#root .tech .on { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 19px; letter-spacing: 0.14em; text-transform: uppercase; color: #5e5248; margin-right: 4px; }
+#root .tech .pill { font-size: 22px; padding: 6px 16px; }
+#root .tech .pill.o { color: #b8470a; border-color: #b8470a; }
+
+
+#s08-h1 { top: 140px; font-size: 110px; }
+#s08-h2 { top: 258px; font-size: 110px; }
+#s08-diff { left: 192px; top: 440px; width: 780px; height: 440px; padding: 26px 30px; opacity: 0; }
+#s08-diff .hd { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 20px; letter-spacing: 0.04em; color: #5e5248; padding-bottom: 16px; border-bottom: 2px solid #e2d9cc; margin-bottom: 14px; }
+#root .dl { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 24px; line-height: 52px; white-space: pre; padding: 0 12px; border-radius: 8px; opacity: 0; }
+#root .dl.h { color: #5e5248; }
+#root .dl.m { color: #7a5c46; background: #f1ebe1; }
+#root .dl.p { color: #1f1a15; background: #fbe6d8; }
+#s08-ev { left: 1030px; top: 440px; width: 700px; height: 440px; padding: 26px 32px; border-color: #e8590c; opacity: 0; }
+#s08-ev .hd { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 22px; letter-spacing: 0.14em; color: #e8590c; margin-bottom: 18px; }
+#root .er { display: flex; align-items: center; height: 66px; border-bottom: 2px solid #e2d9cc; }
+#root .er .ek { width: 210px; font-weight: 700; font-size: 30px; letter-spacing: -0.01em; }
+#root .er .ev { flex: 1; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 23px; color: #5e5248; white-space: nowrap; }
+#root .er .ck { width: 40px; height: 40px; border-radius: 50%; background: #1f1a15; color: #faf7f2; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+#s08-green { position: absolute; left: 1450px; top: 318px; opacity: 0; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 30px; letter-spacing: 0.12em; color: #faf7f2; background: #e8590c; padding: 10px 22px; border-radius: 12px; rotate: -6deg; }
+
+      </style>
+      <div id="root" data-composition-id="v5-08-evidence" data-width="1920" data-height="1080" data-duration="7.497">
+        <div id="s08-ground" class="clip" data-start="0" data-duration="7.497" data-track-index="0"></div>
+
+        <div id="s08-diff" class="card"><div class="hd">PROPOSAL #31 &middot; base 4f2a91c &rarr; candidate 9be03d7</div><div class="dl h" id="s08-d0">@@ src/price.js</div><div class="dl m" id="s08-d1">- return "$" + p.toString();</div><div class="dl p" id="s08-d2">+ return "$" + p.toFixed(2);</div><div class="dl h" id="s08-d3">@@ test/price.test.js</div><div class="dl p" id="s08-d4">+ test("two decimals", () =></div><div class="dl p" id="s08-d5">+   eq(fmt(9.9), "$9.90"));</div></div>
+        <div id="s08-ev" class="card"><div class="hd">EVIDENCE</div><div class="er sw" id="s08-r-touched"><span class="ek">Touched</span><span class="ev">1 file &middot; inside its plan</span><span class="ck">&#10003;</span></div><div class="er sw" id="s08-r-ran"><span class="ek">Ran</span><span class="ev">node --test</span><span class="ck">&#10003;</span></div><div class="er sw" id="s08-r-tests"><span class="ek">Tests</span><span class="ev">12 / 12 passed</span><span class="ck">&#10003;</span></div><div class="er sw" id="s08-r-conf"><span class="ek">Conflicts</span><span class="ev">none</span><span class="ck">&#10003;</span></div><div class="er sw" id="s08-r-run"><span class="ek">Agent run</span><span class="ev">9 turns &middot; full log</span><span class="ck">&#10003;</span></div></div>
+        <div id="s08-green">ALL GREEN</div>
+        <div id="s08-h1" class="hl"><span class="w sw" id="s08a-w0">Every</span> <span class="w sw" id="s08a-w1">change</span> <span class="w sw" id="s08a-w2">comes</span> <span class="w sw" id="s08a-w3">back</span></div>
+        <div id="s08-h2" class="hl"><span class="w sw" id="s08b-w0">with</span> <span class="w sw" id="s08b-w1">its</span> <span class="w sw em" id="s08b-w2">evidence.</span></div>
+        <div id="s08-pf" class="proof"><span class="tick"></span>Immutable proposal: base + candidate SHA &middot; review findings pinned path:line@sha</div>
+
+        <div id="s08-tech" class="tech"><span class="on">on cloudflare</span><span class="pill i">WORKERS AI</span><span class="pill i">D1</span><span class="pill o">immutable proposal</span></div>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        (function () {
+          const root = document.querySelector('[data-composition-id="v5-08-evidence"]');
+
+const tl = gsap.timeline({ paused: true });
+const $ = (s) => root.querySelector(s);
+const $$ = (s) => Array.prototype.slice.call(root.querySelectorAll(s));
+function rise(el, t, dy, d) { tl.fromTo(el, { opacity: 0, y: dy == null ? 60 : dy }, { opacity: 1, y: 0, duration: d || 0.5, ease: "expo.out" }, t); }
+function show(el, t) { tl.set(el, { opacity: 1 }, t); }
+function hide(el, t) { tl.set(el, { opacity: 0 }, t); }
+function draw(el, t, d, ease) { tl.fromTo(el, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: d, ease: ease || "power2.inOut" }, t); }
+function pop(el, t, d) { tl.fromTo(el, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: d || 0.4, ease: "back.out(2.6)" }, t); }
+function slam(el, t) { tl.fromTo(el, { opacity: 0, scale: 0.86, transformOrigin: "0% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, t); }
+function proof(el, t) { tl.fromTo(el, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, t); }
+function swap(a, b, t) { hide(a, t); show(b, t); tl.fromTo(b, { y: 30 }, { y: 0, duration: 0.3, ease: "expo.out" }, t); }
+function count(el, from, to, t, d, fmt, ease) { const o = { v: from }; tl.to(o, { v: to, duration: d, ease: ease || "power2.out", onUpdate: function () { el.textContent = fmt ? fmt(o.v) : String(Math.round(o.v)); } }, t); tl.call(function () { el.textContent = fmt ? fmt(from) : String(from); }, null, Math.max(0, t - 0.001)); }
+
+
+var ha = $$("#s08-h1 .w"), hb = $$("#s08-h2 .w");
+[0.15, 0.55, 0.95, 1.27].forEach(function (t, i) { rise(ha[i], t, 40, 0.35); });
+[2.95, 3.19, 3.35].forEach(function (t, i) { rise(hb[i], t, 40, 0.4); });
+slam($("#s08-diff"), 0.2);
+$$("#root .dl").forEach(function (el, i) { tl.fromTo(el, { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.25, ease: "power3.out" }, 0.4 + i * 0.12); });
+slam($("#s08-ev"), 3.35);
+tl.fromTo($("#s08-diff"), { borderColor: "#1f1a15" }, { borderColor: "#e8590c", duration: 0.2, yoyo: true, repeat: 1 }, 2.31);
+var rt = [4.47, 5.43, 5.91, 6.26, 6.46];
+["touched", "ran", "tests", "conf", "run"].forEach(function (k, i) { rise($("#s08-r-" + k), rt[i], 16, 0.3); pop($("#s08-r-" + k + " .ck"), rt[i] + 0.15, 0.3); });
+tl.fromTo($("#s08-green"), { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power4.out" }, 6.5);
+proof($("#s08-pf"), 2.31);
+
+tl.fromTo($("#s08-tech"), { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.25);
+          window.__timelines["v5-08-evidence"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
