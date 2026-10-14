@@ -52,5 +52,5 @@
   "containers": [
     { "class_name": "AgentRun", "scheduling_policy": "durable_object" },
   ],
-  "observability": { "enabled": false },
+  "observability": { "enabled": true },
 }
