@@ -1,10 +1,16 @@
 # Current implementation and verification
 
-Updated 2026-10-02 Singapore. Source, migrated destination and evaluation resources are private. [Raw deployment/provider/migration receipts](core/raw) are separate from the unchanged historical benchmarks. **Real WorkOS sign-in and deployed R2 LFS are blocked by missing dedicated credentials; this is not a fully verified authenticated launch.**
+Updated 2026-10-14 Singapore. The app is named **Braid** (renamed from Gitflare in `574dd54`); the domain `gitflare.lintlabs.org` and the Worker `cf-native-forge-evaluation` keep their old names. Source, migrated destination and evaluation resources are private. [Raw deployment/provider/migration receipts](core/raw) are separate from the unchanged historical benchmarks.
+
+Status since 2026-10-02, from the commit history (claims of the commit author, not re-measured for this update):
+
+- GitHub sign-in works against live WorkOS (`58f6d59`: first real logins, fixes for the provider/runtime mismatches they exposed).
+- Coding agent runs (`f47d9e6`) and swarms (`e40f7f7`) exist and ran live once: a 3-agent swarm on one real repository, braided in one at a time with two automatic catch-ups.
+- Deployed R2 LFS above 100 MiB is still blocked by missing bucket-scoped signing credentials (README).
 
 | Feature | Implemented / exercised | Remaining live boundary |
 |---|---|---|
-| WorkOS login | Real provider authorize/code exchange, PKCE, encrypted cookies and strict client-pinned JWT verifier | Dedicated client/API key/issuer missing; no real login claimed |
+| WorkOS login | Real provider authorize/code exchange, PKCE, encrypted cookies and strict client-pinned JWT verifier; GitHub sign-in against live WorkOS (`58f6d59`) | Multi-user and organization flows not re-verified |
 | Sessions/orgs | Refresh rotation, org switch, POST/Origin protection, provider revoke/logout; live session and org-membership check on every authenticated request; local deny record | Contract tests use explicitly injected test provider; actual WorkOS lifecycle unverified |
 | Ownership/ACL | Personal sharing, selected active org membership plus explicit reader/contributor/writer/admin; no implicit provider admin grant | Live multi-user/org flow requires WorkOS |
 | Sharing/invites | Admin grants/list/revoke; seven-day verified-email-bound links, atomic one-time acceptance; revoked/expired/wrong email denied | UI and API tested locally; no email service sends invitations |
@@ -16,7 +22,7 @@ Updated 2026-10-02 Singapore. Source, migrated destination and evaluation resour
 | Proposals/review/publish | Immutable base/candidate, ancestry/diff, explicit approval, trusted expected-ref publisher, fenced intent/recovery | Local UI/API and actual native atomic ref race verified; deployed authenticated end-to-end flow blocked |
 | R2 LFS/dedupe | Standard Batch/basic/verify/download, checksum-verified CDC manifests/chunks, isolation, fork inheritance; local >100 MiB benchmarks retained | Real R2 direct staging credentials absent; no >100 MiB Cloudflare claim |
 | Remote deployment | Correct account, dedicated Worker/D1/R2/Artifacts; 13 unauthenticated denial checks pass; bucket public access disabled | Authentication gate only until WorkOS configured |
-| CI/Agents/Sandbox/Containers | Coding agent runs (first slice, see [Agents](#agents)): one agent per run on its own strand in a Cloudflare Container, Pi Durable loop on Workers AI, proposal into Changes. CI/check API still absent | Container start, git install and a real end-to-end run not yet verified live |
+| CI/Agents/Sandbox/Containers | Coding agent runs and swarms (see [Agents](#agents)): one agent per run on its own strand in a Cloudflare Container, Pi Durable loop on Workers AI, proposal into Changes. CI/check API still absent | Live runs exercised once, on one repository (`e40f7f7`) |
 
 Run with Node ≥22.15, Git, npm and installed Chrome. git-lfs is required only for retained developer benchmarks.
 
@@ -37,6 +43,8 @@ The local harness has real SQLite/bare Git/filesystem objects and an ephemeral l
 The old benchmark receipts, >100 MiB local LFS results, and five-repetition local HTTP/GitHub comparison remain unchanged under `docs/benchmarks/`. They are not measurements of deployed WorkOS/Artifacts/R2 latency. The added remote Git exercise is functional verification with finite synthetic commits, not a load benchmark.
 
 ## Minimal dedicated WorkOS setup
+
+Historical (2026-10-02). Sign-in has worked against live WorkOS since `58f6d59` (2026-10-09), so the missing-key and 503 statements below no longer describe the live site.
 
 Gitflare / Staging now exists with dedicated client `client_01M3WQ9VJ9G2MH74MYP7WBD708`, issuer verified through public OIDC discovery, and callback/logout/login/homepage configured for `https://gitflare.lintlabs.org`. Nonsecret runtime values and the custom domain are persisted in `wrangler.jsonc`. [Current setup, identity IDs and evidence](auth/result.md) supersede the original deployment gate receipts below.
 
@@ -84,8 +92,8 @@ Runtime (`src/agent-run.ts`, `src/agents.ts`, entry `src/main.ts`):
 | API ACL, validation, caps, strand exclusion, public-read denial | Contract tests (`test/agents.test.ts`) with a runtime double | — |
 | Run engine phases, gated push window, resume without duplicate push/proposal, cancellation, ACL loss | Engine tests with container/model/app doubles | — |
 | Pi CodingTools driving the container ExecutionEnv via Workers AI-shaped tool calls; request budget cutoff | Test with real Pi Durable harness + JSONL journal, scripted model, in-memory container exec | Real `gpt-oss-120b` tool-use quality on coding tasks |
-| Container start, apt via intercept, HTTPS intercept of the Artifacts host, clone/push through the gate | Deployed (bundle and container application accepted) | Not yet exercised: requires a signed-in writer to start a run |
-| End-to-end run on the live site | — | Pending a run triggered from a signed-in browser |
+| Container start, apt via intercept, HTTPS intercept of the Artifacts host, clone/push through the gate | Exercised live by the swarm run in `e40f7f7` (commit author's claim) | Other repositories |
+| End-to-end run on the live site | Once, on one repository (`e40f7f7`, commit author's claim) | Runs on several repositories |
 
 ### Swarms and catching up
 
@@ -100,7 +108,14 @@ Runtime (`src/agent-run.ts`, `src/agents.ts`, entry `src/main.ts`):
 |---|---|---|
 | Concurrency (3 per repo, whole swarm atomically), planner validation, swarm view, ACL and 401 | `test/swarm.test.ts` | — |
 | Catch-up: clean rebase, conflict resolved by the resolver, leftover markers, in-place catch-up, new proposal on the new head, superseded old proposal, strand default branch untouched, re-approved proposal braids in | `test/swarm.test.ts` with real local Git (bare repositories, real rebase/push) behind a container-exec double and a resolver double | Real `gpt-oss-120b` conflict-resolution quality |
-| Planner JSON quality, three containers at once, catch-up through the gate on Artifacts | Deployed | Pending a swarm triggered from a signed-in browser |
+| Planner JSON quality, three containers at once, catch-up through the gate on Artifacts | One live 3-agent swarm with two automatic catch-ups (`e40f7f7`, commit author's claim) | Swarms on other repositories |
 
 Known limitations: no Internet in the container (package installs, tests needing downloads fail); one container per run, git installed per run (no snapshot reuse yet); no streaming of tool output; a model that ends without edits fails the run rather than asking for clarification; catching up is started by a person (Catch up), not automatically when another proposal is braided in; a catch-up container is not counted against the 3-run limit; no automatic braid queue.
 
+## Publishing
+
+Publish with the `cf` CLI: `cf deploy`. `cf deploy` reads `cloudflare.config.ts` (plus `wrangler.config.ts` for the assets directory) and ignores `wrangler.jsonc`, so keep the two configurations in step. Always run `cf deploy --dry-run` first and check that it names the Worker `cf-native-forge-evaluation` and lists every binding.
+
+Status on 2026-10-14 (measured with cf 1.0.0-beta.14): `cf deploy --dry-run` stops with an error before listing bindings. cf writes `script_name` on every Durable Object binding declared in `cloudflare.config.ts`, then refuses to attach the `AgentRun` container to a class bound that way. With the `AGENTS` binding removed (diagnostic only, not committed), the dry run passes and lists every other binding. So `cf deploy` cannot publish Braid yet, and there is no `deploy` script. `npm run build` (Wrangler dry run of `wrangler.jsonc`) still passes.
+
+Not measured: how cf treats the existing Durable Object migration tags (`v1-review`, `v2-agent-run`) when `exports` declares the same classes, and whether cf reuses the existing container application name `cf-native-forge-evaluation-agentrun`.
