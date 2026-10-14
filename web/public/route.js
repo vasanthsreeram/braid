@@ -1,12 +1,15 @@
-// Boots the streaming-route renderer, its coordinate labels, and a Canvas 2D
-// fallback for devices without WebGL2.
-import { createRouteEngine } from "./route-engine.js";
+// Boots the branch-and-merge route graphic on any `canvas[data-route]`.
+//
+// The graphic is Cloudflare's own stripe field (see gitgraphics.js): a WebGL
+// mask of three lines of work easing into one trunk, restyled by the vendored
+// engine, with a second canvas painting the engine's node frames and their
+// coordinate labels on top.
+//
+// Without WebGL2, or when the visitor asks for reduced motion, the same
+// composition is drawn once with Canvas 2D.
+import { mountRoute } from "./gitgraphics.js";
 
 const DESIGN = { width: 560, height: 480 };
-const LABELS = [
-  { x: 91, y: 147, text: "175, 175" },
-  { x: 557, y: 147, text: "504, 175" },
-];
 
 // Static stand-in with the same composition, drawn once.
 function drawFallback(canvas) {
@@ -43,10 +46,20 @@ function drawFallback(canvas) {
 
   const frame = (cx, cy, w, h, fill, stroke) => {
     context.fillStyle = fill;
-    context.fillRect((cx - w) * width, (cy - h) * height, w * 2 * width, h * 2 * height);
+    context.fillRect(
+      (cx - w) * width,
+      (cy - h) * height,
+      w * 2 * width,
+      h * 2 * height,
+    );
     context.strokeStyle = stroke;
     context.lineWidth = 1.2;
-    context.strokeRect((cx - w) * width, (cy - h) * height, w * 2 * width, h * 2 * height);
+    context.strokeRect(
+      (cx - w) * width,
+      (cy - h) * height,
+      w * 2 * width,
+      h * 2 * height,
+    );
   };
   for (const start of routes) {
     frame(0.1, start, 0.035, 0.045, "rgba(255, 104, 30, 0.12)", "#ff681e");
@@ -54,31 +67,16 @@ function drawFallback(canvas) {
   frame(0.87, 0.5, 0.055, 0.08, "rgba(255, 104, 30, 0.16)", "#ff681e");
 }
 
-function mount(canvas) {
-  const host = canvas.parentElement;
-  if (!host) return;
-
-  for (const label of LABELS) {
-    const node = document.createElement("span");
-    node.className = "route-label";
-    node.setAttribute("aria-hidden", "true");
-    node.textContent = label.text;
-    node.style.left = ((label.x / DESIGN.width) * 100).toFixed(2) + "%";
-    node.style.top = ((label.y / DESIGN.height) * 100).toFixed(2) + "%";
-    host.append(node);
-  }
-
-  try {
-    createRouteEngine(canvas);
-  } catch (error) {
-    // No WebGL2: keep the composition with a static Canvas 2D drawing.
-    host.dataset.routeFallback = "true";
-    drawFallback(canvas);
-    addEventListener("resize", () => drawFallback(canvas), { passive: true });
-    if (globalThis.console) console.warn(error.message);
-  }
-}
-
 for (const canvas of document.querySelectorAll("canvas[data-route]")) {
-  mount(canvas);
+  const host = canvas.parentElement;
+  if (!host) continue;
+  const frames = host.querySelector("canvas[data-route-frames]");
+  const field = mountRoute(canvas, frames);
+  if (field) continue;
+
+  // No WebGL2 or reduced motion: keep the composition with a static drawing.
+  host.dataset.routeFallback = "true";
+  if (frames) frames.hidden = true;
+  drawFallback(canvas);
+  addEventListener("resize", () => drawFallback(canvas), { passive: true });
 }

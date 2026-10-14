@@ -1,4 +1,4 @@
-# Gitflare
+# Gitrah
 
 A private forge with a Workers API/UI, WorkOS AuthKit identity, Artifacts Git, explicit repository sharing, reviewed task publishing, and tenant-scoped R2 LFS deduplication.
 

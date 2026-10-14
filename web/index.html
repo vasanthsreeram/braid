@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#faf8f3" />
-    <title>Gitflare · Workspace</title>
+    <title>Gitrah · Workspace</title>
     <link rel="stylesheet" href="/style.css" />
     <script defer src="/app.js"></script><script type="module" src="/public/route.js"></script>
   </head>
   <body>
     <header>
-      <a class="brand" href="/" aria-label="Gitflare home"
-        ><span class="pixel-mark" aria-hidden="true"></span>gitflare</a
+      <a class="brand" href="/" aria-label="Gitrah home"
+        ><span class="pixel-mark" aria-hidden="true"></span>gitrah</a
       ><span class="badge">PRIVATE WORKSPACE</span
       ><span class="header-context">CODE / CONTEXT / COLLABORATION</span>
       <form method="post" action="/auth/logout"><button>Sign out</button></form>
@@ -70,7 +70,7 @@
               Repositories<span class="title-dot" aria-hidden="true">.</span>
             </h2>
           </div>
-          <div class="workspace-context"><div class="workspace-route"><canvas data-route width="210" height="180" aria-hidden="true"></canvas></div>
+          <div class="workspace-context"><div class="workspace-route"><svg class="route-fallback" viewBox="0 0 560 480" fill="none" aria-hidden="true"><path d="M56 116C224 116 272 240 462 240M56 240H462M56 364C224 364 272 240 462 240" stroke="currentColor"></path><rect x="42" y="102" width="28" height="28"></rect><rect x="42" y="226" width="28" height="28"></rect><rect x="42" y="350" width="28" height="28"></rect><rect x="448" y="212" width="56" height="56"></rect></svg><canvas class="route-webgl no-auto-position" data-route width="210" height="180" aria-hidden="true"></canvas><canvas class="route-frames no-auto-position" data-route-frames aria-hidden="true"></canvas></div>
           <span id="environment">Authenticated workspace</span></div>
         </div>
         <div class="overview">
@@ -82,7 +82,7 @@
             <p id="github-account">Checking GitHub connection…</p>
             <p>
               List your public repositories and import complete Git history into
-              a private Gitflare repository. Private GitHub access requires
+              a private Gitrah repository. Private GitHub access requires
               separate repository authorization.
             </p>
             <div class="tools">
@@ -423,7 +423,7 @@
       </section>
     </main>
     <footer>
-      <span>GITFLARE / A PRIVATE HOME FOR SHARED WORK</span
+      <span>GITRAH / A PRIVATE HOME FOR SHARED WORK</span
       ><span
         >CODE. CONTEXT. YOUR NEXT COMMIT.
         <span aria-hidden="true">[ + ]</span></span

@@ -66,7 +66,7 @@ export class GitHubAccounts {
         authorization: (basic ? "Basic " : "Bearer ") + token,
         accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2026-03-10",
-        "user-agent": "Gitflare",
+        "user-agent": "Gitrah",
         "content-type": "application/json",
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
@@ -359,7 +359,7 @@ export class GitHubAccounts {
     check(
       this.c.GITHUB_CLIENT_ID && this.c.GITHUB_CLIENT_SECRET,
       503,
-      "Connection removed locally; revoke Gitflare in GitHub application settings",
+      "Connection removed locally; revoke Gitrah in GitHub application settings",
     );
     try {
       await this.api(

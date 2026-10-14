@@ -23,7 +23,7 @@ assert.match(root.headers.get("cache-control")!, /no-store/);
 assert.equal(root.headers.get("x-content-type-options"), "nosniff");
 const html = await root.text();
 assert.match(html, /Great code\./);
-assert.match(html, /Gitflare Blocks/);
+assert.match(html, /Gitrah Blocks/);
 assert.doesNotMatch(
   html,
   /LOCALFIXTURE|fixture-owner|local-owner|temporarily unavailable/,
@@ -34,8 +34,9 @@ for (const path of [
   "/public/welcome.css",
   "/public/blocks.js",
   "/public/blocks-engine.js",
+  "/public/gitgraphics.js",
   "/public/route.js",
-  "/public/route-engine.js",
+  "/public/stripes-engine.js",
 ]) {
   const response = await fetch(origin + path);
   assert.equal(response.status, 200);
@@ -86,7 +87,7 @@ for (const path of [
   assert.ok([401, 403, 404].includes(r.status), path + " must be denied");
   assert.doesNotMatch(
     await r.text(),
-    /use strict|Gitflare · Workspace|LOCALFIXTURE|fixture-owner|WORKOS_API_KEY/,
+    /use strict|Gitrah · Workspace|LOCALFIXTURE|fixture-owner|WORKOS_API_KEY/,
   );
   checks.push({ path, method: "GET", status: r.status, passed: true });
 }

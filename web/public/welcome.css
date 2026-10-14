@@ -6,6 +6,9 @@
   --line: #ddd7cc;
   --orange: #ff681e;
   --accent: #a63c0c;
+  /* Dark base the stripe-field graphics are drawn on. */
+  --field-base: #1a1714;
+  --field-line: #2c2723;
   font:
     16px/1.6 -apple-system,
     BlinkMacSystemFont,
@@ -258,17 +261,35 @@ h1 > span {
 }
 .canvas-wrap {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   height: 514px;
   border-bottom: 1px solid var(--line);
+  background: var(--field-base);
 }
-#block-canvas {
+#block-canvas,
+#block-webgl {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
-  outline-offset: -3px;
+}
+#block-canvas {
+  z-index: 0;
+}
+/* The stripe field replaces the 2D board and is scaled like Cloudflare's hero. */
+#block-webgl {
+  z-index: 1;
+  transform: scale(1.18);
+  transform-origin: center;
+}
+.canvas-wrap[data-field="engine"] #block-canvas {
+  display: none;
 }
 .game-overlay {
   position: absolute;
+  z-index: 2;
   inset: 0;
   display: flex;
   align-items: center;
@@ -483,15 +504,17 @@ footer span span {
 .route-story h2{font-size:clamp(28px,3vw,42px);line-height:1.14;letter-spacing:-1.2px;font-weight:600;margin:18px 0 16px}
 .route-story h2 span{color:var(--accent);font-weight:500}
 .route-story p{font-size:14px;line-height:1.85;max-width:430px;margin:0 0 22px}
-.route-diagram{position:relative;border:1px solid #2c2723;background:#1a1714;padding:18px 20px 12px;box-shadow:inset 0 0 0 1px #100e0c}
-.route-diagram canvas{display:block;width:100%;height:auto;aspect-ratio:7/6;background:#1a1714}
-.route-label{position:absolute;transform:translate(-50%,-100%);font:9px ui-monospace,SFMono-Regular,monospace;letter-spacing:.6px;color:#faf8f3;background:rgba(255,104,30,.9);border:1px solid #ffb066;padding:2px 6px;white-space:nowrap;pointer-events:none;display:none}
-.route-diagram[data-route-fallback=true] canvas{background:linear-gradient(135deg,#1a1714,#241d18)}
-.route-legend{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #2c2723;margin-top:14px;padding-top:12px;font:9px ui-monospace,monospace;letter-spacing:1.1px;color:#8d8177}
+.route-diagram{position:relative;isolation:isolate;min-width:0;min-height:540px;overflow:hidden;border:1px solid var(--field-line);background:var(--field-base)}
+.route-diagram:after{position:absolute;z-index:3;inset:40px;border:1px solid var(--field-line);content:"";pointer-events:none}
+.route-diagram canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.route-fallback{position:absolute;z-index:0;inset:0;width:100%;height:100%;color:var(--orange);opacity:.18}
+.route-fallback path,.route-fallback rect{vector-effect:non-scaling-stroke;stroke-width:1}
+.route-webgl{z-index:1}
+.route-frames{z-index:2;pointer-events:none}
+.route-legend{position:absolute;z-index:4;right:40px;bottom:14px;left:40px;display:flex;justify-content:space-between;gap:12px;font:9px ui-monospace,monospace;letter-spacing:1.1px;color:#8d8177}
 .route-legend span:last-child{color:#ff8a45}
 @media (max-width:1100px){.route-story{grid-template-columns:1fr;gap:26px;padding:44px 0}}
-@media (max-width:700px){.route-story{margin:0 22px;padding:34px 0 30px}.route-story h2{font-size:29px}.route-diagram{padding:12px 12px 8px}.route-legend{font-size:7px;letter-spacing:.6px}}
-@media (min-width:701px){.route-label{display:block}}
+@media (max-width:700px){.route-story{margin:0 22px;padding:34px 0 30px}.route-story h2{font-size:29px}.route-diagram{min-height:420px}.route-diagram:after{inset:24px}.route-legend{right:24px;left:24px;font-size:7px;letter-spacing:.6px}}
 @media (min-width: 1600px) {
   .hero {
     min-height: 840px;

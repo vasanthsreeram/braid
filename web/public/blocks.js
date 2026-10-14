@@ -1,13 +1,21 @@
 import { BlocksGame, COLS, ROWS, SHAPES, NAMES } from "./blocks-engine.js";
+import { mountTetris } from "./gitgraphics.js";
 
 const root = document.getElementById("blocks");
 if (root) {
   const el = (id) => document.getElementById(id);
+  const wrap = root.querySelector(".canvas-wrap");
   const canvas = el("block-canvas"),
     ctx = canvas.getContext("2d");
   const nextCanvas = el("block-next"),
     nextCtx = nextCanvas.getContext("2d");
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
+  // The board is drawn by Cloudflare's stripe field when it can run. Without
+  // WebGL2, or under reduced motion, the Canvas 2D board below keeps working.
+  const field = wrap
+    ? mountTetris(el("block-webgl"), { onReady: () => draw() })
+    : null;
+  if (field && wrap) wrap.dataset.field = "engine";
   const colors = [
     "#ff681e",
     "#edae28",
@@ -35,11 +43,36 @@ if (root) {
       color: (Math.floor(x / 2) + Math.floor(n / 2)) % colors.length,
     })),
   );
+  // The stripe field takes the board one cell per entry, top row first.
+  const cells = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+  function pushCells() {
+    if (!field) return;
+    if (!started) {
+      // No board yet: the field animates its own falling block.
+      field.setCells(null);
+      return;
+    }
+    game.board.forEach((row, y) =>
+      row.forEach((v, x) => {
+        cells[y][x] = v ? 1 : 0;
+      }),
+    );
+    if (!game.over)
+      game.piece.cells.forEach((row, dy) =>
+        row.forEach((v, dx) => {
+          if (!v) return;
+          const y = game.piece.y + dy,
+            x = game.piece.x + dx;
+          if (y >= 0 && y < ROWS && x >= 0 && x < COLS) cells[y][x] = 1;
+        }),
+      );
+    field.setCells(cells);
+  }
   function tile(context, x, y, size, color, ghost = false) {
     const pad = Math.max(1.4, size * 0.065),
       s = size - 2 * pad;
     if (ghost) {
-      context.strokeStyle = "#ce9a71";
+      context.strokeStyle = "#d98a4e";
       context.lineWidth = 1;
       context.strokeRect(x + pad, y + pad, s, s);
       return;
@@ -84,7 +117,8 @@ if (root) {
       ctx.stroke();
     }
   }
-  function draw() {
+  // Canvas 2D board, used only when the stripe field is unavailable.
+  function drawBoard() {
     ctx.clearRect(0, 0, width, height);
     const cols = started ? COLS : 14;
     const size = Math.min((width - 12) / cols, (height - 20) / ROWS);
@@ -136,12 +170,18 @@ if (root) {
       piece(game.ghost(), true);
       piece(game.piece, false);
     }
+  }
+  function drawNext() {
     nextCtx.clearRect(0, 0, 72, 48);
     SHAPES[game.next].forEach((r, y) =>
       r.forEach((v, x) => {
         if (v) tile(nextCtx, 6 + x * 12, 2 + y * 12, 12, game.next);
       }),
     );
+  }
+  function draw() {
+    if (!field) drawBoard();
+    if (game) drawNext();
   }
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -159,28 +199,31 @@ if (root) {
   }
   function schedule() {
     stopTimer();
-    if (
-      !visible ||
-      document.hidden ||
-      (started ? paused || game.over : motion.matches)
-    )
+    if (!visible || document.hidden) return;
+    if (!started) {
+      // Idle: the stripe field animates itself, the 2D stand-in steps slowly.
+      if (field || motion.matches) return;
+      timer = setTimeout(() => {
+        timer = undefined;
+        decorationY += 0.2;
+        if (decorationY > 9) {
+          decorationY = -3;
+          decorationCycle++;
+        }
+        draw();
+        schedule();
+      }, 180);
       return;
-    // Event-driven rendering; idle game gravity ≤ 2 Hz, decoration ≤ 6 Hz. No RAF loop.
+    }
+    if (paused || game.over) return;
+    // Event-driven rendering; idle game gravity ≤ 2 Hz. No RAF loop.
     timer = setTimeout(
       () => {
         timer = undefined;
-        if (started) act("gravity");
-        else {
-          decorationY += 0.2;
-          if (decorationY > 9) {
-            decorationY = -3;
-            decorationCycle++;
-          }
-          draw();
-        }
+        act("gravity");
         schedule();
       },
-      started ? Math.max(160, 650 - Math.floor(game.lines / 10) * 55) : 180,
+      Math.max(160, 650 - Math.floor(game.lines / 10) * 55),
     );
   }
   function announce(text) {
@@ -207,6 +250,7 @@ if (root) {
     el("block-pause").textContent = paused ? "Resume" : "Pause";
     el("block-pause").disabled = game.over;
     el("block-play").textContent = "Restart Blocks ↗";
+    pushCells();
     draw();
   }
   function start() {
@@ -216,14 +260,14 @@ if (root) {
     el("block-controls").hidden = false;
     el("block-instructions").textContent =
       "Fill a row to clear it. Keep the stack low.";
-    canvas.tabIndex = 0;
-    canvas.setAttribute("role", "region");
-    canvas.setAttribute(
+    const board = wrap || canvas;
+    board.tabIndex = 0;
+    board.setAttribute("role", "region");
+    board.setAttribute(
       "aria-label",
       "Blocks board. Arrow keys move and rotate; Space drops; Escape pauses.",
     );
-    canvas.removeAttribute("aria-hidden");
-    canvas.focus({ preventScroll: true });
+    board.focus({ preventScroll: true });
     announce("Game started. Focus the board to use arrow keys.");
     update();
     schedule();
@@ -265,7 +309,7 @@ if (root) {
   el("block-restart").addEventListener("click", start);
   el("block-pause").addEventListener("click", () => {
     pause();
-    if (!paused) canvas.focus({ preventScroll: true });
+    if (!paused) (wrap || canvas).focus({ preventScroll: true });
   });
   root
     .querySelectorAll("[data-block-action]")
@@ -273,7 +317,7 @@ if (root) {
       button.addEventListener("click", () => act(button.dataset.blockAction)),
     );
   // Capture only a focused board; page scrolling, navigation and ordinary forms stay native.
-  canvas.addEventListener("keydown", (e) => {
+  (wrap || canvas).addEventListener("keydown", (e) => {
     const actions = {
       ArrowLeft: "left",
       ArrowRight: "right",
@@ -309,9 +353,9 @@ if (root) {
       else schedule();
     },
     { threshold: 0.05 },
-  ).observe(canvas);
+  ).observe(wrap || canvas);
   motion.addEventListener("change", () => {
-    if (!started && motion.matches) {
+    if (!started && motion.matches && !field) {
       decorationY = -3;
       draw();
     }
@@ -319,6 +363,8 @@ if (root) {
   });
   new ResizeObserver(resize).observe(canvas);
   window.addEventListener("pagehide", suspend);
+  pushCells();
+  draw();
   resize();
   schedule();
 }
