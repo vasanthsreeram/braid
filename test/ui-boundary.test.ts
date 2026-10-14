@@ -38,6 +38,11 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
     assert.match(await gate.text(), /Sign-in is temporarily unavailable/);
     for (const path of [
       "/public/welcome.css",
+      "/public/blocks.js",
+      "/public/blocks-engine.js",
+      "/public/gitgraphics.js",
+      "/public/route.js",
+      "/public/stripes-engine.js",
     ]) {
       const r = await fetch(local.url + path);
       assert.equal(r.status, 200, path);
@@ -86,7 +91,7 @@ test("local workerd: exact public allowlist, CSP and private denials", async () 
       assert.equal(r.status, path.includes("/tree") ? 404 : 401, path);
       assert.doesNotMatch(
         await r.text(),
-        /use strict|Gitflare · Workspace|local-owner|WORKOS_API_KEY/,
+        /use strict|Gitrah · Workspace|local-owner|WORKOS_API_KEY/,
       );
     }
     assert.equal(

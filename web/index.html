@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#faf7f2" />
-    <title>Braid</title>
+    <meta name="theme-color" content="#faf8f3" />
+    <title>Gitrah · Workspace</title>
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/braid.css" />
     <script defer src="/app.js"></script>
@@ -13,16 +13,28 @@
     <script type="module" src="/agents.js"></script>
   </head>
   <body>
-    <a class="skip" href="#workspace">Skip to content</a>
-    <div class="progress" aria-hidden="true"></div>
-    <header class="topbar">
-      <div class="topbar-inner">
-        <a class="brand" href="/" aria-label="Braid home"
-          ><svg class="braid-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.0 12.0 L2.8 12.2 L3.7 12.7 L4.5 13.6 L5.3 14.6 L6.2 15.7 L7.0 16.6 L7.8 17.1 L8.7 17.1 L9.5 16.5 L10.3 15.4 L11.2 13.8 L12.0 12.0 L12.8 10.2 L13.7 8.6 L14.5 7.5 L15.3 6.9 L16.2 6.9 L17.0 7.4 L17.8 8.3 L18.7 9.4 L19.5 10.4 L20.3 11.3 L21.2 11.8 L22.0 12.0" /><path d="M2.0 12.0 L2.8 12.4 L3.7 12.7 L4.5 12.6 L5.3 12.0 L6.2 11.0 L7.0 9.7 L7.8 8.3 L8.7 6.9 L9.5 5.9 L10.3 5.3 L11.2 5.3 L12.0 5.9 L12.8 7.1 L13.7 8.6 L14.5 10.4 L15.3 12.0 L16.2 13.4 L17.0 14.3 L17.8 14.7 L18.7 14.6 L19.5 14.1 L20.3 13.4 L21.2 12.6 L22.0 12.0" /><path d="M2.0 12.0 L2.8 11.4 L3.7 10.6 L4.5 9.9 L5.3 9.4 L6.2 9.3 L7.0 9.7 L7.8 10.6 L8.7 12.0 L9.5 13.6 L10.3 15.4 L11.2 16.9 L12.0 18.1 L12.8 18.7 L13.7 18.7 L14.5 18.1 L15.3 17.1 L16.2 15.7 L17.0 14.3 L17.8 13.0 L18.7 12.0 L19.5 11.4 L20.3 11.3 L21.2 11.6 L22.0 12.0" /></svg><span class="brand-name">Braid</span></a
-        >
-        <nav class="primary-nav" aria-label="Main">
-          <button id="mine" type="button" aria-current="page">
-            Repositories
+    <header>
+      <a class="brand" href="/" aria-label="Gitrah home"
+        ><span class="pixel-mark" aria-hidden="true"></span>gitrah</a
+      ><span class="badge">PRIVATE WORKSPACE</span
+      ><span class="header-context">CODE / CONTEXT / COLLABORATION</span>
+      <form method="post" action="/auth/logout"><button>Sign out</button></form>
+    </header>
+    <main>
+      <a class="skip" href="#workspace">Skip to workspace</a>
+      <aside class="workspace-sidebar">
+        <p class="eyebrow">WORKSPACE</p>
+        <h1>Your work.</h1>
+        <p class="sidebar-intro">One place. Shared context.</p>
+        <nav aria-label="Workspace navigation">
+          <button id="mine" aria-current="page">
+            <span aria-hidden="true">▦</span> My &amp; shared repositories
+          </button>
+          <button id="discover">
+            <span aria-hidden="true">⌕</span> Discover
+          </button>
+          <button id="profile">
+            <span aria-hidden="true">▥</span> My contribution profile
           </button>
           <button id="discover" type="button">Explore</button>
           <button id="profile" type="button">Activity</button>
@@ -149,9 +161,25 @@
       <section id="overview" class="view">
         <div class="page-head">
           <div>
-            <h1 id="view-title">Repositories</h1>
-            <p id="view-subtitle" class="muted">
-              Your private repositories and the ones shared with you.
+            <p class="eyebrow" id="view-kicker">YOUR WORKSPACE / OVERVIEW</p>
+            <h2 id="view-title">
+              Repositories<span class="title-dot" aria-hidden="true">.</span>
+            </h2>
+          </div>
+          <div class="workspace-context"><div class="workspace-route"><svg class="route-fallback" viewBox="0 0 560 480" fill="none" aria-hidden="true"><path d="M56 116C224 116 272 240 462 240M56 240H462M56 364C224 364 272 240 462 240" stroke="currentColor"></path><rect x="42" y="102" width="28" height="28"></rect><rect x="42" y="226" width="28" height="28"></rect><rect x="42" y="350" width="28" height="28"></rect><rect x="448" y="212" width="56" height="56"></rect></svg><canvas class="route-webgl no-auto-position" data-route width="210" height="180" aria-hidden="true"></canvas><canvas class="route-frames no-auto-position" data-route-frames aria-hidden="true"></canvas></div>
+          <span id="environment">Authenticated workspace</span></div>
+        </div>
+        <div class="overview">
+          <details id="github-view" aria-labelledby="github-title">
+            <summary>
+              <span id="github-title">Connected GitHub account</span
+              ><span class="summary-note">IMPORT YOUR HISTORY ↗</span>
+            </summary>
+            <p id="github-account">Checking GitHub connection…</p>
+            <p>
+              List your public repositories and import complete Git history into
+              a private Gitrah repository. Private GitHub access requires
+              separate repository authorization.
             </p>
           </div>
           <div class="page-actions" id="overview-actions">
@@ -1105,5 +1133,12 @@
         </section>
       </article>
     </main>
+    <footer>
+      <span>GITRAH / A PRIVATE HOME FOR SHARED WORK</span
+      ><span
+        >CODE. CONTEXT. YOUR NEXT COMMIT.
+        <span aria-hidden="true">[ + ]</span></span
+      >
+    </footer>
   </body>
 </html>

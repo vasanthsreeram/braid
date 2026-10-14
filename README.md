@@ -1,4 +1,4 @@
-# Braid
+# Gitrah
 
 **Where parallel work comes together.**
 

@@ -1776,10 +1776,68 @@ pre.code.small {
   min-height: 44px;
 }
 
-/* Small screens */
-@media (max-width: 860px) {
-  .topbar {
-    position: static;
+/* Shared workspace heading route mark. */
+.workspace-context {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 260px;
+}
+.workspace-route {
+  position: relative;
+  isolation: isolate;
+  width: 210px;
+  height: 180px;
+  border: 1px solid #2c2723;
+  background: #1a1714;
+  overflow: hidden;
+}
+.workspace-route canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.workspace-route .route-fallback {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: #ff681e;
+  opacity: 0.18;
+}
+.workspace-route .route-fallback path,
+.workspace-route .route-fallback rect {
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1;
+}
+.workspace-route .route-webgl {
+  z-index: 1;
+}
+.workspace-route .route-frames {
+  z-index: 2;
+  pointer-events: none;
+}
+main:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 159px,
+    #efe7db28 159px 160px
+  );
+  pointer-events: none;
+}
+main {
+  position: relative;
+}
+@media (max-width: 1100px) {
+  .header-context {
+    display: none;
   }
   .topbar-inner {
     flex-wrap: wrap;

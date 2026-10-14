@@ -420,6 +420,11 @@ export async function serveLocal(directory: string, port = 0) {
           "/agents.css": "agents.css",
           "/braid.css": "braid.css",
           // Public allowlist mirrors the Worker's; other paths stay private.
+          "/public/blocks-engine.js": "public/blocks-engine.js",
+          "/public/blocks.js": "public/blocks.js",
+          "/public/gitgraphics.js": "public/gitgraphics.js",
+          "/public/route.js": "public/route.js",
+          "/public/stripes-engine.js": "public/stripes-engine.js",
           "/public/welcome.css": "public/welcome.css",
         };
         if (u.pathname === "/auth/login") {
