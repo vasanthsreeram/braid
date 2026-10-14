@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-const origin = "https://braid.lintlabs.org";
+const origin = "https://gitflare.lintlabs.org";
 const rows = [];
 for (const [path, method, body, headers, status] of [
   ["/", "GET", undefined, {}, 401],
